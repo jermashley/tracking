@@ -1,21 +1,39 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <meta name="title" content="{{ config('app.name', 'Prologue Alert System') }}" />
+    <meta name="description" content="Decode and encode your data with ease!" />
 
-        <!-- Scripts -->
-        @routes
-        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
-        @inertiaHead
-    </head>
-    <body class="font-sans antialiased">
-        @inertia
-    </body>
+    <title inertia>{{ config('app.name', 'Prologue Alert System') }}</title>
+
+    @env('local')
+    <script src="http://localhost:8098"></script>
+    @endenv
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+
+    <link
+        href="https://fonts.bunny.net/css?family=figtree:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|jetbrains-mono:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i&display=swap"
+        rel="stylesheet" />
+
+    <!-- Scripts -->
+    @routes
+
+    @vite([
+    'resources/js/app.js',
+    'resources/css/app.css',
+    ])
+
+    @inertiaHead
+</head>
+
+<body class="font-sans antialiased">
+    @inertia
+</body>
+
 </html>
