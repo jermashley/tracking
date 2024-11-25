@@ -10,33 +10,17 @@ class PipelineApiShipmentCoordinates extends PipelineApiBaseService
 
     public function __construct()
     {
-        parent::__construct();
+        parent::__construct(config('services.pipeline.base_url').'/app.php?r=mapApi');
 
-        $this->endpoint = '/TrackingData';
+        $this->endpoint = '/getRoutes';
     }
 
-    public function getTrackingData(
+    public function getCoordinates(
         ?string $trackingNumber = '',
-        ?string $searchOption = '',
         ?string $companyId = '',
-        ?string $zipCode = ''
     ): Response {
-        $data = [
-            'trackingNum' => $trackingNumber,
-            'searchOption' => $searchOption,
-            'companyId' => $companyId,
-            'zipCode' => $zipCode,
-        ];
-
-        $response = $this->makeRequest('POST', $this->endpoint, $data);
+        $response = $this->makeRequest('POST', $this->endpoint.'/getRoutes&Filter[bolNum]='.$trackingNumber.'&Filter[companyId]='.$companyId);
 
         return $response;
-    }
-
-    public function getTrackingCoordinates(
-        ?string $bolNumber = '',
-        ?string $companyId = ''
-    ): Response {
-        $response
     }
 }

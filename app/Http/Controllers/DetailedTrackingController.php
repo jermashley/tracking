@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Services\Pipeline\PipelineApiShipmentCoordinates;
 use App\Services\Pipeline\PipelineApiTracking;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -25,18 +26,26 @@ class DetailedTrackingController extends Controller
             $zipCode
         );
 
-        $company = null;
+        $pipelineCompanyId = $trackingData->object()->data->trackingObject->companyId;
 
-        if ($trackingData->ok()) {
-            $company = Company::where('pipeline_company_id', $trackingData->object()->data->trackingObject->companyId)
+        if ($pipelineCompanyId && $trackingData->ok()) {
+            $company = Company::where('pipeline_company_id', $pipelineCompanyId)
                 ->with('theme')
                 ->with('backgroundImage')
                 ->first();
+
+            $pipelineApiShipmentCoordinates = new PipelineApiShipmentCoordinates;
+
+            $shipmentCoordinates = $pipelineApiShipmentCoordinates->getCoordinates(
+                $trackingNumber,
+                $pipelineCompanyId
+            );
         }
 
         return Inertia::render('detailedTracking/Index', [
             'trackingData' => $trackingData->json(),
             'company' => $company,
+            'shipmentCoordinates' => $shipmentCoordinates->json(),
         ]);
     }
 }

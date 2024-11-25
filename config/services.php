@@ -44,6 +44,7 @@ return [
     ],
 
     'pipeline' => [
+        'base_url' => env('PIPELINE_BASE_URL'),
         'api_url' => env('PIPELINE_API_URL'),
         'api_key' => env('PIPELINE_API_KEY'),
     ],

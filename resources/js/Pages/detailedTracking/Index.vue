@@ -19,6 +19,7 @@ import { computed } from 'vue'
 import AddressCard from '@/components/feature/tracking/AddressCard.vue'
 import ShipmentDetail from '@/components/feature/tracking/ShipmentDetail.vue'
 import StatusStepper from '@/components/feature/tracking/StatusStepper.vue'
+import TrackingMap from '@/components/feature/tracking/TrackingMap.vue'
 import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -33,7 +34,12 @@ const props = defineProps({
   },
   company: {
     type: Object,
-    required: false,
+    required: true,
+    default: null,
+  },
+  shipmentCoordinates: {
+    type: Object,
+    required: true,
     default: null,
   },
 })
@@ -93,7 +99,12 @@ const numberOfPieces = computed(() => {
           <CardTitle>Tracking Map</CardTitle>
         </CardHeader>
 
-        <CardContent> </CardContent>
+        <CardContent>
+          <TrackingMap
+            v-if="shipmentCoordinates"
+            :shipment-coordinates="shipmentCoordinates[0]"
+          />
+        </CardContent>
       </Card>
 
       <Card class="w-full shadow-lg">

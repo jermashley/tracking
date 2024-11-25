@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->integer('pipeline_company_id')->unique();
+            $table->boolean('enable_map')->default(false);
             $table->foreignIdFor(Theme::class)->nullable();
             $table->foreignIdFor(BackgroundImage::class)->nullable();
             $table->timestamps();
