@@ -14,11 +14,11 @@ import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
     >
       <div>
         <h1 class="w-auto text-4xl font-bold text-zinc-700">
-          Welcome to RegRunner
+          {{ $page.props.app.name }}
         </h1>
 
         <p class="mt-2 w-auto text-center text-zinc-500">
-          Your on-prem tool for regression testing.
+          Your on-prem tool for shipment tracking.
         </p>
       </div>
 

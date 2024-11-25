@@ -19,6 +19,7 @@ defineProps({
 <template>
   <Button :size="size" as="a" :href="route('oauth.redirect', provider)">
     <FontAwesomeIcon class="mr-2" :icon="faMicrosoft" fixed-width />
-    Login with Microsoft
+
+    <span>Login with Microsoft</span>
   </Button>
 </template>

@@ -5,10 +5,10 @@ import { createApp, h } from 'vue'
 
 import { ZiggyVue } from '../../vendor/tightenco/ziggy'
 
-const appName = import.meta.env.VITE_APP_NAME || `RegRunner`
+const appName = import.meta.env.VITE_APP_NAME || `Prologue Tracking`
 
 createInertiaApp({
-  title: (title) => `${title} - ${appName}`,
+  title: (title) => `${title}`,
   resolve: (name) =>
     resolvePageComponent(
       `./pages/${name}.vue`,

@@ -11,7 +11,7 @@
     <title inertia>{{ config('app.name', 'Prologue Alert System') }}</title>
 
     @env('local')
-    <script src="http://localhost:8098"></script>
+    {{-- <script src="http://localhost:8098"></script> --}}
     @endenv
 
     <!-- Fonts -->

@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [
     laravel({
       input: [`resources/css/app.css`, `resources/js/app.js`],
+      refresh: true,
     }),
     vue({
       template: {
@@ -17,6 +18,16 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    hmr: {
+      host: `tracking.test`,
+    },
+  },
+  build: {
+    watch: {
+      include: [`resources/**`],
+    },
+  },
   resolve: {
     alias: {
       'tailwind.config.js': path.resolve(__dirname, `tailwind.config.js`),

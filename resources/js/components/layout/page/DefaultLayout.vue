@@ -1,16 +1,17 @@
 <script setup>
-import { faCopyright } from '@fortawesome/pro-duotone-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-import Navbar from '@/components/layout/navbar/Navbar.vue'
 import { Badge } from '@/components/ui/badge'
+import { useCompanyTheme } from '@/composables/hooks/theme'
+
+import Navbar from '../navigation/Navbar.vue'
+
+useCompanyTheme()
 </script>
 
 <template>
-  <div class="grid min-h-screen grid-rows-[1fr,auto] items-center">
-    <!-- <Navbar /> -->
+  <div class="grid min-h-screen grid-rows-[auto,1fr,auto] items-start">
+    <Navbar />
 
-    <main class="mx-auto w-full max-w-3xl">
+    <main class="mx-auto my-12 w-full max-w-3xl px-6 lg:px-0">
       <slot />
     </main>
 

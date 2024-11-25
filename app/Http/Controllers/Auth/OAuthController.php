@@ -20,6 +20,7 @@ class OAuthController extends Controller
 
     public function callback(string $provider)
     {
+        dump(Socialite::driver($provider)->user());
         $socialiteUser = Socialite::driver($provider)->user();
 
         $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
