@@ -29,14 +29,10 @@ onMounted(() => {
       locations.coordinates.lat,
     ])
 
-  console.log(`simplifiedCoordinates`, simplifiedCoordinates)
-
   const coordinates = simplifiedCoordinates.map(
     (simplifiedCoordinate) =>
       new TrimbleMaps.LngLat(simplifiedCoordinate[0], simplifiedCoordinate[1]),
   )
-
-  console.log(`coordinates`, coordinates)
 
   const myRoute = new TrimbleMaps.Route({
     routeId: `myRoute`,
