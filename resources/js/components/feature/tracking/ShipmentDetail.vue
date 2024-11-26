@@ -67,7 +67,7 @@ const proNumberClipboard = useClipboard()
           </TooltipTrigger>
 
           <TooltipContent>
-            <p>Click to copy.</p>
+            <p>Click to copy</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

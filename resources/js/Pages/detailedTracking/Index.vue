@@ -9,6 +9,7 @@ import {
   faCalendarCheck,
   faCopy,
   faExclamationTriangle,
+  faFileSignature,
   faMapLocationDot,
   faTruckContainer,
   faWeightScale,
@@ -115,7 +116,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <h1 class="text-xl font-bold">{{ bolNumber }}</h1>
+                <h1 class="text-2xl font-bold">{{ bolNumber }}</h1>
               </TooltipTrigger>
 
               <TooltipContent>
@@ -166,7 +167,17 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 
         <CardContent>
           <section class="grid grid-cols-1 gap-4 md:grid-cols-[1fr,auto]">
-            <div class="flex flex-col gap-4">
+            <div
+              class="grid grid-flow-col grid-cols-1 grid-rows-5 gap-4 md:grid-cols-2 md:grid-rows-3"
+            >
+              <ShipmentDetail
+                v-if="bolNumber"
+                :detail="bolNumber"
+                label="Bill of Lading"
+                :icon="faFileSignature"
+                is-copyable
+              />
+
               <ShipmentDetail
                 :detail="trackingData.data.trackingObject.carrierName"
                 label="Carrier"
@@ -199,7 +210,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
             </div>
 
             <div
-              class="flex min-w-56 flex-col gap-4 border-t border-t-border pt-4 sm:border-l sm:border-t-0 sm:border-l-border sm:pl-4 sm:pt-0"
+              class="flex min-w-56 flex-col gap-4 border-t border-t-border pt-4 md:border-l md:border-t-0 md:border-l-border md:pl-4 md:pt-0"
             >
               <ShipmentDetail
                 v-if="trackingData.data.trackingObject.actualDeliveryDate"

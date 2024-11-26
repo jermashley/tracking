@@ -59,7 +59,7 @@ const googleMapsLink = computed(() => {
     <CardContent>
       <section class="flex flex-col items-start justify-between space-y-4">
         <address class="flex flex-col text-sm not-italic">
-          <span v-if="location?.name" class="font-semibold">
+          <span v-if="location?.name" class="text-lg font-semibold">
             {{ location?.name }}
           </span>
 
