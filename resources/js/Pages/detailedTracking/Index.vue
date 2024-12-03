@@ -24,15 +24,9 @@ import AddressCard from '@/components/feature/tracking/AddressCard.vue'
 import ShipmentDetail from '@/components/feature/tracking/ShipmentDetail.vue'
 import StatusStepper from '@/components/feature/tracking/StatusStepper.vue'
 import TrackingMap from '@/components/feature/tracking/TrackingMap.vue'
-import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
+import TrackingLayout from '@/components/layout/page/TrackingLayout.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Tooltip,
   TooltipContent,
@@ -107,7 +101,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 <template>
   <Head :title="`${company?.name ?? appName} - Tracking - ${proNumber}`" />
 
-  <DefaultLayout>
+  <TrackingLayout>
     <div class="flex flex-col gap-12">
       <section
         class="grid-rows-auto grid grid-cols-1 gap-x-0 gap-y-2 sm:grid-cols-[1fr,auto] sm:grid-rows-2 sm:gap-x-4 sm:gap-y-0"
@@ -168,7 +162,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
         <CardContent>
           <section class="grid grid-cols-1 gap-4 md:grid-cols-[1fr,auto]">
             <div
-              class="grid grid-flow-col grid-cols-1 grid-rows-5 gap-4 md:grid-cols-2 md:grid-rows-3"
+              class="grid grid-flow-col grid-cols-1 grid-rows-5 gap-x-8 gap-y-4 md:grid-cols-2 md:grid-rows-3"
             >
               <ShipmentDetail
                 v-if="bolNumber"
@@ -267,7 +261,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
       </Card>
 
       <section
-        class="flex flex-col items-center justify-between space-x-0 space-y-8 md:flex-row md:space-x-8 md:space-y-0"
+        class="flex flex-col items-stretch justify-between space-x-0 space-y-8 md:flex-row md:space-x-8 md:space-y-0"
       >
         <AddressCard
           :location="trackingData.data.trackingObject?.originLocation"
@@ -275,7 +269,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
         />
 
         <FontAwesomeIcon
-          class="rotate-90 transform md:rotate-0"
+          class="rotate-90 transform self-center md:rotate-0"
           :icon="faArrowRight"
           fixed-width
         />
@@ -317,5 +311,5 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
         </div>
       </section>
     </div>
-  </DefaultLayout>
+  </TrackingLayout>
 </template>

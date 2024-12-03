@@ -20,6 +20,7 @@ class Company extends Model
         'email',
         'pipeline_company_id',
         'theme_id',
+        'enable_map',
     ];
 
     public function theme(): BelongsTo
@@ -30,5 +31,12 @@ class Company extends Model
     public function backgroundImage(): BelongsTo
     {
         return $this->belongsTo(BackgroundImage::class);
+    }
+
+    public static function booleanFields(): array
+    {
+        return [
+            'enable_map',
+        ];
     }
 }

@@ -59,7 +59,10 @@ const googleMapsLink = computed(() => {
     <CardContent>
       <section class="flex flex-col items-start justify-between space-y-4">
         <address class="flex flex-col text-sm not-italic">
-          <span v-if="location?.name" class="text-lg font-semibold">
+          <span
+            v-if="location?.name"
+            class="mb-2 text-lg font-semibold leading-none"
+          >
             {{ location?.name }}
           </span>
 
@@ -76,7 +79,7 @@ const googleMapsLink = computed(() => {
           </span>
         </address>
 
-        <TooltipProvider>
+        <!-- <TooltipProvider>
           <Tooltip>
             <TooltipTrigger as-child>
               <Button
@@ -103,7 +106,7 @@ const googleMapsLink = computed(() => {
               <p>Open in Google Maps</p>
             </TooltipContent>
           </Tooltip>
-        </TooltipProvider>
+        </TooltipProvider> -->
       </section>
     </CardContent>
   </Card>

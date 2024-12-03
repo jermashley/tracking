@@ -27,7 +27,7 @@ class OAuthController extends Controller
 
         // Return to the login if the user's email domain is not in our valid domain list.
         if (! in_array($emailDomain, config('socialite.valid_domains'))) {
-            return redirect()->route('home')->withErrors([
+            return redirect()->route('auth.login')->withErrors([
                 'email' => 'You must use a valid Prologue email address to login.',
             ]);
         }
@@ -48,7 +48,7 @@ class OAuthController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('home'));
+        return redirect(route('admin.dashboard'));
     }
 
     public function logout(Request $request)

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreCompanyRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreCompanyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -22,7 +23,14 @@ class StoreCompanyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'logo' => ['required', 'string', 'max:255'],
+            'website' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'max:255'],
+            'pipeline_company_id' => ['required', 'integer'],
+            'theme_id' => ['required', 'integer'],
+            'enable_map' => ['required', 'boolean'],
         ];
     }
 }

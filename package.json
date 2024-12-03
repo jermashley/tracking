@@ -49,6 +49,7 @@
         "@tailwindcss/container-queries": "^0.1.1",
         "@tanstack/vue-query": "^5.29.0",
         "@tanstack/vue-query-devtools": "^5.37.1",
+        "@tanstack/vue-table": "^8.20.5",
         "@trimblemaps/trimblemaps-js": "^3.20.0",
         "@vee-validate/yup": "^4.12.6",
         "@vee-validate/zod": "^4.13.2",
@@ -62,7 +63,6 @@
         "tailwind-merge": "^2.3.0",
         "tailwindcss-animate": "^1.0.7",
         "vee-validate": "^4.13.2",
-        "yup": "^1.4.0",
         "zod": "^3.23.8"
     }
 }
