@@ -1,10 +1,7 @@
 <script setup>
-import { faPlus } from '@fortawesome/pro-duotone-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
-import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -17,8 +14,8 @@ import { useCompaniesQuery } from '@/composables/queries/company'
 
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
 import CompanyCreateButton from './CompanyCreateButton.vue'
-import CompanyEditButton from './CompanyEditButton.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
+import CompanyUpdateButton from './CompanyUpdateButton.vue'
 import EnableMapSwitch from './EnableMapSwitch.vue'
 
 const { data, isError } = useCompaniesQuery()
@@ -63,7 +60,7 @@ const columns = [
     accessorKey: `edit`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
     cell: ({ row }) => {
-      return h(CompanyEditButton, { company: row.original })
+      return h(CompanyUpdateButton, { company: row.original })
     },
   },
   //   {

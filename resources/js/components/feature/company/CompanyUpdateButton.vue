@@ -1,10 +1,10 @@
 <script setup>
-import { faPlus } from '@fortawesome/pro-duotone-svg-icons'
+import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { faCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
 import { useForm } from 'vee-validate'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import * as yup from 'yup'
 
 import { Button } from '@/components/ui/button'
@@ -34,8 +34,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
-import { useCompanyCreateMutation } from '@/composables/mutations/company'
+import { useCompanyUpdateMutation } from '@/composables/mutations/company'
 import { useThemesQuery } from '@/composables/queries/theme'
+
+const props = defineProps({
+  company: {
+    type: Object,
+    required: true,
+  },
+})
 
 const isOpen = ref(false)
 
@@ -43,7 +50,7 @@ const queryClient = useQueryClient()
 
 const { data: themes } = useThemesQuery()
 
-const newCompanyFormSchema = yup.object({
+const updateCompanyFormSchema = yup.object({
   name: yup.string().min(1).required(),
   pipeline_company_id: yup.number().min(1).required(),
   // logo: yup.string().nullable(),
@@ -54,25 +61,27 @@ const newCompanyFormSchema = yup.object({
   enable_map: yup.boolean().required(),
 })
 
-const { resetForm, isFieldDirty, handleSubmit } = useForm({
-  validationSchema: newCompanyFormSchema,
-  initialValues: {
-    name: ``,
-    pipeline_company_id: null,
-    // logo: ``,
-    website: ``,
-    phone: ``,
-    email: ``,
-    theme_id: null,
-    enable_map: false,
-  },
+const initialValues = reactive({
+  name: props.company.name,
+  pipeline_company_id: props.company.pipeline_company_id,
+  // logo: props.company.logo,
+  website: props.company.website,
+  phone: props.company.phone,
+  email: props.company.email,
+  theme_id: `${props.company.theme_id}`,
+  enable_map: Boolean(props.company.enable_map),
 })
 
-const { mutate: createCompany } = useCompanyCreateMutation({
+const { isFieldDirty, handleSubmit } = useForm({
+  validationSchema: updateCompanyFormSchema,
+  initialValues: initialValues,
+  keepValuesOnUnmount: true,
+})
+
+const { mutate: updateCompany } = useCompanyUpdateMutation({
   config: {
     onSuccess: () => {
       queryClient.invalidateQueries(`companies`)
-      resetForm()
       isOpen.value = false
     },
   },
@@ -80,7 +89,7 @@ const { mutate: createCompany } = useCompanyCreateMutation({
 
 const onValidForm = (values) => {
   console.log(values)
-  createCompany({ formData: values })
+  updateCompany({ companyId: props.company.id, formData: values })
 }
 
 const onInvalidForm = ({ values, errors, results }) => {
@@ -98,20 +107,18 @@ const submitForm = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="default" size="sm">
-        <FontAwesomeIcon :icon="faPlus" class="mr-2" fixed-width />
-
-        <span>Add Company</span>
+      <Button variant="outline" size="sm">
+        <FontAwesomeIcon :icon="faEdit" fixed-width />
       </Button>
     </DialogTrigger>
 
     <DialogContent class="max-h-[85dvh] grid-rows-[auto_minmax(0,1fr)_auto]">
       <DialogHeader>
-        <DialogTitle>Add Company</DialogTitle>
+        <DialogTitle>Edit {{ company.name }}</DialogTitle>
       </DialogHeader>
 
       <form
-        id="newCompanyForm"
+        :id="`editCompanyForm_${company.uuid}`"
         class="flex w-full flex-col space-y-4 overflow-y-auto px-2"
         @submit="submitForm"
       >
