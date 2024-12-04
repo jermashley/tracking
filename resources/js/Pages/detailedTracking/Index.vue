@@ -281,7 +281,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
       </section>
 
       <Card
-        v-if="shipmentCoordinates && company.enable_map"
+        v-if="shipmentCoordinates && company?.enable_map"
         class="w-full shadow-lg"
       >
         <CardHeader>

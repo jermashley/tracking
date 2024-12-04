@@ -1,11 +1,11 @@
 <script setup>
-import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+import { faPlus } from '@fortawesome/pro-duotone-svg-icons'
+import { faCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
-import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { ref } from 'vue'
-import * as z from 'zod'
+import * as yup from 'yup'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -24,32 +24,48 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Switch } from '@/components/ui/switch'
 import useCompanyCreateMutation from '@/composables/mutations/company/useCompanyCreateMutation'
-
-defineProps({
-  company: {
-    type: Object,
-    required: true,
-  },
-})
+import { useThemesQuery } from '@/composables/queries/theme'
 
 const isOpen = ref(false)
 
 const queryClient = useQueryClient()
 
-const newCompanyFormSchema = toTypedSchema(
-  z.object({
-    name: z.string().min(1),
-    pipeline_company_id: z.number().min(1),
-    logo: z.string().nullable(),
-    website: z.string().nullable(),
-    phone: z.string().nullable(),
-    email: z.string().nullable(),
-  }),
-)
+const { data: themes } = useThemesQuery()
+
+const newCompanyFormSchema = yup.object({
+  name: yup.string().min(1).required(),
+  pipeline_company_id: yup.number().min(1).required(),
+  logo: yup.string().nullable(),
+  website: yup.string().nullable(),
+  phone: yup.string().nullable(),
+  email: yup.string().nullable(),
+  theme_id: yup.number().required(),
+  enable_map: yup.boolean().required(),
+})
 
 const { resetForm, isFieldDirty, handleSubmit } = useForm({
   validationSchema: newCompanyFormSchema,
+  initialValues: {
+    name: ``,
+    pipeline_company_id: null,
+    logo: ``,
+    website: ``,
+    phone: ``,
+    email: ``,
+    theme_id: null,
+    enable_map: false,
+  },
 })
 
 const { mutate: createCompany } = useCompanyCreateMutation({
@@ -62,26 +78,42 @@ const { mutate: createCompany } = useCompanyCreateMutation({
   },
 })
 
-const submitForm = () => handleSubmit((values) => createCompany(values))
+const onValidForm = (values) => {
+  console.log(values)
+  createCompany({ formData: values })
+}
+
+const onInvalidForm = ({ values, errors, results }) => {
+  console.log(values)
+  console.log(errors)
+  console.log(results)
+}
+
+const submitForm = () => {
+  console.log(`submitting form`)
+  handleSubmit(onValidForm, onInvalidForm)()
+}
 </script>
 
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="outline" size="sm">
-        <FontAwesomeIcon :icon="faEdit" fixed-width />
+      <Button variant="default" size="sm">
+        <FontAwesomeIcon :icon="faPlus" class="mr-2" fixed-width />
+
+        <span>Add Company</span>
       </Button>
     </DialogTrigger>
 
-    <DialogContent>
+    <DialogContent class="max-h-[85dvh] grid-rows-[auto_minmax(0,1fr)_auto]">
       <DialogHeader>
-        <DialogTitle>Edit {{ company.name }}</DialogTitle>
+        <DialogTitle>Add Company</DialogTitle>
       </DialogHeader>
 
       <form
         id="newCompanyForm"
-        class="flex flex-col space-y-4"
-        @submit.prevent="submitForm"
+        class="flex w-full flex-col space-y-4 overflow-y-auto px-2"
+        @submit="submitForm"
       >
         <FormField
           v-slot="{ componentField }"
@@ -112,7 +144,7 @@ const submitForm = () => handleSubmit((values) => createCompany(values))
             <FormLabel>Pipeline Company ID</FormLabel>
 
             <FormControl>
-              <Input type="text" placeholder="123" v-bind="componentField" />
+              <Input type="number" placeholder="123" v-bind="componentField" />
             </FormControl>
 
             <FormDescription>
@@ -198,6 +230,82 @@ const submitForm = () => handleSubmit((values) => createCompany(values))
             <FormDescription> The company's email address. </FormDescription>
           </FormItem>
         </FormField>
+
+        <FormField
+          v-slot="{ componentField }"
+          name="theme_id"
+          :validate-on-blur="!isFieldDirty"
+        >
+          <FormItem>
+            <FormLabel>Theme</FormLabel>
+
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger class="w-full">
+                  <SelectValue placeholder="Select a theme" />
+                </SelectTrigger>
+              </FormControl>
+
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Themes</SelectLabel>
+
+                  <SelectItem
+                    v-for="theme in themes"
+                    :key="theme.uuid"
+                    :value="`${theme.id}`"
+                  >
+                    <div class="flex flex-row items-center justify-between">
+                      <div
+                        class="mr-2 flex flex-row items-center justify-center"
+                      >
+                        <FontAwesomeIcon
+                          :icon="faCircle"
+                          class="z-10 text-lg"
+                          fixed-width
+                          :style="{
+                            color: `hsl(${theme.colors.root.primary})`,
+                          }"
+                        />
+
+                        <FontAwesomeIcon
+                          :icon="faCircle"
+                          class="-ml-3 text-lg"
+                          fixed-width
+                          :style="{
+                            color: `hsl(${theme.colors.root.accent})`,
+                          }"
+                        />
+                      </div>
+
+                      <span>{{ theme.name }}</span>
+                    </div>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <FormDescription> The company's email address. </FormDescription>
+          </FormItem>
+        </FormField>
+
+        <FormField v-slot="{ value, handleChange }" name="enable_map">
+          <FormItem
+            class="flex flex-row items-center justify-between rounded-lg border p-4"
+          >
+            <div class="space-y-0.5">
+              <FormLabel class="text-base">Enable Map</FormLabel>
+
+              <FormDescription>
+                Enable the tracking/route map.
+              </FormDescription>
+            </div>
+
+            <FormControl>
+              <Switch :checked="value" @update:checked="handleChange" />
+            </FormControl>
+          </FormItem>
+        </FormField>
       </form>
 
       <DialogFooter
@@ -207,7 +315,13 @@ const submitForm = () => handleSubmit((values) => createCompany(values))
           Cancel
         </Button>
 
-        <Button variant="default" size="sm" type="submit" form="newCompanyForm">
+        <Button
+          variant="default"
+          size="sm"
+          type="submit"
+          class=""
+          @click="submitForm"
+        >
           Save
         </Button>
       </DialogFooter>

@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/table'
 import { useCompaniesQuery } from '@/composables/queries/company'
 
+import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
+import CompanyCreateButton from './CompanyCreateButton.vue'
 import CompanyEditButton from './CompanyEditButton.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
 import EnableMapSwitch from './EnableMapSwitch.vue'
@@ -44,6 +46,16 @@ const columns = [
         id: `enable_map`,
         name: `Enable Map`,
         value: Boolean(row.getValue(`enable_map`)),
+      })
+    },
+  },
+  {
+    accessorKey: `theme_id`,
+    header: () => h(`div`, { class: `text-base` }, `Theme`),
+    cell: ({ row }) => {
+      return h(SelectThemeDialog, {
+        companyId: row.original.id,
+        currentTheme: row.original.theme,
       })
     },
   },
@@ -89,11 +101,7 @@ const companiesTable = useVueTable(tableOptions)
   <div class="mb-4 flex flex-row items-center justify-between">
     <h2 class="text-2xl font-semibold">Companies</h2>
 
-    <Button variant="default" size="sm">
-      <FontAwesomeIcon :icon="faPlus" class="mr-2" fixed-width />
-
-      <span>Add Company</span>
-    </Button>
+    <CompanyCreateButton />
   </div>
 
   <div class="rounded border border-border">

@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const createCompany = async (formData) => {
@@ -5,3 +6,12 @@ const createCompany = async (formData) => {
 
   return data
 }
+
+const useCompanyCreateMutation = ({ config = {} } = {}) =>
+  useMutation({
+    mutationFn: ({ formData }) => createCompany(formData),
+
+    ...config,
+  })
+
+export default useCompanyCreateMutation

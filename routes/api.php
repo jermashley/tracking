@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -17,4 +18,7 @@ Route::as('api.')
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
         Route::apiResource('companies', CompanyController::class);
+
+        Route::patch('companies/{company}/setTheme', [CompanyController::class, 'setTheme'])->name('companies.setTheme');
+        Route::apiResource('themes', ThemeController::class);
     })->middleware(Authenticate::using('sanctum'));

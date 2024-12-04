@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Http\Requests\UpdateCompanyThemeRequest;
 use App\Models\Company;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -44,6 +45,18 @@ class CompanyController extends Controller
     public function update(UpdateCompanyRequest $request, Company $company)
     {
         $company->update($request->validated());
+
+        return response()->json($company, Response::HTTP_OK);
+    }
+
+    /**
+     * Set the company's theme.
+     */
+    public function setTheme(Company $company, UpdateCompanyThemeRequest $request)
+    {
+        $company->theme_id = $request->theme_id;
+
+        $company->save();
 
         return response()->json($company, Response::HTTP_OK);
     }

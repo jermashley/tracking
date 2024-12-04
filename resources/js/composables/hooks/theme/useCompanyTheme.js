@@ -2,11 +2,9 @@ import { usePage } from '@inertiajs/vue3'
 import { onMounted } from 'vue'
 
 const useCompanyTheme = () => {
-  const {
-    company: {
-      theme: { colors },
-    },
-  } = usePage().props
+  const { company } = usePage().props
+  const { theme } = company ?? { theme: undefined }
+  const { colors } = theme ?? { colors: undefined }
 
   onMounted(() => {
     if (colors) {
