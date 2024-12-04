@@ -3,14 +3,16 @@ import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { faCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
+import { VisuallyHidden } from 'radix-vue'
 import { useForm } from 'vee-validate'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import * as yup from 'yup'
 
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -61,20 +63,18 @@ const updateCompanyFormSchema = yup.object({
   enable_map: yup.boolean().required(),
 })
 
-const initialValues = reactive({
-  name: props.company.name,
-  pipeline_company_id: props.company.pipeline_company_id,
-  // logo: props.company.logo,
-  website: props.company.website,
-  phone: props.company.phone,
-  email: props.company.email,
-  theme_id: `${props.company.theme_id}`,
-  enable_map: Boolean(props.company.enable_map),
-})
-
 const { isFieldDirty, handleSubmit } = useForm({
   validationSchema: updateCompanyFormSchema,
-  initialValues: initialValues,
+  initialValues: {
+    name: props.company.name,
+    pipeline_company_id: props.company.pipeline_company_id,
+    // logo: props.company.logo,
+    website: props.company.website,
+    phone: props.company.phone,
+    email: props.company.email,
+    theme_id: `${props.company.theme_id}`,
+    enable_map: Boolean(props.company.enable_map),
+  },
   keepValuesOnUnmount: true,
 })
 
@@ -88,7 +88,6 @@ const { mutate: updateCompany } = useCompanyUpdateMutation({
 })
 
 const onValidForm = (values) => {
-  console.log(values)
   updateCompany({ companyId: props.company.id, formData: values })
 }
 
@@ -113,6 +112,12 @@ const submitForm = () => {
     </DialogTrigger>
 
     <DialogContent class="max-h-[85dvh] grid-rows-[auto_minmax(0,1fr)_auto]">
+      <VisuallyHidden as-child>
+        <DialogDescription>
+          A dialog to update {{ company.name }}.
+        </DialogDescription>
+      </VisuallyHidden>
+
       <DialogHeader>
         <DialogTitle>Edit {{ company.name }}</DialogTitle>
       </DialogHeader>
