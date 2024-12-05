@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\BackgroundImage;
+use App\Models\Image;
 use App\Models\Theme;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,14 +17,13 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('name');
-            $table->string('logo')->nullable();
             $table->string('website')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->integer('pipeline_company_id')->unique();
-            $table->boolean('enable_map')->default(false);
+            $table->foreignIdFor(Image::class, 'logo_image_id')->nullable();
             $table->foreignIdFor(Theme::class)->nullable();
-            $table->foreignIdFor(BackgroundImage::class)->nullable();
+            $table->boolean('enable_map')->default(false);
             $table->timestamps();
         });
     }

@@ -19,18 +19,19 @@ class Company extends Model
         'phone',
         'email',
         'pipeline_company_id',
+        'logo_image_id',
         'theme_id',
         'enable_map',
     ];
 
+    public function logo(): BelongsTo
+    {
+        return $this->belongsTo(Image::class, 'logo_image_id');
+    }
+
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);
-    }
-
-    public function backgroundImage(): BelongsTo
-    {
-        return $this->belongsTo(BackgroundImage::class);
     }
 
     public static function booleanFields(): array

@@ -95,6 +95,11 @@ const submitForm = () => {
   console.log(`submitting form`)
   handleSubmit(onValidForm, onInvalidForm)()
 }
+
+const cancelDialog = () => {
+  isOpen.value = false
+  resetForm()
+}
 </script>
 
 <template>
@@ -317,7 +322,7 @@ const submitForm = () => {
       <DialogFooter
         class="flex flex-row items-center justify-end space-x-2 pt-4"
       >
-        <Button variant="secondary" size="sm" @click="() => (isOpen = false)">
+        <Button variant="secondary" size="sm" @click="cancelDialog">
           Cancel
         </Button>
 

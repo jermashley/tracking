@@ -17,9 +17,9 @@ const {
       <div class="flex h-full flex-row items-center justify-start space-x-4">
         <img
           v-if="company && company?.logo"
-          :src="company.logo"
+          :src="company.logo.file_path"
           class="h-full w-auto py-4"
-          alt="4 State Logo"
+          :alt="company.logo?.name ?? `Company logo`"
         />
       </div>
 

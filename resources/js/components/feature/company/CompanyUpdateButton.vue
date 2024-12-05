@@ -63,7 +63,7 @@ const updateCompanyFormSchema = yup.object({
   enable_map: yup.boolean().required(),
 })
 
-const { isFieldDirty, handleSubmit } = useForm({
+const { isFieldDirty, handleSubmit, resetForm } = useForm({
   validationSchema: updateCompanyFormSchema,
   initialValues: {
     name: props.company.name,
@@ -83,6 +83,7 @@ const { mutate: updateCompany } = useCompanyUpdateMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(`companies`)
       isOpen.value = false
+      resetForm()
     },
   },
 })
@@ -100,6 +101,11 @@ const onInvalidForm = ({ values, errors, results }) => {
 const submitForm = () => {
   console.log(`submitting form`)
   handleSubmit(onValidForm, onInvalidForm)()
+}
+
+const cancelDialog = () => {
+  isOpen.value = false
+  resetForm()
 }
 </script>
 
@@ -323,7 +329,7 @@ const submitForm = () => {
       <DialogFooter
         class="flex flex-row items-center justify-end space-x-2 pt-4"
       >
-        <Button variant="secondary" size="sm" @click="() => (isOpen = false)">
+        <Button variant="secondary" size="sm" @click="cancelDialog">
           Cancel
         </Button>
 

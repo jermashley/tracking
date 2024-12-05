@@ -16,7 +16,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::with('theme')->get();
+        $companies = Company::with(['logo', 'theme'])->get();
 
         return response()->json($companies, Response::HTTP_OK);
     }

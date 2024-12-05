@@ -30,8 +30,7 @@ class DetailedTrackingController extends Controller
 
         if ($pipelineCompanyId && $trackingData->ok()) {
             $company = Company::where('pipeline_company_id', $pipelineCompanyId)
-                ->with('theme')
-                ->with('backgroundImage')
+                ->with(['logo', 'theme'])
                 ->first();
 
             $pipelineApiShipmentCoordinates = new PipelineApiShipmentCoordinates;
