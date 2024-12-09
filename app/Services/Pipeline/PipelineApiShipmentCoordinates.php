@@ -15,11 +15,14 @@ class PipelineApiShipmentCoordinates extends PipelineApiBaseService
         $this->endpoint = '/getRoutes';
     }
 
+    /**
+     * Get shipment coordinates for Trimble tracking map.
+     */
     public function getCoordinates(
         ?string $trackingNumber = '',
-        ?string $companyId = '',
+        ?string $pipelineCompanyId = '',
     ): Response {
-        $response = $this->makeRequest('POST', $this->endpoint.'/getRoutes&Filter[bolNum]='.$trackingNumber.'&Filter[companyId]='.$companyId);
+        $response = $this->makeRequest('POST', $this->endpoint.'/getRoutes&Filter[bolNum]='.$trackingNumber.'&Filter[companyId]='.$pipelineCompanyId);
 
         return $response;
     }

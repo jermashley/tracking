@@ -7,6 +7,7 @@ use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Requests\UpdateCompanyThemeRequest;
 use App\Models\Company;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyController extends Controller
@@ -14,7 +15,7 @@ class CompanyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $companies = Company::with(['logo', 'theme'])->get();
 
@@ -24,7 +25,7 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCompanyRequest $request)
+    public function store(StoreCompanyRequest $request): JsonResponse
     {
         $company = Company::create($request->validated());
 
@@ -34,7 +35,7 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Company $company)
+    public function show(Company $company): JsonResponse
     {
         return response()->json($company, Response::HTTP_OK);
     }
@@ -42,7 +43,7 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCompanyRequest $request, Company $company)
+    public function update(UpdateCompanyRequest $request, Company $company): JsonResponse
     {
         $company->update($request->validated());
 
@@ -52,7 +53,7 @@ class CompanyController extends Controller
     /**
      * Set the company's theme.
      */
-    public function setTheme(Company $company, UpdateCompanyThemeRequest $request)
+    public function setTheme(Company $company, UpdateCompanyThemeRequest $request): JsonResponse
     {
         $company->theme_id = $request->theme_id;
 
@@ -64,7 +65,7 @@ class CompanyController extends Controller
     /**
      * Toggle a one of the company's boolean fields.
      */
-    public function toggleMapOption(Company $company)
+    public function toggleMapOption(Company $company): JsonResponse
     {
         $company->enable_map = ! $company->enable_map;
 
@@ -76,7 +77,7 @@ class CompanyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Company $company)
+    public function destroy(Company $company): JsonResponse
     {
         $company->delete();
 

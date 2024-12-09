@@ -95,12 +95,6 @@ const companiesTable = useVueTable(tableOptions)
 </script>
 
 <template>
-  <div class="mb-4 flex flex-row items-center justify-between">
-    <h2 class="text-2xl font-semibold">Companies</h2>
-
-    <CompanyCreateButton />
-  </div>
-
   <div class="rounded border border-border">
     <Table v-if="data && !isError">
       <TableHeader>
