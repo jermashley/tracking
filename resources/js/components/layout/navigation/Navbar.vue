@@ -2,6 +2,7 @@
 import { usePage } from '@inertiajs/vue3'
 
 import UserDropdown from '@/components/feature/user/navigation/UserDropdown.vue'
+import { Badge } from '@/components/ui/badge'
 
 const {
   auth: { user },
@@ -24,6 +25,10 @@ const {
       </div>
 
       <div class="flex flex-row items-stretch justify-end space-x-4">
+        <Badge variant="destructive" class="text-xs capitalize">
+          <span>{{ $page.props.app.env }}</span>
+        </Badge>
+
         <p class="text-lg font-extrabold text-zinc-700 dark:text-zinc-200">
           {{ company?.name ?? $page.props.app.name }}
         </p>

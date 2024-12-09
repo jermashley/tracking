@@ -1,4 +1,8 @@
 <script setup>
+import { faCopyright } from '@fortawesome/pro-regular-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import dayjs from 'dayjs'
+
 import { Badge } from '@/components/ui/badge'
 import { useCompanyTheme } from '@/composables/hooks/theme'
 
@@ -17,15 +21,29 @@ useCompanyTheme()
 
     <footer class="flex flex-col items-center justify-center space-y-2 py-4">
       <p class="text-center text-sm">
-        {{ $page.props.app.name }}
+        <a
+          href="https://prologuetechnology.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold underline"
+        >
+          {{ $page.props.app.name }}
+        </a>
+
+        <FontAwesomeIcon
+          class="mx-[0.125rem] text-xs"
+          :icon="faCopyright"
+          fixed-width
+        />
+
+        {{ dayjs().year() }}
       </p>
 
-      <div class="flex flex-row items-center justify-center">
-        <Badge
-          v-if="$page.props.app.env !== `production`"
-          variant="destructive"
-          class="capitalize"
-        >
+      <div
+        v-if="$page.props.app.env !== `production`"
+        class="flex flex-row items-center justify-center"
+      >
+        <Badge variant="destructive" class="capitalize">
           <span>{{ $page.props.app.env }}</span>
         </Badge>
       </div>

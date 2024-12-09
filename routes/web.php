@@ -29,7 +29,7 @@ Route::prefix('admin')
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');
-Route::get('/trackShipment/notFound', [DetailedTrackingController::class, 'trackingDataNotFound'])->name('trackShipment.notFound');
+Route::get('/trackShipment/notFound/{trackingNumber}', [DetailedTrackingController::class, 'trackingDataNotFound'])->name('trackShipment.notFound');
 
 Route::prefix('oauth')
     ->as('oauth.')

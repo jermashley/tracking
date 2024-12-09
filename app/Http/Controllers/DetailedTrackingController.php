@@ -28,7 +28,7 @@ class DetailedTrackingController extends Controller
 
         // If error in trackingDataResponse, redirect to error page.
         if ($trackingDataResponse->failed() || $trackingDataResponse->clientError() || empty($trackingDataResponse->object()->data?->trackingObject)) {
-            return redirect(route('trackShipment.notFound'));
+            return redirect(route('trackShipment.notFound', $trackingNumber));
         }
 
         // Pipeline ID of the company the shipment belongs to.
@@ -64,8 +64,10 @@ class DetailedTrackingController extends Controller
         ]);
     }
 
-    public function trackingDataNotFound()
+    public function trackingDataNotFound($trackingNumber)
     {
-        return Inertia::render('detailedTracking/Error');
+        return Inertia::render('detailedTracking/Error', [
+            'trackingNumber' => $trackingNumber,
+        ]);
     }
 }
