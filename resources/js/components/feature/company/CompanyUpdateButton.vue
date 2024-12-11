@@ -41,6 +41,7 @@ import { useImagesQuery } from '@/composables/queries/image'
 import { useThemesQuery } from '@/composables/queries/theme'
 
 import LogoStoreDialog from '../image/LogoStoreDialog.vue'
+import CompanyDestroyDialog from './CompanyDestroyDialog.vue'
 
 const props = defineProps({
   company: {
@@ -396,6 +397,10 @@ const cancelDialog = () => {
       <DialogFooter
         class="flex flex-row items-center justify-end space-x-2 pt-4"
       >
+        <div class="mr-auto">
+          <CompanyDestroyDialog :company="company" />
+        </div>
+
         <Button variant="secondary" size="sm" @click="cancelDialog">
           Cancel
         </Button>

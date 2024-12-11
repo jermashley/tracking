@@ -14,10 +14,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { useImageDestroyMutation } from '@/composables/mutations/image'
+import { useCompanyDestroyMutation } from '@/composables/mutations/company'
 
 const props = defineProps({
-  logo: {
+  company: {
     type: Object,
     required: true,
   },
@@ -27,20 +27,16 @@ const isOpen = ref(false)
 
 const queryClient = useQueryClient()
 
-const { mutate: destroyImage } = useImageDestroyMutation({
+const { mutate: destroyCompany } = useCompanyDestroyMutation({
   config: {
     onSuccess: () => {
-      queryClient
-        .invalidateQueries({
-          queryKey: [`images`, `logos`],
-        })
-        .then(() => (isOpen.value = false))
+      queryClient.invalidateQueries([`companies`])
     },
   },
 })
 
 const handleDelete = () => {
-  destroyImage({ id: props.logo.id })
+  destroyCompany({ id: props.company.id })
 }
 
 const cancelDialog = () => {
@@ -51,17 +47,22 @@ const cancelDialog = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="destructive" size="xs" class="w-full">
-        <FontAwesomeIcon :icon="faTrashAlt" fixed-width />
+      <Button variant="destructive" size="sm">
+        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+
+        <span>Delete</span>
       </Button>
     </DialogTrigger>
 
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete Logo {{ logo.name }}</DialogTitle>
+        <DialogTitle>Delete {{ company.name }}</DialogTitle>
 
         <DialogDescription>
-          Are you sure you want to delete this logo?
+          <p>
+            A you sure you want to delete the company
+            <span class="font-semibold"> {{ company.name }} </span>?
+          </p>
         </DialogDescription>
       </DialogHeader>
 

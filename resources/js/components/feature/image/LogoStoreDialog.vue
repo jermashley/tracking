@@ -115,12 +115,12 @@ const cancelDialog = () => {
     </DialogTrigger>
 
     <DialogContent class="max-h-[85dvh] grid-rows-[auto_minmax(0,1fr)_auto]">
-      <VisuallyHidden as-child>
-        <DialogDescription>A dialog to add a logo.</DialogDescription>
-      </VisuallyHidden>
-
       <DialogHeader>
         <DialogTitle>Add New Logo</DialogTitle>
+
+        <VisuallyHidden as-child>
+          <DialogDescription>A dialog to add a logo.</DialogDescription>
+        </VisuallyHidden>
       </DialogHeader>
 
       <form
