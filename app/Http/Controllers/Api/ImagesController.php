@@ -14,9 +14,17 @@ class ImagesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $images = Image::all();
+        $imageTypeId = $request->query('image_type_id');
+
+        $imagesQuery = Image::query();
+
+        if ($imageTypeId) {
+            $imagesQuery->where('image_type_id', $imageTypeId);
+        }
+
+        $images = Image::get();
 
         return response()->json($images, Response::HTTP_OK);
     }
@@ -26,7 +34,13 @@ class ImagesController extends Controller
      */
     public function store(StoreImageRequest $request)
     {
-        //
+        $image = Image::create([
+            'name' => $request->name,
+            'image_type_id' => $request->image_type_id,
+            'file_path' => $request->file('image')->store('images', 'public'),
+        ]);
+
+        return response()->json($image, Response::HTTP_CREATED);
     }
 
     /**
@@ -50,6 +64,8 @@ class ImagesController extends Controller
      */
     public function destroy(Image $image)
     {
-        //
+        $image->delete();
+
+        return response()->json(null, Response::HTTP_OK);
     }
 }

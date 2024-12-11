@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ImagesController;
+use App\Http\Controllers\Api\ImageTypesController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -20,6 +21,8 @@ Route::as('api.')
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
         Route::patch('companies/{company}/setTheme', [CompanyController::class, 'setTheme'])->name('companies.setTheme');
         Route::apiResource('companies', CompanyController::class);
+
+        Route::apiResource('imageTypes', ImageTypesController::class);
 
         Route::apiResource('images', ImagesController::class);
 

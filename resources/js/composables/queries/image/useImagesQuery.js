@@ -1,16 +1,22 @@
 import { useQuery } from '@tanstack/vue-query'
 import axios from 'axios'
 
-const getImages = async () => {
-  const { data } = await axios.get(route(`api.images.index`))
+const getImages = async (imageTypeId) => {
+  const { data } = await axios.get(route(`api.images.index`), {
+    imageTypeId,
+  })
 
   return data
 }
 
-const useImagesQuery = ({ config = {} } = {}) =>
+const useImagesQuery = ({
+  config = {},
+  imageType = null,
+  imageTypeId = null,
+} = {}) =>
   useQuery({
-    queryKey: [`images`],
-    queryFn: getImages,
+    queryKey: [`images`, imageType],
+    queryFn: () => getImages(imageTypeId),
 
     ...config,
   })

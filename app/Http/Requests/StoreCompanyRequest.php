@@ -23,7 +23,7 @@ class StoreCompanyRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'logo' => ['nullable', 'string', 'max:255'],
+            'logo_image_id' => ['nullable', 'integer', 'exists:images,id'],
             'website' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'max:255'],

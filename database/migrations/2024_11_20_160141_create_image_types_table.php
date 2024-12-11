@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\ImageType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
+        Schema::create('image_types', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
             $table->string('name');
-            $table->foreignIdFor(ImageType::class);
-            $table->string('file_path');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('image_types');
     }
 };

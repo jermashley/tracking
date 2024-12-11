@@ -24,14 +24,14 @@ const {
         />
       </div>
 
-      <div class="flex flex-row items-stretch justify-end space-x-4">
-        <Badge variant="destructive" class="text-xs capitalize">
-          <span>{{ $page.props.app.env }}</span>
-        </Badge>
-
+      <div class="flex flex-row items-center justify-end space-x-4">
         <p class="text-lg font-extrabold text-zinc-700 dark:text-zinc-200">
           {{ company?.name ?? $page.props.app.name }}
         </p>
+
+        <Badge variant="destructive" class="text-xs capitalize">
+          <span>{{ $page.props.app.env }}</span>
+        </Badge>
 
         <UserDropdown v-if="user" />
       </div>

@@ -37,7 +37,10 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useCompanyCreateMutation } from '@/composables/mutations/company'
+import { useImagesQuery } from '@/composables/queries/image'
 import { useThemesQuery } from '@/composables/queries/theme'
+
+import LogoStoreDialog from '../image/LogoStoreDialog.vue'
 
 const isOpen = ref(false)
 
@@ -45,15 +48,20 @@ const queryClient = useQueryClient()
 
 const { data: themes } = useThemesQuery()
 
+const { data: images } = useImagesQuery({
+  imageType: `logos`,
+  imageTypeId: 1,
+})
+
 const newCompanyFormSchema = yup.object({
   name: yup.string().min(1).required(),
   pipeline_company_id: yup.number().min(1).required(),
-  // logo: yup.string().nullable(),
   website: yup.string().nullable(),
   phone: yup.string().nullable(),
   email: yup.string().nullable(),
   theme_id: yup.number().required(),
   enable_map: yup.boolean().required(),
+  logo_image_id: yup.number().nullable(),
 })
 
 const { resetForm, isFieldDirty, handleSubmit } = useForm({
@@ -61,27 +69,27 @@ const { resetForm, isFieldDirty, handleSubmit } = useForm({
   initialValues: {
     name: ``,
     pipeline_company_id: null,
-    // logo: ``,
     website: ``,
     phone: ``,
     email: ``,
     theme_id: null,
     enable_map: false,
+    logo_image_id: null,
   },
 })
 
 const { mutate: createCompany } = useCompanyCreateMutation({
   config: {
     onSuccess: () => {
-      queryClient.invalidateQueries(`companies`)
       resetForm()
-      isOpen.value = false
+      queryClient
+        .invalidateQueries(`companies`)
+        .then(() => (isOpen.value = false))
     },
   },
 })
 
 const onValidForm = (values) => {
-  console.log(values)
   createCompany({ formData: values })
 }
 
@@ -92,7 +100,6 @@ const onInvalidForm = ({ values, errors, results }) => {
 }
 
 const submitForm = () => {
-  console.log(`submitting form`)
   handleSubmit(onValidForm, onInvalidForm)()
 }
 
@@ -163,24 +170,6 @@ const cancelDialog = () => {
             </FormDescription>
           </FormItem>
         </FormField>
-
-        <!-- <FormField
-          v-slot="{ componentField }"
-          name="logo"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Logo</FormLabel>
-
-            <FormControl>
-              <Input type="file" v-bind="componentField" />
-            </FormControl>
-
-            <FormDescription>
-              Company logo. Must be a PNG, JPG, or SVG file.
-            </FormDescription>
-          </FormItem>
-        </FormField> -->
 
         <FormField
           v-slot="{ componentField }"
@@ -296,7 +285,7 @@ const cancelDialog = () => {
               </SelectContent>
             </Select>
 
-            <FormDescription> The company's email address. </FormDescription>
+            <FormDescription> The company's theme. </FormDescription>
           </FormItem>
         </FormField>
 
@@ -315,6 +304,56 @@ const cancelDialog = () => {
             <FormControl>
               <Switch :checked="value" @update:checked="handleChange" />
             </FormControl>
+          </FormItem>
+        </FormField>
+
+        <FormField
+          v-slot="{ componentField }"
+          name="logo_image_id"
+          :validate-on-blur="!isFieldDirty"
+        >
+          <FormItem>
+            <FormLabel>Logo</FormLabel>
+
+            <div class="flex flex-row items-center justify-start space-x-2">
+              <Select v-bind="componentField">
+                <FormControl>
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Select a logo" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Logo</SelectLabel>
+
+                    <SelectItem
+                      v-for="image in images"
+                      :key="image.uuid"
+                      :value="`${image.id}`"
+                    >
+                      <div class="flex flex-row items-center justify-between">
+                        <div
+                          class="mr-2 flex flex-row items-center justify-center"
+                        >
+                          <div class="relative aspect-square w-8">
+                            <img
+                              :src="`/${image.file_path}`"
+                              class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
+                            />
+                          </div>
+                        </div>
+
+                        <span>{{ image.name }}</span>
+                      </div>
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <LogoStoreDialog icon-only />
+            </div>
+
+            <FormDescription>The company's logo.</FormDescription>
           </FormItem>
         </FormField>
       </form>

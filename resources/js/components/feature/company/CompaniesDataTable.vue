@@ -13,7 +13,6 @@ import {
 import { useCompaniesQuery } from '@/composables/queries/company'
 
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
-import CompanyCreateButton from './CompanyCreateButton.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
 import CompanyUpdateButton from './CompanyUpdateButton.vue'
 import EnableMapSwitch from './EnableMapSwitch.vue'
@@ -31,6 +30,7 @@ const columns = [
         phone: row.original.phone,
         website: row.original.website,
         email: row.original.email,
+        logo: row.original.logo,
       })
     },
   },

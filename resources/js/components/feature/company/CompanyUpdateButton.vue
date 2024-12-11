@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
 import { VisuallyHidden } from 'radix-vue'
 import { useForm } from 'vee-validate'
-import { ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import * as yup from 'yup'
 
 import { Button } from '@/components/ui/button'
@@ -37,7 +37,10 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useCompanyUpdateMutation } from '@/composables/mutations/company'
+import { useImagesQuery } from '@/composables/queries/image'
 import { useThemesQuery } from '@/composables/queries/theme'
+
+import LogoStoreDialog from '../image/LogoStoreDialog.vue'
 
 const props = defineProps({
   company: {
@@ -52,10 +55,15 @@ const queryClient = useQueryClient()
 
 const { data: themes } = useThemesQuery()
 
+const { data: images } = useImagesQuery({
+  imageType: `logos`,
+  imageTypeId: 1,
+})
+
 const updateCompanyFormSchema = yup.object({
   name: yup.string().min(1).required(),
   pipeline_company_id: yup.number().min(1).required(),
-  // logo: yup.string().nullable(),
+  logo_image_id: yup.number().nullable(),
   website: yup.string().nullable(),
   phone: yup.string().nullable(),
   email: yup.string().nullable(),
@@ -68,12 +76,12 @@ const { isFieldDirty, handleSubmit, resetForm } = useForm({
   initialValues: {
     name: props.company.name,
     pipeline_company_id: props.company.pipeline_company_id,
-    // logo: props.company.logo,
     website: props.company.website,
     phone: props.company.phone,
     email: props.company.email,
     theme_id: `${props.company.theme_id}`,
     enable_map: Boolean(props.company.enable_map),
+    logo_image_id: `${props.company.logo.id}`,
   },
   keepValuesOnUnmount: true,
 })
@@ -81,9 +89,9 @@ const { isFieldDirty, handleSubmit, resetForm } = useForm({
 const { mutate: updateCompany } = useCompanyUpdateMutation({
   config: {
     onSuccess: () => {
-      queryClient.invalidateQueries(`companies`)
-      isOpen.value = false
-      resetForm()
+      queryClient
+        .invalidateQueries(`companies`)
+        .then(() => (isOpen.value = false))
     },
   },
 })
@@ -99,13 +107,40 @@ const onInvalidForm = ({ values, errors, results }) => {
 }
 
 const submitForm = () => {
-  console.log(`submitting form`)
   handleSubmit(onValidForm, onInvalidForm)()
 }
 
+watch([props.company], () => {
+  if (props.company) {
+    resetForm({
+      values: {
+        name: props.company.name,
+        pipeline_company_id: props.company.pipeline_company_id,
+        website: props.company.website,
+        phone: props.company.phone,
+        email: props.company.email,
+        theme_id: `${props.company.theme_id}`,
+        enable_map: Boolean(props.company.enable_map),
+        logo_image_id: `${props.company.logo.id}`,
+      },
+    })
+  }
+})
+
 const cancelDialog = () => {
   isOpen.value = false
-  resetForm()
+  resetForm({
+    values: {
+      name: props.company.name,
+      pipeline_company_id: props.company.pipeline_company_id,
+      website: props.company.website,
+      phone: props.company.phone,
+      email: props.company.email,
+      theme_id: `${props.company.theme_id}`,
+      enable_map: Boolean(props.company.enable_map),
+      logo_image_id: `${props.company.logo.id}`,
+    },
+  })
 }
 </script>
 
@@ -170,24 +205,6 @@ const cancelDialog = () => {
             </FormDescription>
           </FormItem>
         </FormField>
-
-        <!-- <FormField
-          v-slot="{ componentField }"
-          name="logo"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Logo</FormLabel>
-
-            <FormControl>
-              <Input type="file" v-bind="componentField" />
-            </FormControl>
-
-            <FormDescription>
-              Company logo. Must be a PNG, JPG, or SVG file.
-            </FormDescription>
-          </FormItem>
-        </FormField> -->
 
         <FormField
           v-slot="{ componentField }"
@@ -303,7 +320,7 @@ const cancelDialog = () => {
               </SelectContent>
             </Select>
 
-            <FormDescription> The company's email address. </FormDescription>
+            <FormDescription> The company's theme. </FormDescription>
           </FormItem>
         </FormField>
 
@@ -322,6 +339,56 @@ const cancelDialog = () => {
             <FormControl>
               <Switch :checked="value" @update:checked="handleChange" />
             </FormControl>
+          </FormItem>
+        </FormField>
+
+        <FormField
+          v-slot="{ componentField }"
+          name="logo_image_id"
+          :validate-on-blur="!isFieldDirty"
+        >
+          <FormItem>
+            <FormLabel>Logo</FormLabel>
+
+            <div class="flex flex-row items-center justify-start space-x-2">
+              <Select v-bind="componentField">
+                <FormControl>
+                  <SelectTrigger class="w-full">
+                    <SelectValue placeholder="Select a logo" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Logo</SelectLabel>
+
+                    <SelectItem
+                      v-for="image in images"
+                      :key="image.uuid"
+                      :value="`${image.id}`"
+                    >
+                      <div class="flex flex-row items-center justify-between">
+                        <div
+                          class="mr-2 flex flex-row items-center justify-center"
+                        >
+                          <div class="relative aspect-square w-8">
+                            <img
+                              :src="`/${image.file_path}`"
+                              class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
+                            />
+                          </div>
+                        </div>
+
+                        <span>{{ image.name }}</span>
+                      </div>
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+
+              <LogoStoreDialog icon-only />
+            </div>
+
+            <FormDescription>The company's logo.</FormDescription>
           </FormItem>
         </FormField>
       </form>
