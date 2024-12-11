@@ -29,8 +29,10 @@ const queryClient = useQueryClient()
 
 const { mutate: destroyCompany } = useCompanyDestroyMutation({
   config: {
-    onSuccess: () => {
-      queryClient.invalidateQueries([`companies`])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
     },
   },
 })

@@ -41,7 +41,7 @@ defineProps({
 
 <template>
   <div class="flex flex-row items-center justify-start space-x-6">
-    <div class="relative aspect-square w-16">
+    <div v-if="logo?.file_path" class="relative aspect-square w-16">
       <img
         :src="`/${logo.file_path}`"
         class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"

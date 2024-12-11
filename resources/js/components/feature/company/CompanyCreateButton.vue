@@ -80,11 +80,13 @@ const { resetForm, isFieldDirty, handleSubmit } = useForm({
 
 const { mutate: createCompany } = useCompanyCreateMutation({
   config: {
-    onSuccess: () => {
+    onSuccess: async () => {
       resetForm()
-      queryClient
-        .invalidateQueries(`companies`)
-        .then(() => (isOpen.value = false))
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
+      isOpen.value = false
     },
   },
 })

@@ -82,17 +82,19 @@ const { isFieldDirty, handleSubmit, resetForm } = useForm({
     email: props.company.email,
     theme_id: `${props.company.theme_id}`,
     enable_map: Boolean(props.company.enable_map),
-    logo_image_id: `${props.company.logo.id}`,
+    logo_image_id: props.company.logo?.id ? `${props.company.logo?.id}` : null,
   },
   keepValuesOnUnmount: true,
 })
 
 const { mutate: updateCompany } = useCompanyUpdateMutation({
   config: {
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries(`companies`)
-        .then(() => (isOpen.value = false))
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
+      isOpen.value = false
     },
   },
 })
@@ -111,22 +113,25 @@ const submitForm = () => {
   handleSubmit(onValidForm, onInvalidForm)()
 }
 
-watch([props.company], () => {
-  if (props.company) {
-    resetForm({
-      values: {
-        name: props.company.name,
-        pipeline_company_id: props.company.pipeline_company_id,
-        website: props.company.website,
-        phone: props.company.phone,
-        email: props.company.email,
-        theme_id: `${props.company.theme_id}`,
-        enable_map: Boolean(props.company.enable_map),
-        logo_image_id: `${props.company.logo.id}`,
-      },
-    })
-  }
-})
+watch(
+  () => props.company, // Use a getter function to watch the company prop
+  (newCompany) => {
+    if (newCompany) {
+      resetForm({
+        values: {
+          name: newCompany.name,
+          pipeline_company_id: newCompany.pipeline_company_id,
+          website: newCompany.website,
+          phone: newCompany.phone,
+          email: newCompany.email,
+          theme_id: `${newCompany.theme_id}`,
+          enable_map: Boolean(newCompany.enable_map),
+          logo_image_id: `${newCompany.logo?.id}`,
+        },
+      })
+    }
+  },
+)
 
 const cancelDialog = () => {
   isOpen.value = false
@@ -139,7 +144,7 @@ const cancelDialog = () => {
       email: props.company.email,
       theme_id: `${props.company.theme_id}`,
       enable_map: Boolean(props.company.enable_map),
-      logo_image_id: `${props.company.logo.id}`,
+      logo_image_id: `${props.company.logo?.id}`,
     },
   })
 }

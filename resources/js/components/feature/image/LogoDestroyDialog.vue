@@ -29,12 +29,16 @@ const queryClient = useQueryClient()
 
 const { mutate: destroyImage } = useImageDestroyMutation({
   config: {
-    onSuccess: () => {
-      queryClient
-        .invalidateQueries({
-          queryKey: [`images`, `logos`],
-        })
-        .then(() => (isOpen.value = false))
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [`images`, `logos`],
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
+      isOpen.value = false
     },
   },
 })

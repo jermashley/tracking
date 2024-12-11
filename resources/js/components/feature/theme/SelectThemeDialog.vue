@@ -38,8 +38,11 @@ const { data, isError } = useThemesQuery()
 
 const { mutate: setCompanyTheme } = useCompanyThemeMutation({
   config: {
-    onSuccess: () => {
-      queryClient.invalidateQueries(`companies`)
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
       isOpen.value = false
     },
   },

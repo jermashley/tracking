@@ -55,13 +55,14 @@ const { resetForm, isFieldDirty, handleSubmit } = useForm({
 
 const { mutate: createLogo } = useImageStoreMutation({
   config: {
-    onSuccess: () => {
+    onSuccess: async () => {
       resetForm()
-      queryClient
-        .invalidateQueries({
-          queryKey: [`images`, `logos`],
-        })
-        .then(() => (isOpen.value = false))
+
+      await queryClient.invalidateQueries({
+        queryKey: [`images`, `logos`],
+      })
+
+      isOpen.value = false
     },
   },
 })

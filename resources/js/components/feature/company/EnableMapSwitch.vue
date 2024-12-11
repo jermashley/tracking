@@ -28,7 +28,11 @@ const queryClient = useQueryClient()
 const { mutate: toggleEnableMap, isPending } =
   useToggleCompanyEnableMapMutation({
     config: {
-      onSuccess: () => queryClient.invalidateQueries(`companies`),
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: [`companies`],
+        })
+      },
     },
   })
 
