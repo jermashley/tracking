@@ -1,0 +1,253 @@
+<script setup>
+import { Link, router } from '@inertiajs/vue3'
+import { useQueryClient } from '@tanstack/vue-query'
+import { useForm } from 'vee-validate'
+import { watch } from 'vue'
+import * as yup from 'yup'
+
+import CompanyDestroyDialog from '@/components/feature/company/CompanyDestroyDialog.vue'
+import { Button } from '@/components/ui/button'
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  useCompanyCreateMutation,
+  useCompanyUpdateMutation,
+} from '@/composables/mutations/company'
+
+const props = defineProps({
+  company: {
+    type: Object,
+    required: true,
+  },
+  heading: {
+    type: String,
+    default: `Company Information`,
+  },
+})
+
+const queryClient = useQueryClient()
+
+const updateCompanyFormSchema = yup.object({
+  name: yup.string().min(1).required(),
+  pipeline_company_id: yup.number().min(1).required(),
+  logo_image_id: yup.number().nullable(),
+  website: yup.string().nullable(),
+  phone: yup.string().nullable(),
+  email: yup.string().nullable(),
+})
+
+const { isFieldDirty, handleSubmit, resetForm } = useForm({
+  validationSchema: updateCompanyFormSchema,
+  initialValues: {
+    name: props.company?.name,
+    pipeline_company_id: props.company?.pipeline_company_id,
+    website: props.company?.website,
+    phone: props.company?.phone,
+    email: props.company?.email,
+  },
+  keepValuesOnUnmount: true,
+})
+
+const { mutate: createCompany } = useCompanyCreateMutation({
+  config: {
+    onSuccess: async (data) => {
+      resetForm()
+
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
+      router.visit(route(`admin.company.show`, data.uuid))
+    },
+  },
+})
+
+const { mutate: updateCompany } = useCompanyUpdateMutation({
+  config: {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`],
+      })
+
+      router.visit(route(`admin.dashboard`))
+    },
+  },
+})
+
+const onValidForm = (values) => {
+  if (props.company) {
+    updateCompany({
+      id: props.company.id,
+      ...values,
+    })
+  } else {
+    createCompany({
+      formData: values,
+    })
+  }
+}
+
+const onInvalidForm = ({ values, errors, results }) => {
+  console.log(values)
+  console.log(errors)
+  console.log(results)
+}
+
+const submitForm = () => {
+  handleSubmit(onValidForm, onInvalidForm)()
+}
+
+watch(
+  () => props.company,
+  (newCompany) => {
+    if (newCompany) {
+      resetForm({
+        values: {
+          name: newCompany.name,
+          pipeline_company_id: newCompany.pipeline_company_id,
+          website: newCompany.website,
+          phone: newCompany.phone,
+          email: newCompany.email,
+          theme_id: `${newCompany.theme_id}`,
+          enable_map: Boolean(newCompany.enable_map),
+          logo_image_id: `${newCompany.logo?.id}`,
+        },
+      })
+    }
+  },
+)
+</script>
+
+<template>
+  <h2 class="mt-8 text-lg font-semibold text-foreground">
+    {{ heading }}
+  </h2>
+
+  <form
+    id="companyForm`"
+    class="mt-4 flex w-full flex-col space-y-4 rounded-lg border border-border p-4"
+    @submit="submitForm"
+  >
+    <FormField
+      v-slot="{ componentField }"
+      name="name"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>Name</FormLabel>
+
+        <FormControl>
+          <Input type="text" placeholder="ACME Inc." v-bind="componentField" />
+        </FormControl>
+
+        <FormDescription>The name of the company.</FormDescription>
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-slot="{ componentField }"
+      name="pipeline_company_id"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>Pipeline Company ID</FormLabel>
+
+        <FormControl>
+          <Input type="number" placeholder="123" v-bind="componentField" />
+        </FormControl>
+
+        <FormDescription> The ID of the company in Pipeline. </FormDescription>
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-slot="{ componentField }"
+      name="website"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>Website</FormLabel>
+
+        <FormControl>
+          <Input
+            type="text"
+            placeholder="https://acme.com"
+            v-bind="componentField"
+          />
+        </FormControl>
+
+        <FormDescription> The company's website URL. </FormDescription>
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-slot="{ componentField }"
+      name="phone"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>Phone Number</FormLabel>
+
+        <FormControl>
+          <Input
+            type="tel"
+            placeholder="(123) 456-7890"
+            v-bind="componentField"
+          />
+        </FormControl>
+
+        <FormDescription> The company's phone number. </FormDescription>
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-slot="{ componentField }"
+      name="email"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>E-mail</FormLabel>
+
+        <FormControl>
+          <Input
+            type="email"
+            placeholder="info@acme.com"
+            v-bind="componentField"
+          />
+        </FormControl>
+
+        <FormDescription> The company's email address. </FormDescription>
+      </FormItem>
+    </FormField>
+
+    <hr class="mb-4 mt-6" />
+
+    <div
+      class="mx-auto flex w-full max-w-3xl flex-row items-center justify-end space-x-2 py-2"
+    >
+      <div v-if="company?.id" class="mr-auto">
+        <CompanyDestroyDialog :company="company" />
+      </div>
+
+      <Button variant="secondary" size="sm">
+        <Link :href="route(`admin.dashboard`)">Cancel</Link>
+      </Button>
+
+      <Button
+        variant="default"
+        size="sm"
+        type="button"
+        class=""
+        @click="submitForm"
+      >
+        Save
+      </Button>
+    </div>
+  </form>
+</template>

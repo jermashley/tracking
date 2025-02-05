@@ -100,6 +100,18 @@ class CompanyController extends Controller
     }
 
     /**
+     * Toggle company is active field.
+     */
+    public function toggleActive(Company $company): JsonResponse
+    {
+        $company->is_active = ! $company->is_active;
+
+        $company->save();
+
+        return response()->json($company, Response::HTTP_OK);
+    }
+
+    /**
      * Toggle a one of the company's boolean fields.
      */
     public function toggleMapOption(Company $company): JsonResponse

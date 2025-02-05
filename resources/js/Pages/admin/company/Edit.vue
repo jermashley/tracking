@@ -1,39 +1,17 @@
 <script setup>
 // import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { faImageSlash, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
-import { faCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Head, Link, router } from '@inertiajs/vue3'
-import { useQueryClient } from '@tanstack/vue-query'
-import { useForm } from 'vee-validate'
-import { watch } from 'vue'
-import * as yup from 'yup'
+import { Head } from '@inertiajs/vue3'
 
-import CompanyDestroyDialog from '@/components/feature/company/CompanyDestroyDialog.vue'
+import CompanyForm from '@/components/feature/company/CompanyForm.vue'
 import CompanySetImageAsset from '@/components/feature/company/CompanySetImageAsset.vue'
+import ToggleCompanyIsActive from '@/components/feature/company/ToggleCompanyIsActive.vue'
+import ToggleMapSwitch from '@/components/feature/company/ToggleMapSwitch.vue'
 import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vue'
+import SelectThemeDialog from '@/components/feature/theme/SelectThemeDialog.vue'
 import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
-import { Button } from '@/components/ui/button'
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
-import { useCompanyUpdateMutation } from '@/composables/mutations/company'
 import { useCompanyQuery } from '@/composables/queries/company'
 import { useThemesQuery } from '@/composables/queries/theme'
 
@@ -44,8 +22,6 @@ const props = defineProps({
   },
 })
 
-const queryClient = useQueryClient()
-
 const { data: company, isError } = useCompanyQuery({
   id: props.companyInitialValues.id,
 
@@ -53,86 +29,9 @@ const { data: company, isError } = useCompanyQuery({
     initialData: props.companyInitialValues,
   },
 })
-
-const { data: themes } = useThemesQuery()
-
-const updateCompanyFormSchema = yup.object({
-  name: yup.string().min(1).required(),
-  pipeline_company_id: yup.number().min(1).required(),
-  logo_image_id: yup.number().nullable(),
-  website: yup.string().nullable(),
-  phone: yup.string().nullable(),
-  email: yup.string().nullable(),
-  theme_id: yup.number().required(),
-  enable_map: yup.boolean().required(),
-})
-
-const { isFieldDirty, handleSubmit, resetForm } = useForm({
-  validationSchema: updateCompanyFormSchema,
-  initialValues: {
-    name: props.companyInitialValues.name,
-    pipeline_company_id: props.companyInitialValues.pipeline_company_id,
-    website: props.companyInitialValues.website,
-    phone: props.companyInitialValues.phone,
-    email: props.companyInitialValues.email,
-    theme_id: `${props.companyInitialValues.theme_id}`,
-    enable_map: Boolean(props.companyInitialValues.enable_map),
-    logo_image_id: props.companyInitialValues.logo?.id
-      ? `${props.companyInitialValues.logo?.id}`
-      : null,
-  },
-  keepValuesOnUnmount: true,
-})
-
-const { mutate: updateCompany } = useCompanyUpdateMutation({
-  config: {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [`companies`],
-      })
-
-      router.visit(route(`admin.dashboard`))
-    },
-  },
-})
-
-const onValidForm = (values) => {
-  updateCompany({ companyId: company?.id, formData: values })
-}
-
-const onInvalidForm = ({ values, errors, results }) => {
-  console.log(values)
-  console.log(errors)
-  console.log(results)
-}
-
-const submitForm = () => {
-  handleSubmit(onValidForm, onInvalidForm)()
-}
-
-watch(
-  () => company,
-  (newCompany) => {
-    if (newCompany) {
-      resetForm({
-        values: {
-          name: newCompany.name,
-          pipeline_company_id: newCompany.pipeline_company_id,
-          website: newCompany.website,
-          phone: newCompany.phone,
-          email: newCompany.email,
-          theme_id: `${newCompany.theme_id}`,
-          enable_map: Boolean(newCompany.enable_map),
-          logo_image_id: `${newCompany.logo?.id}`,
-        },
-      })
-    }
-  },
-)
 </script>
 
 <template>
-  <div></div>
   <Head :title="`${company?.name} - Manage Company`" />
 
   <DefaultLayout>
@@ -205,189 +104,73 @@ watch(
     </div>
 
     <section v-if="company && !isError" class="mt-32">
-      <form
-        :id="`editCompanyForm_${company.uuid}`"
-        class="flex w-full flex-col space-y-4 px-2 md:px-0"
-        @submit="submitForm"
+      <div
+        class="flex flex-col justify-stretch space-y-4 md:flex-row md:items-stretch md:space-x-4 md:space-y-0"
       >
-        <FormField
-          v-slot="{ componentField }"
-          name="name"
-          :validate-on-blur="!isFieldDirty"
+        <div
+          class="flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
         >
-          <FormItem>
-            <FormLabel>Name</FormLabel>
+          <div class="w-full space-y-0.5">
+            <Label class="text-base">Enabled</Label>
 
-            <FormControl>
-              <Input
-                type="text"
-                placeholder="ACME Inc."
-                v-bind="componentField"
-              />
-            </FormControl>
+            <p class="text-sm text-muted-foreground">
+              Enable company tracking portal.
+            </p>
+          </div>
 
-            <FormDescription>The name of the company.</FormDescription>
-          </FormItem>
-        </FormField>
+          <div>
+            <ToggleCompanyIsActive
+              id="is_active"
+              name="is_active"
+              :company-id="company?.id"
+              :value="Boolean(company?.is_active)"
+            />
+          </div>
+        </div>
 
-        <FormField
-          v-slot="{ componentField }"
-          name="pipeline_company_id"
-          :validate-on-blur="!isFieldDirty"
+        <div
+          class="flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
         >
-          <FormItem>
-            <FormLabel>Pipeline Company ID</FormLabel>
+          <div class="w-full space-y-0.5">
+            <Label class="text-base">Tracking Map</Label>
 
-            <FormControl>
-              <Input type="number" placeholder="123" v-bind="componentField" />
-            </FormControl>
+            <p class="text-sm text-muted-foreground">
+              Enable tracking map in portal.
+            </p>
+          </div>
 
-            <FormDescription>
-              The ID of the company in Pipeline.
-            </FormDescription>
-          </FormItem>
-        </FormField>
+          <div>
+            <ToggleMapSwitch
+              id="enable_map"
+              name="enable_map"
+              :company-id="company?.id"
+              :value="Boolean(company?.enable_map)"
+            />
+          </div>
+        </div>
+      </div>
 
-        <FormField
-          v-slot="{ componentField }"
-          name="website"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Website</FormLabel>
+      <div
+        class="mt-4 flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
+      >
+        <div class="w-full space-y-0.5">
+          <Label class="text-base">Theme</Label>
 
-            <FormControl>
-              <Input
-                type="text"
-                placeholder="https://acme.com"
-                v-bind="componentField"
-              />
-            </FormControl>
+          <p class="text-sm text-muted-foreground">
+            Set the color theme for the company's tracking portal.
+          </p>
+        </div>
 
-            <FormDescription> The company's website URL. </FormDescription>
-          </FormItem>
-        </FormField>
-
-        <FormField
-          v-slot="{ componentField }"
-          name="phone"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Phone Number</FormLabel>
-
-            <FormControl>
-              <Input
-                type="tel"
-                placeholder="(123) 456-7890"
-                v-bind="componentField"
-              />
-            </FormControl>
-
-            <FormDescription> The company's phone number. </FormDescription>
-          </FormItem>
-        </FormField>
-
-        <FormField
-          v-slot="{ componentField }"
-          name="email"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>E-mail</FormLabel>
-
-            <FormControl>
-              <Input
-                type="email"
-                placeholder="info@acme.com"
-                v-bind="componentField"
-              />
-            </FormControl>
-
-            <FormDescription> The company's email address. </FormDescription>
-          </FormItem>
-        </FormField>
-
-        <FormField
-          v-slot="{ componentField }"
-          name="theme_id"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Theme</FormLabel>
-
-            <Select v-bind="componentField">
-              <FormControl>
-                <SelectTrigger class="w-full">
-                  <SelectValue placeholder="Select a theme" />
-                </SelectTrigger>
-              </FormControl>
-
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Themes</SelectLabel>
-
-                  <SelectItem
-                    v-for="theme in themes"
-                    :key="theme.uuid"
-                    :value="`${theme.id}`"
-                  >
-                    <div class="flex flex-row items-center justify-between">
-                      <div
-                        class="mr-2 flex flex-row items-center justify-center"
-                      >
-                        <FontAwesomeIcon
-                          :icon="faCircle"
-                          class="z-10 text-lg"
-                          fixed-width
-                          :style="{
-                            color: `hsl(${theme.colors.root.primary})`,
-                          }"
-                        />
-
-                        <FontAwesomeIcon
-                          :icon="faCircle"
-                          class="-ml-3 text-lg"
-                          fixed-width
-                          :style="{
-                            color: `hsl(${theme.colors.root.accent})`,
-                          }"
-                        />
-                      </div>
-
-                      <span>{{ theme.name }}</span>
-                    </div>
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-
-            <FormDescription> The company's theme. </FormDescription>
-          </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ value, handleChange }" name="enable_map">
-          <FormItem
-            class="flex flex-row items-center justify-between rounded-lg border p-4"
-          >
-            <div class="space-y-0.5">
-              <FormLabel class="text-base">Enable Map</FormLabel>
-
-              <FormDescription>
-                Enable the tracking/route map.
-              </FormDescription>
-            </div>
-
-            <FormControl>
-              <Switch :checked="value" @update:checked="handleChange" />
-            </FormControl>
-          </FormItem>
-        </FormField>
-      </form>
+        <div>
+          <SelectThemeDialog
+            :company-id="company?.id"
+            :current-theme="company?.theme"
+          />
+        </div>
+      </div>
 
       <div class="mx-2 mt-4 md:mx-0">
         <Label>Footer</Label>
-
         <div class="relative mt-2 h-72">
           <div
             class="absolute right-2 top-2 flex flex-row items-center justify-end space-x-2"
@@ -427,32 +210,8 @@ watch(
           </div>
         </div>
       </div>
+
+      <CompanyForm v-if="company && !isError" :company="company" />
     </section>
-
-    <div
-      class="fixed bottom-0 left-0 right-0 border-t border-t-border/70 bg-background/70 px-4 py-2 shadow-[0_-12px_25px_-12px_rgb(0_0_0_/_0.17)] backdrop-blur-lg"
-    >
-      <div
-        class="mx-auto flex w-full max-w-3xl flex-row items-center justify-end space-x-2 py-2"
-      >
-        <div class="mr-auto">
-          <CompanyDestroyDialog :company="company" />
-        </div>
-
-        <Button variant="secondary" size="sm">
-          <Link :href="route(`admin.dashboard`)">Cancel</Link>
-        </Button>
-
-        <Button
-          variant="default"
-          size="sm"
-          type="button"
-          class=""
-          @click="submitForm"
-        >
-          Save
-        </Button>
-      </div>
-    </div>
   </DefaultLayout>
 </template>

@@ -48,7 +48,7 @@ const { mutate: setCompanyTheme } = useCompanyThemeMutation({
   },
 })
 
-const selectedTheme = ref(`${props.currentTheme.id}`)
+const selectedTheme = ref(`${props.currentTheme?.id}`)
 
 const handleSave = () => {
   setCompanyTheme({
@@ -71,16 +71,23 @@ const handleSave = () => {
           class="z-10 text-lg"
           fixed-width
           :style="{
-            color: `hsl(${currentTheme.colors.root.primary})`,
+            color: currentTheme
+              ? `hsl(${currentTheme?.colors?.root.primary})`
+              : `hsl(var(--primary))`,
           }"
         />
 
         <FontAwesomeIcon
           :icon="faCircle"
           class="-ml-3 text-lg"
+          :class="{
+            'stroke-foreground stroke-[6]': !currentTheme,
+          }"
           fixed-width
           :style="{
-            color: `hsl(${currentTheme.colors.root.accent})`,
+            color: currentTheme
+              ? `hsl(${currentTheme?.colors?.root.accent})`
+              : `hsl(var(--background))`,
           }"
         />
       </Button>
@@ -99,7 +106,7 @@ const handleSave = () => {
         <RadioGroup
           v-if="data && !isError"
           v-model:model-value="selectedTheme"
-          :default-value="`${currentTheme.id}`"
+          :default-value="`${currentTheme?.id}`"
           orientation="vertical"
         >
           <div
@@ -121,7 +128,7 @@ const handleSave = () => {
                   class="z-10 text-lg"
                   fixed-width
                   :style="{
-                    color: `hsl(${theme.colors.root.primary})`,
+                    color: `hsl(${theme.colors?.root.primary})`,
                   }"
                 />
 
@@ -130,7 +137,7 @@ const handleSave = () => {
                   class="-ml-3 text-lg"
                   fixed-width
                   :style="{
-                    color: `hsl(${theme.colors.root.accent})`,
+                    color: `hsl(${theme.colors?.root.accent})`,
                   }"
                 />
               </div>

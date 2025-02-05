@@ -4,3 +4,4 @@ export { default as useCompanySetImageAssetMutation } from './useCompanySetImage
 export { default as useCompanyThemeMutation } from './useCompanyThemeMutation'
 export { default as useCompanyUpdateMutation } from './useCompanyUpdateMutation'
 export { default as useToggleCompanyEnableMapMutation } from './useToggleCompanyEnableMapMutation'
+export { default as useToggleCompanyIsActiveMutation } from './useToggleCompanyIsActiveMutation'

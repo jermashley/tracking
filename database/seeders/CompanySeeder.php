@@ -21,7 +21,8 @@ class CompanySeeder extends Seeder
                 'pipeline_company_id' => 438,
                 // 'logo_image_id' => 1,
                 'theme_id' => 7,
-                'enable_map' => 1,
+                'enable_map' => 0,
+                'is_active' => 1,
             ],
             [
                 'name' => 'Jayco',
@@ -32,6 +33,7 @@ class CompanySeeder extends Seeder
                 // 'logo_image_id' => 2,
                 'theme_id' => 8,
                 'enable_map' => 1,
+                'is_active' => 1,
             ],
             [
                 'name' => 'Loftwall',
@@ -41,7 +43,8 @@ class CompanySeeder extends Seeder
                 'pipeline_company_id' => 472,
                 // 'logo_image_id' => 3,
                 'theme_id' => 9,
-                'enable_map' => 1,
+                'enable_map' => 0,
+                'is_active' => 1,
             ],
             [
                 'name' => 'Ubique',
@@ -52,6 +55,7 @@ class CompanySeeder extends Seeder
                 // 'logo_image_id' => 4,
                 'theme_id' => 10,
                 'enable_map' => 1,
+                'is_active' => 0,
             ],
         ];
 

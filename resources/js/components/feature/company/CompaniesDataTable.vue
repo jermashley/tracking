@@ -19,7 +19,7 @@ import { useCompaniesQuery } from '@/composables/queries/company'
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
 import CompanyUpdateButton from './CompanyUpdateButton.vue'
-import EnableMapSwitch from './EnableMapSwitch.vue'
+import ToggleMapSwitch from './ToggleMapSwitch.vue'
 
 const { data, isError } = useCompaniesQuery()
 
@@ -42,7 +42,7 @@ const columns = [
     accessorKey: `enable_map`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Tracking Map`),
     cell: ({ row }) => {
-      return h(EnableMapSwitch, {
+      return h(ToggleMapSwitch, {
         companyId: row.original.id,
         id: `enable_map`,
         name: `Enable Map`,
