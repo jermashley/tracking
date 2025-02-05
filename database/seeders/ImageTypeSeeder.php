@@ -14,9 +14,9 @@ class ImageTypeSeeder extends Seeder
     public function run(): void
     {
         foreach (ImageTypeEnum::cases() as $imageType) {
-            ImageType::create([
-                'name' => $imageType->value,
-            ]);
+            $imageTypeModel = new ImageType;
+            $imageTypeModel->name = $imageType->value;
+            $imageTypeModel->save();
         }
     }
 }

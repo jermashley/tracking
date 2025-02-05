@@ -1,23 +1,19 @@
 <script setup>
-import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+// import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+import { faImageSlash, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { faCircle } from '@fortawesome/pro-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Head, Link, router } from '@inertiajs/vue3'
 import { useQueryClient } from '@tanstack/vue-query'
-import { VisuallyHidden } from 'radix-vue'
 import { useForm } from 'vee-validate'
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import * as yup from 'yup'
 
+import CompanyDestroyDialog from '@/components/feature/company/CompanyDestroyDialog.vue'
+import CompanySetImageAsset from '@/components/feature/company/CompanySetImageAsset.vue'
+import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vue'
+import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import {
   FormControl,
   FormDescription,
@@ -26,6 +22,7 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -37,29 +34,27 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { useCompanyUpdateMutation } from '@/composables/mutations/company'
-import { useImagesQuery } from '@/composables/queries/image'
+import { useCompanyQuery } from '@/composables/queries/company'
 import { useThemesQuery } from '@/composables/queries/theme'
 
-import CompanyDestroyDialog from './CompanyDestroyDialog.vue'
-import LogoStoreDialog from './CompanySetImageAsset.vue'
-
 const props = defineProps({
-  company: {
+  companyInitialValues: {
     type: Object,
     required: true,
   },
 })
 
-const isOpen = ref(false)
-
 const queryClient = useQueryClient()
 
-const { data: themes } = useThemesQuery()
+const { data: company, isError } = useCompanyQuery({
+  id: props.companyInitialValues.id,
 
-const { data: images } = useImagesQuery({
-  imageType: `logos`,
-  imageTypeId: 1,
+  config: {
+    initialData: props.companyInitialValues,
+  },
 })
+
+const { data: themes } = useThemesQuery()
 
 const updateCompanyFormSchema = yup.object({
   name: yup.string().min(1).required(),
@@ -75,14 +70,16 @@ const updateCompanyFormSchema = yup.object({
 const { isFieldDirty, handleSubmit, resetForm } = useForm({
   validationSchema: updateCompanyFormSchema,
   initialValues: {
-    name: props.company.name,
-    pipeline_company_id: props.company.pipeline_company_id,
-    website: props.company.website,
-    phone: props.company.phone,
-    email: props.company.email,
-    theme_id: `${props.company.theme_id}`,
-    enable_map: Boolean(props.company.enable_map),
-    logo_image_id: props.company.logo?.id ? `${props.company.logo?.id}` : null,
+    name: props.companyInitialValues.name,
+    pipeline_company_id: props.companyInitialValues.pipeline_company_id,
+    website: props.companyInitialValues.website,
+    phone: props.companyInitialValues.phone,
+    email: props.companyInitialValues.email,
+    theme_id: `${props.companyInitialValues.theme_id}`,
+    enable_map: Boolean(props.companyInitialValues.enable_map),
+    logo_image_id: props.companyInitialValues.logo?.id
+      ? `${props.companyInitialValues.logo?.id}`
+      : null,
   },
   keepValuesOnUnmount: true,
 })
@@ -94,13 +91,13 @@ const { mutate: updateCompany } = useCompanyUpdateMutation({
         queryKey: [`companies`],
       })
 
-      isOpen.value = false
+      router.visit(route(`admin.dashboard`))
     },
   },
 })
 
 const onValidForm = (values) => {
-  updateCompany({ companyId: props.company.id, formData: values })
+  updateCompany({ companyId: company?.id, formData: values })
 }
 
 const onInvalidForm = ({ values, errors, results }) => {
@@ -114,7 +111,7 @@ const submitForm = () => {
 }
 
 watch(
-  () => props.company, // Use a getter function to watch the company prop
+  () => company,
   (newCompany) => {
     if (newCompany) {
       resetForm({
@@ -132,46 +129,85 @@ watch(
     }
   },
 )
-
-const cancelDialog = () => {
-  isOpen.value = false
-  resetForm({
-    values: {
-      name: props.company.name,
-      pipeline_company_id: props.company.pipeline_company_id,
-      website: props.company.website,
-      phone: props.company.phone,
-      email: props.company.email,
-      theme_id: `${props.company.theme_id}`,
-      enable_map: Boolean(props.company.enable_map),
-      logo_image_id: `${props.company.logo?.id}`,
-    },
-  })
-}
 </script>
 
 <template>
-  <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button variant="outline" size="sm">
-        <FontAwesomeIcon :icon="faEdit" fixed-width />
-      </Button>
-    </DialogTrigger>
+  <div></div>
+  <Head :title="`${company?.name} - Manage Company`" />
 
-    <DialogContent class="max-h-[85dvh] grid-rows-[auto_minmax(0,1fr)_auto]">
-      <VisuallyHidden as-child>
-        <DialogDescription>
-          A dialog to update {{ company.name }}.
-        </DialogDescription>
-      </VisuallyHidden>
+  <DefaultLayout>
+    <div v-if="company && !isError" class="group relative h-72">
+      <div
+        class="absolute left-8 top-40 mb-4 flex flex-col items-stretch justify-start space-y-4"
+      >
+        <div
+          class="relative flex aspect-square h-40 w-40 flex-row items-center justify-center overflow-hidden rounded-lg border border-border bg-card p-4 shadow-lg"
+        >
+          <img
+            v-if="company.logo?.file_path"
+            :src="`/${company.logo?.file_path}`"
+            :alt="company.logo?.name"
+          />
 
-      <DialogHeader>
-        <DialogTitle>Edit {{ company.name }}</DialogTitle>
-      </DialogHeader>
+          <div
+            v-else
+            class="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center overflow-hidden rounded-lg bg-muted"
+          >
+            <FontAwesomeIcon
+              class="text-4xl text-muted-foreground"
+              :icon="faImageSlash"
+              fixed-width
+            />
+          </div>
+        </div>
 
+        <CompanySetImageAsset :company="company" type="logo">
+          {{ company.logo?.file_path ? `Edit` : `Add` }} Logo
+        </CompanySetImageAsset>
+      </div>
+
+      <div
+        class="absolute right-2 top-2 flex flex-row items-center justify-end space-x-2"
+      >
+        <ImageDestroyDialog
+          v-if="company.banner?.file_path"
+          :image="company.banner"
+        >
+          <FontAwesomeIcon :icon="faTrashAlt" fixed-width />
+        </ImageDestroyDialog>
+
+        <CompanySetImageAsset :company="company" type="banner">
+          {{ company.banner?.file_path ? `Edit` : `Add` }} Banner
+        </CompanySetImageAsset>
+      </div>
+
+      <div
+        v-if="company.banner?.file_path"
+        class="absolute left-0 top-0 -z-10 h-full w-full overflow-hidden rounded-lg opacity-65 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
+      >
+        <img
+          src="https://jayco.com/uploads/sections/1-bg-Homepage-Picture-2023-B.jpg"
+          :alt="company.banner?.name"
+          class="h-full w-full object-cover"
+        />
+      </div>
+
+      <div
+        v-else
+        class="absolute left-0 top-0 -z-10 flex h-full w-full flex-row items-center justify-center overflow-hidden rounded-lg bg-muted"
+      >
+        <FontAwesomeIcon
+          class="text-4xl text-muted-foreground"
+          :icon="faImageSlash"
+          fixed-width
+        />
+      </div>
+    </div>
+
+    <section v-if="company && !isError" class="mt-32">
       <form
         :id="`editCompanyForm_${company.uuid}`"
-        class="flex w-full flex-col space-y-4 overflow-y-auto px-2"
+        class="flex w-full flex-col space-y-4 px-2 md:px-0"
         @submit="submitForm"
       >
         <FormField
@@ -347,67 +383,64 @@ const cancelDialog = () => {
             </FormControl>
           </FormItem>
         </FormField>
-
-        <FormField
-          v-slot="{ componentField }"
-          name="logo_image_id"
-          :validate-on-blur="!isFieldDirty"
-        >
-          <FormItem>
-            <FormLabel>Logo</FormLabel>
-
-            <div class="flex flex-row items-center justify-start space-x-2">
-              <Select v-bind="componentField">
-                <FormControl>
-                  <SelectTrigger class="w-full">
-                    <SelectValue placeholder="Select a logo" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Logo</SelectLabel>
-
-                    <SelectItem
-                      v-for="image in images"
-                      :key="image.uuid"
-                      :value="`${image.id}`"
-                    >
-                      <div class="flex flex-row items-center justify-between">
-                        <div
-                          class="mr-2 flex flex-row items-center justify-center"
-                        >
-                          <div class="relative aspect-square w-8">
-                            <img
-                              :src="`/${image.file_path}`"
-                              class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
-                            />
-                          </div>
-                        </div>
-
-                        <span>{{ image.name }}</span>
-                      </div>
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-              <LogoStoreDialog icon-only />
-            </div>
-
-            <FormDescription>The company's logo.</FormDescription>
-          </FormItem>
-        </FormField>
       </form>
 
-      <DialogFooter
-        class="flex flex-row items-center justify-end space-x-2 pt-4"
+      <div class="mx-2 mt-4 md:mx-0">
+        <Label>Footer</Label>
+
+        <div class="relative mt-2 h-72">
+          <div
+            class="absolute right-2 top-2 flex flex-row items-center justify-end space-x-2"
+          >
+            <ImageDestroyDialog
+              v-if="company.footer?.file_path"
+              :image="company.footer"
+            >
+              <FontAwesomeIcon :icon="faTrashAlt" fixed-width />
+            </ImageDestroyDialog>
+
+            <CompanySetImageAsset :company="company" type="footer">
+              {{ company.footer?.file_path ? `Edit` : `Add` }} Footer
+            </CompanySetImageAsset>
+          </div>
+
+          <div
+            v-if="company.footer?.file_path"
+            class="absolute left-0 top-0 -z-10 h-full w-full overflow-hidden rounded-lg"
+          >
+            <img
+              src="https://jayco.com/uploads/sections/1-bg-Homepage-Picture-2023-B.jpg"
+              :alt="company.footer.name"
+              class="h-full w-full object-cover"
+            />
+          </div>
+
+          <div
+            v-else
+            class="absolute left-0 top-0 -z-10 flex h-full w-full flex-row items-center justify-center overflow-hidden rounded-lg bg-muted"
+          >
+            <FontAwesomeIcon
+              class="text-4xl text-muted-foreground"
+              :icon="faImageSlash"
+              fixed-width
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div
+      class="fixed bottom-0 left-0 right-0 border-t border-t-border/70 bg-background/70 px-4 py-2 shadow-[0_-12px_25px_-12px_rgb(0_0_0_/_0.17)] backdrop-blur-lg"
+    >
+      <div
+        class="mx-auto flex w-full max-w-3xl flex-row items-center justify-end space-x-2 py-2"
       >
         <div class="mr-auto">
           <CompanyDestroyDialog :company="company" />
         </div>
 
-        <Button variant="secondary" size="sm" @click="cancelDialog">
-          Cancel
+        <Button variant="secondary" size="sm">
+          <Link :href="route(`admin.dashboard`)">Cancel</Link>
         </Button>
 
         <Button
@@ -419,7 +452,7 @@ const cancelDialog = () => {
         >
           Save
         </Button>
-      </DialogFooter>
-    </DialogContent>
-  </Dialog>
+      </div>
+    </div>
+  </DefaultLayout>
 </template>

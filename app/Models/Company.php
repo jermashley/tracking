@@ -20,6 +20,8 @@ class Company extends Model
         'email',
         'pipeline_company_id',
         'logo_image_id',
+        'banner_image_id',
+        'footer_image_id',
         'theme_id',
         'enable_map',
     ];
@@ -27,6 +29,16 @@ class Company extends Model
     public function logo(): BelongsTo
     {
         return $this->belongsTo(Image::class, 'logo_image_id');
+    }
+
+    public function banner(): BelongsTo
+    {
+        return $this->belongsTo(Image::class, 'banner_image_id');
+    }
+
+    public function footer(): BelongsTo
+    {
+        return $this->belongsTo(Image::class, 'footer_image_id');
     }
 
     public function theme(): BelongsTo

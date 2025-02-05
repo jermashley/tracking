@@ -1,5 +1,5 @@
 <script setup>
-import { faRectangleHistoryCirclePlus } from '@fortawesome/pro-duotone-svg-icons'
+import { faImage } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
 import { VisuallyHidden } from 'radix-vue'
@@ -25,15 +25,22 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { useCompanySetImageAssetMutation } from '@/composables/mutations/company'
 import { useImageStoreMutation } from '@/composables/mutations/image'
+import { imageTypes } from '@/lib/types'
 
-defineProps({
+const props = defineProps({
+  company: {
+    type: Object,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+    validator(value) {
+      return Object.values(imageTypes).includes(value)
+    },
+  },
   iconOnly: {
     type: Boolean,
     default: false,
@@ -53,13 +60,31 @@ const { resetForm, isFieldDirty, handleSubmit } = useForm({
   validationSchema: newLogoFormSchema,
 })
 
-const { mutate: createLogo } = useImageStoreMutation({
+const { mutate: setImageAsset } = useCompanySetImageAssetMutation({
   config: {
     onSuccess: async () => {
-      resetForm()
+      await queryClient.invalidateQueries({
+        queryKey: [`companies`, props.company.id],
+        exact: true,
+      })
 
       await queryClient.invalidateQueries({
-        queryKey: [`images`, `logos`],
+        queryKey: [`companies`],
+        exact: true,
+      })
+    },
+  },
+})
+
+const { mutate: createLogo } = useImageStoreMutation({
+  config: {
+    onSuccess: (data) => {
+      resetForm()
+
+      setImageAsset({
+        companyId: props.company.id,
+        imageId: data.id,
+        type: props.type,
       })
 
       isOpen.value = false
@@ -77,9 +102,9 @@ const onValidForm = (values) => {
 }
 
 const onInvalidForm = ({ values, errors, results }) => {
-  console.log(values)
-  console.log(errors)
-  console.log(results)
+  console.error(values)
+  console.error(errors)
+  console.error(results)
 }
 
 const submitForm = () => {
@@ -96,7 +121,7 @@ const cancelDialog = () => {
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
       <Button
-        variant="default"
+        variant="outline"
         size="sm"
         :class="{
           'w-full': !iconOnly,
@@ -107,11 +132,13 @@ const cancelDialog = () => {
           :class="{
             'mr-2': !iconOnly,
           }"
-          :icon="faRectangleHistoryCirclePlus"
+          :icon="faImage"
           fixed-width
         />
 
-        <span v-if="!iconOnly">Add Logo</span>
+        <span v-if="!iconOnly">
+          <slot />
+        </span>
       </Button>
     </DialogTrigger>
 

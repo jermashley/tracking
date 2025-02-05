@@ -2,15 +2,12 @@
 import {
   faCalendarClock,
   faCircleCheck,
-  faEye,
   faLocationDot,
-  faPlusMinus,
   faWaveSine,
 } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import dayjs from 'dayjs'
 
-import { Button } from '@/components/ui/button'
 import {
   Stepper,
   StepperDescription,
@@ -43,7 +40,7 @@ defineProps({
       v-for="(status, index) in statuses"
       :key="`${index}-${status.id}`"
       :step="index - statuses.length"
-      class="group relative flex w-full items-start rounded-lg bg-transparent px-2 py-2 transition-all duration-300 hover:bg-gradient-to-r hover:from-background hover:to-primary/10 md:py-4"
+      class="group relative flex w-full items-start rounded-lg bg-transparent px-2 py-2 transition-all duration-300 hover:bg-gradient-to-r hover:from-transparent hover:to-primary/10 md:py-4"
     >
       <StepperSeparator
         v-if="index !== 0"

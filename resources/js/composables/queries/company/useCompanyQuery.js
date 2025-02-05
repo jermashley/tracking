@@ -7,14 +7,14 @@ const getCompany = async (id) => {
   return data
 }
 
-const useCompaniesQuery = ({ config = {}, id = null } = {}) =>
+const useCompanyQuery = ({ config = {}, id = null } = {}) =>
   useQuery({
     queryKey: [`companies`, id],
-    queryFn: getCompany,
+    queryFn: () => getCompany(id),
     staleTime: Infinity,
     cacheTime: Infinity,
 
     ...config,
   })
 
-export default useCompaniesQuery
+export default useCompanyQuery

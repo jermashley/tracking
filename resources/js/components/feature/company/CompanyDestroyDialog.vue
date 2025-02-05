@@ -1,6 +1,7 @@
 <script setup>
 import { faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { router } from '@inertiajs/vue3'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ref } from 'vue'
 
@@ -33,6 +34,8 @@ const { mutate: destroyCompany } = useCompanyDestroyMutation({
       await queryClient.invalidateQueries({
         queryKey: [`companies`],
       })
+
+      router.visit(route(`admin.dashboard`))
     },
   },
 })

@@ -1,6 +1,4 @@
 <script setup>
-import { faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ref } from 'vue'
 
@@ -17,7 +15,7 @@ import {
 import { useImageDestroyMutation } from '@/composables/mutations/image'
 
 const props = defineProps({
-  logo: {
+  image: {
     type: Object,
     required: true,
   },
@@ -31,7 +29,7 @@ const { mutate: destroyImage } = useImageDestroyMutation({
   config: {
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [`images`, `logos`],
+        queryKey: [`images`],
       })
 
       await queryClient.invalidateQueries({
@@ -44,7 +42,7 @@ const { mutate: destroyImage } = useImageDestroyMutation({
 })
 
 const handleDelete = () => {
-  destroyImage({ id: props.logo.id })
+  destroyImage({ id: props.image.id })
 }
 
 const cancelDialog = () => {
@@ -55,17 +53,17 @@ const cancelDialog = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="destructive" size="xs" class="w-full">
-        <FontAwesomeIcon :icon="faTrashAlt" fixed-width />
+      <Button variant="destructive" size="sm">
+        <slot />
       </Button>
     </DialogTrigger>
 
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Delete Logo {{ logo.name }}</DialogTitle>
+        <DialogTitle>Delete {{ image.name }}</DialogTitle>
 
         <DialogDescription>
-          Are you sure you want to delete this logo?
+          Are you sure you want to delete this image?
         </DialogDescription>
       </DialogHeader>
 

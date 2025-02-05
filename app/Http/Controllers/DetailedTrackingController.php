@@ -38,7 +38,7 @@ class DetailedTrackingController extends Controller
 
         // Attempt to get local company model from Pipeline company ID.
         $company = Company::where('pipeline_company_id', $pipelineCompanyId)
-            ->with(['logo', 'theme'])
+            ->with(['logo', 'banner', 'footer', 'theme'])
             ->first();
 
         $shipmentCoordinates = null;

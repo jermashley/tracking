@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\ImageTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyLogoRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Requests\UpdateCompanyThemeRequest;
 use App\Models\Company;
@@ -37,6 +39,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company): JsonResponse
     {
+        $company->load(['logo', 'banner', 'footer', 'theme']);
+
         return response()->json($company, Response::HTTP_OK);
     }
 
@@ -56,6 +60,39 @@ class CompanyController extends Controller
     public function setTheme(Company $company, UpdateCompanyThemeRequest $request): JsonResponse
     {
         $company->theme_id = $request->theme_id;
+
+        $company->save();
+
+        return response()->json($company, Response::HTTP_OK);
+    }
+
+    public function setImageAsset(Company $company, UpdateCompanyLogoRequest $request): JsonResponse
+    {
+        switch ($request->type) {
+            case ImageTypeEnum::LOGO->value:
+                if ($company->logo) {
+                    $company->logo->delete();
+                }
+                $company->logo_image_id = $request->image_id;
+                break;
+
+            case ImageTypeEnum::BANNER->value:
+                if ($company->banner) {
+                    $company->banner->delete();
+                }
+                $company->banner_image_id = $request->image_id;
+                break;
+
+            case ImageTypeEnum::FOOTER->value:
+                if ($company->footer) {
+                    $company->footer->delete();
+                }
+                $company->footer_image_id = $request->image_id;
+                break;
+
+            default:
+                return response()->json(['error' => 'Invalid image type'], Response::HTTP_BAD_REQUEST);
+        }
 
         $company->save();
 

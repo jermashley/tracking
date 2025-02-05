@@ -101,7 +101,10 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 <template>
   <Head :title="`${company?.name ?? appName} - Tracking - ${proNumber}`" />
 
-  <TrackingLayout>
+  <TrackingLayout
+    :banner-file-path="company?.banner?.file_path"
+    :footer-file-path="company?.footer?.file_path"
+  >
     <div class="flex flex-col gap-12">
       <section
         class="grid-rows-auto grid grid-cols-1 gap-x-0 gap-y-2 sm:grid-cols-[1fr,auto] sm:grid-rows-2 sm:gap-x-4 sm:gap-y-0"
@@ -110,11 +113,13 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <h1 class="text-2xl font-bold">{{ bolNumber }}</h1>
+                <h1 class="text-2xl font-bold">
+                  {{ proNumber ?? `Tracking Number Unavailable` }}
+                </h1>
               </TooltipTrigger>
 
               <TooltipContent>
-                <p>Bill of Lading</p>
+                <p>Tracking Number</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -124,11 +129,13 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <p class="text-base font-semibold">{{ proNumber }}</p>
+                <p class="text-base font-semibold">
+                  {{ bolNumber ?? `BOL Unavailable` }}
+                </p>
               </TooltipTrigger>
 
               <TooltipContent>
-                <p>Carrier PRO</p>
+                <p>Bill of Lading</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -165,6 +172,14 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
               class="grid grid-flow-col grid-cols-1 grid-rows-5 gap-x-8 gap-y-4 md:grid-cols-2 md:grid-rows-3"
             >
               <ShipmentDetail
+                v-if="proNumber"
+                :detail="proNumber"
+                label="Tracking Number"
+                :icon="faMapLocationDot"
+                is-copyable
+              />
+
+              <ShipmentDetail
                 v-if="bolNumber"
                 :detail="bolNumber"
                 label="Bill of Lading"
@@ -176,14 +191,6 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
                 :detail="trackingData.data.trackingObject.carrierName"
                 label="Carrier"
                 :icon="faTruckContainer"
-              />
-
-              <ShipmentDetail
-                v-if="proNumber"
-                :detail="proNumber"
-                label="Tracking Number"
-                :icon="faMapLocationDot"
-                is-copyable
               />
 
               <ShipmentDetail

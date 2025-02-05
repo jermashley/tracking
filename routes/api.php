@@ -20,6 +20,7 @@ Route::as('api.')
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
         Route::patch('companies/{company}/setTheme', [CompanyController::class, 'setTheme'])->name('companies.setTheme');
+        Route::patch('companies/{company}/setImageAsset', [CompanyController::class, 'setImageAsset'])->name('companies.setImageAsset');
         Route::apiResource('companies', CompanyController::class);
 
         Route::apiResource('imageTypes', ImageTypesController::class);

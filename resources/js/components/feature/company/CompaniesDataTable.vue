@@ -1,7 +1,11 @@
 <script setup>
+import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Link } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
+import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -60,7 +64,11 @@ const columns = [
     accessorKey: `edit`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
     cell: ({ row }) => {
-      return h(CompanyUpdateButton, { company: row.original })
+      return h(Button, { variant: `outline`, size: `sm`, asChild: true }, [
+        h(Link, { href: route(`admin.company.show`, row.original.uuid) }, [
+          h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
+        ]),
+      ])
     },
   },
   //   {

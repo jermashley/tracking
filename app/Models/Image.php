@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ImageTypeEnum;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,22 @@ class Image extends Model
         parent::boot();
 
         static::deleting(function ($image) {
-            Company::where('logo_image_id', $image->id)->update(['logo_image_id' => null]);
+            switch ($image->type) {
+                case ImageTypeEnum::LOGO->value:
+                    Company::where('logo_image_id', $image->id)->update(['logo_image_id' => null]);
+                    break;
+
+                case ImageTypeEnum::BANNER->value:
+                    Company::where('logo_banner_id', $image->id)->update(['logo_banner_id' => null]);
+                    break;
+
+                case ImageTypeEnum::FOOTER->value:
+                    Company::where('logo_footer_id', $image->id)->update(['logo_footer_id' => null]);
+                    break;
+
+                default:
+                    return;
+            }
         });
     }
 

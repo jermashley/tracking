@@ -1,52 +1,71 @@
 <script setup>
-import { faCopyright } from '@fortawesome/pro-regular-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import dayjs from 'dayjs'
-
-import { Badge } from '@/components/ui/badge'
 import { useCompanyTheme } from '@/composables/hooks/theme'
 
+import Footer from '../footer/Footer.vue'
 import Navbar from '../navigation/Navbar.vue'
 
 useCompanyTheme()
+
+defineProps({
+  bannerFilePath: {
+    type: String,
+    required: false,
+    default: null,
+  },
+  footerFilePath: {
+    type: String,
+    required: false,
+    default: null,
+  },
+})
 </script>
 
 <template>
-  <div class="grid min-h-screen grid-rows-[auto,1fr,auto] items-start">
+  <div
+    class="relative grid min-h-screen items-start bg-background/0"
+    :class="{
+      'grid-rows-[auto,1fr,auto,auto]': bannerFilePath,
+      'grid-rows-[auto,auto,auto]': !bannerFilePath,
+    }"
+  >
     <Navbar />
 
-    <main class="mx-auto my-12 w-full max-w-3xl px-6 lg:px-0">
-      <slot />
-    </main>
+    <div
+      v-if="bannerFilePath"
+      class="relative -z-10 h-[50vh] w-full overflow-hidden"
+    >
+      <img
+        :src="bannerFilePath"
+        class="mx-auto h-full w-full max-w-7xl object-cover"
+        alt=""
+      />
 
-    <footer class="flex flex-col items-center justify-center space-y-2 py-4">
-      <p class="text-center text-sm">
-        <a
-          href="https://prologuetechnology.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="font-semibold underline"
-        >
-          {{ $page.props.app.name }}
-        </a>
+      <img
+        :src="bannerFilePath"
+        class="absolute bottom-0 left-0 right-0 top-0 -z-10 h-[120%] w-[120%] object-cover opacity-75 blur-2xl"
+        alt=""
+      />
+    </div>
 
-        <FontAwesomeIcon
-          class="mx-[0.125rem] text-xs"
-          :icon="faCopyright"
-          fixed-width
-        />
-
-        {{ dayjs().year() }}
-      </p>
+    <div
+      class="mx-auto mb-8 w-auto max-w-3xl rounded-lg bg-background px-6 py-4"
+      :class="{
+        'mt-8 lg:-mt-24': bannerFilePath,
+        'mt-32 lg:mt-32': !bannerFilePath,
+      }"
+    >
+      <main class="w-full">
+        <slot />
+      </main>
 
       <div
-        v-if="$page.props.app.env !== `production`"
-        class="flex flex-row items-center justify-center"
+        v-if="footerFilePath"
+        class="mx-auto mt-8 w-full max-w-3xl overflow-hidden rounded-lg shadow-xl"
       >
-        <Badge variant="destructive" class="capitalize">
-          <span>{{ $page.props.app.env }}</span>
-        </Badge>
+        <img :src="footerFilePath" class="w-full object-cover" alt="" />
       </div>
-    </footer>
+    </div>
+
+    <Footer />
   </div>
 </template>

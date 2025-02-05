@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->integer('pipeline_company_id')->unique();
             $table->foreignIdFor(Image::class, 'logo_image_id')->nullable();
+            $table->foreignIdFor(Image::class, 'banner_image_id')->nullable();
+            $table->foreignIdFor(Image::class, 'footer_image_id')->nullable();
             $table->foreignIdFor(Theme::class)->nullable();
             $table->boolean('enable_map')->default(false);
             $table->timestamps();

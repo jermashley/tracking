@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import laravel from 'laravel-vite-plugin'
 import path from 'path'
 import { defineConfig } from 'vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
   plugins: [
@@ -17,17 +18,18 @@ export default defineConfig({
         },
       },
     }),
+    vueDevTools(),
   ],
   server: {
     hmr: {
       host: `tracking.test`,
     },
   },
-  build: {
-    watch: {
-      include: [`resources/**`],
-    },
-  },
+  // build: {
+  //   watch: {
+  //     include: [`resources/**`],
+  //   },
+  // },
   resolve: {
     alias: {
       'tailwind.config.js': path.resolve(__dirname, `tailwind.config.js`),

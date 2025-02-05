@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
+use App\Models\Company;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,10 +23,21 @@ Route::prefix('admin')
     ->as('admin.')
     ->middleware('auth')
     ->group(function () {
-
         Route::get('/dashboard', function () {
             return Inertia::render('admin/Dashboard');
         })->name('dashboard');
+
+        Route::get('/company/create', function () {
+            return Inertia::render('admin/company/Create');
+        })->name('company.create');
+
+        Route::get('/company/{company:uuid}', function (Company $company) {
+            $company->load(['logo', 'banner', 'footer', 'theme']);
+
+            return Inertia::render('admin/company/Edit', [
+                'companyInitialValues' => $company,
+            ]);
+        })->name('company.show');
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

@@ -16,8 +16,8 @@ import {
 } from '@/components/ui/dialog'
 import { useImagesQuery } from '@/composables/queries/image'
 
-import LogoDestroyDialog from './LogoDestroyDialog.vue'
-import LogoStoreDialog from './LogoStoreDialog.vue'
+import LogoStoreDialog from '../company/CompanySetImageAsset.vue'
+import LogoDestroyDialog from './ImageDestroyDialog.vue'
 
 const { data: images, isError: imagesIsError } = useImagesQuery({
   imageType: `logos`,

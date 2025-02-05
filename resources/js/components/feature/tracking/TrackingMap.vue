@@ -14,13 +14,16 @@ const trackingMap = useTemplateRef(`trackingMap`)
 onMounted(() => {
   TrimbleMaps.APIKey = import.meta.env.VITE_TRIMBLE_API_KEY
 
+  const lngLat = new TrimbleMaps.LngLat(
+    props.shipmentCoordinates.lastLocation.coordinates.lng,
+    props.shipmentCoordinates.lastLocation.coordinates.lat,
+  )
+
   const myMap = new TrimbleMaps.Map({
     container: trackingMap.value,
-    center: new TrimbleMaps.LngLat(
-      props.shipmentCoordinates.lastLocation.coordinates.lng,
-      props.shipmentCoordinates.lastLocation.coordinates.lat,
-    ),
-    zoom: 3,
+    center: lngLat,
+    interactive: false,
+    boxZoom: false,
   })
 
   const simplifiedCoordinates =
