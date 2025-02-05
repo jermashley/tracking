@@ -54,31 +54,33 @@ const { isFieldDirty, handleSubmit, resetForm } = useForm({
   keepValuesOnUnmount: true,
 })
 
-const { mutate: createCompany } = useCompanyCreateMutation({
-  config: {
-    onSuccess: async (data) => {
-      resetForm()
+const { mutate: createCompany, isPending: createCompanyIsPending } =
+  useCompanyCreateMutation({
+    config: {
+      onSuccess: async (data) => {
+        resetForm()
 
-      await queryClient.invalidateQueries({
-        queryKey: [`companies`],
-      })
+        await queryClient.invalidateQueries({
+          queryKey: [`companies`],
+        })
 
-      router.visit(route(`admin.company.show`, data.uuid))
+        router.visit(route(`admin.company.show`, data.uuid))
+      },
     },
-  },
-})
+  })
 
-const { mutate: updateCompany } = useCompanyUpdateMutation({
-  config: {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: [`companies`],
-      })
+const { mutate: updateCompany, isPending: updateCompanyIsPending } =
+  useCompanyUpdateMutation({
+    config: {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: [`companies`],
+        })
 
-      router.visit(route(`admin.dashboard`))
+        router.visit(route(`admin.dashboard`))
+      },
     },
-  },
-})
+  })
 
 const onValidForm = (values) => {
   if (props.company) {
@@ -159,7 +161,12 @@ watch(
         <FormLabel>Pipeline Company ID</FormLabel>
 
         <FormControl>
-          <Input type="number" placeholder="123" v-bind="componentField" />
+          <Input
+            type="number"
+            placeholder="123"
+            v-bind="componentField"
+            :disabled="createCompanyIsPending || updateCompanyIsPending"
+          />
         </FormControl>
 
         <FormDescription> The ID of the company in Pipeline. </FormDescription>
@@ -179,6 +186,7 @@ watch(
             type="text"
             placeholder="https://acme.com"
             v-bind="componentField"
+            :disabled="createCompanyIsPending || updateCompanyIsPending"
           />
         </FormControl>
 
@@ -199,6 +207,7 @@ watch(
             type="tel"
             placeholder="(123) 456-7890"
             v-bind="componentField"
+            :disabled="createCompanyIsPending || updateCompanyIsPending"
           />
         </FormControl>
 
@@ -219,6 +228,7 @@ watch(
             type="email"
             placeholder="info@acme.com"
             v-bind="componentField"
+            :disabled="createCompanyIsPending || updateCompanyIsPending"
           />
         </FormControl>
 
@@ -235,7 +245,11 @@ watch(
         <CompanyDestroyDialog :company="company" />
       </div>
 
-      <Button variant="secondary" size="sm">
+      <Button
+        variant="secondary"
+        size="sm"
+        :disabled="createCompanyIsPending || updateCompanyIsPending"
+      >
         <Link :href="route(`admin.dashboard`)">Cancel</Link>
       </Button>
 
@@ -244,6 +258,7 @@ watch(
         size="sm"
         type="button"
         class=""
+        :disabled="createCompanyIsPending || updateCompanyIsPending"
         @click="submitForm"
       >
         Save
