@@ -10,10 +10,9 @@ import ToggleCompanyIsActive from '@/components/feature/company/ToggleCompanyIsA
 import ToggleMapSwitch from '@/components/feature/company/ToggleMapSwitch.vue'
 import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vue'
 import SelectThemeDialog from '@/components/feature/theme/SelectThemeDialog.vue'
-import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
+import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Label } from '@/components/ui/label'
 import { useCompanyQuery } from '@/composables/queries/company'
-import { useThemesQuery } from '@/composables/queries/theme'
 
 const props = defineProps({
   companyInitialValues: {
@@ -34,7 +33,7 @@ const { data: company, isError } = useCompanyQuery({
 <template>
   <Head :title="`${company?.name} - Manage Company`" />
 
-  <DefaultLayout>
+  <AuthenticatedLayout>
     <div v-if="company && !isError" class="group relative h-72">
       <div
         class="absolute left-8 top-40 mb-4 flex flex-col items-stretch justify-start space-y-4"
@@ -213,5 +212,5 @@ const { data: company, isError } = useCompanyQuery({
 
       <CompanyForm v-if="company && !isError" :company="company" />
     </section>
-  </DefaultLayout>
+  </AuthenticatedLayout>
 </template>

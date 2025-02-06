@@ -2,13 +2,13 @@
 import { Head } from '@inertiajs/vue3'
 
 import CompanyForm from '@/components/feature/company/CompanyForm.vue'
-import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
+import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 </script>
 
 <template>
   <Head title="Create Company`" />
 
-  <DefaultLayout>
+  <AuthenticatedLayout>
     <div class="">
       <h1 class="text-4xl font-bold">Create Company</h1>
 
@@ -18,5 +18,5 @@ import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
         <CompanyForm />
       </section>
     </div>
-  </DefaultLayout>
+  </AuthenticatedLayout>
 </template>

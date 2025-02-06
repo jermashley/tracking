@@ -42,15 +42,15 @@ const { logout } = useLogout()
           </span>
         </DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
+        <!-- <DropdownMenuSeparator /> -->
 
-        <DropdownMenuItem as-child>
+        <!-- <DropdownMenuItem as-child>
           <Link :href="route(`admin.dashboard`)">
             <FontAwesomeIcon class="mr-2" :icon="faGear" fixed-width />
 
             <span>Settings</span>
           </Link>
-        </DropdownMenuItem>
+        </DropdownMenuItem> -->
 
         <DropdownMenuSeparator />
 

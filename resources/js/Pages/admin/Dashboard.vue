@@ -3,16 +3,13 @@ import { Head } from '@inertiajs/vue3'
 
 import CompaniesDataTable from '@/components/feature/company/CompaniesDataTable.vue'
 import CompanyCreateButton from '@/components/feature/company/CompanyCreateButton.vue'
-// import LogoListDialog from '@/components/feature/image/LogoListDialog.vue'
-import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
-
-//
+import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 </script>
 
 <template>
   <Head title="Dashboard" />
 
-  <DefaultLayout>
+  <AuthenticatedLayout>
     <div
       class="mb-4 flex flex-col items-stretch justify-start space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0"
     >
@@ -26,5 +23,5 @@ import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
     </div>
 
     <CompaniesDataTable />
-  </DefaultLayout>
+  </AuthenticatedLayout>
 </template>

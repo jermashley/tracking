@@ -1,6 +1,4 @@
 <script setup>
-import { Badge } from '@/components/ui/badge'
-
 import Navbar from '../navigation/Navbar.vue'
 
 defineProps({
