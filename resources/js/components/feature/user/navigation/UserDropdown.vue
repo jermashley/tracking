@@ -1,7 +1,7 @@
 <script setup>
-import { faBars, faGear, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
+import { faBars, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Link, usePage } from '@inertiajs/vue3'
+import { usePage } from '@inertiajs/vue3'
 
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'

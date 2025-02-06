@@ -1,13 +1,17 @@
 <script setup>
+import { faChartTreeMap } from '@fortawesome/pro-duotone-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Link, usePage } from '@inertiajs/vue3'
 
 import UserDropdown from '@/components/feature/user/navigation/UserDropdown.vue'
 import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
@@ -27,9 +31,58 @@ const {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
-              <Link :href="route('admin.dashboard')">Dashboard</Link>
+              <Link :href="route('admin.dashboard')">
+                <FontAwesomeIcon
+                  class="mr-2"
+                  :icon="faChartTreeMap"
+                  fixed-width
+                />
+
+                Dashboard
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
+
+          <!-- <NavigationMenuItem>
+            <NavigationMenuTrigger> Manage </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul
+                class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]"
+              >
+                <li>
+                  <NavigationMenuLink as-child>
+                    <a
+                      href="#"
+                      class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div class="text-sm font-medium leading-none">Themes</div>
+                      <p
+                        class="line-clamp-2 text-sm leading-snug text-muted-foreground"
+                      >
+                        Create and edit custom themes.
+                      </p>
+                    </a>
+                  </NavigationMenuLink>
+                </li>
+
+                <li>
+                  <NavigationMenuLink as-child>
+                    <a
+                      href="#"
+                      class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                    >
+                      <div class="text-sm font-medium leading-none">Images</div>
+                      <p
+                        class="line-clamp-2 text-sm leading-snug text-muted-foreground"
+                      >
+                        Manage image library.
+                      </p>
+                    </a>
+                  </NavigationMenuLink>
+                </li>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem> -->
         </NavigationMenuList>
       </NavigationMenu>
 
