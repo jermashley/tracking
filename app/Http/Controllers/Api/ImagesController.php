@@ -34,11 +34,13 @@ class ImagesController extends Controller
      */
     public function store(StoreImageRequest $request)
     {
-        $image = Image::create([
+        $image = new Image([
             'name' => $request->name,
             'image_type_id' => $request->image_type_id,
             'file_path' => $request->file('image')->store('images', 'public'),
         ]);
+
+        $image->save();
 
         return response()->json($image, Response::HTTP_CREATED);
     }

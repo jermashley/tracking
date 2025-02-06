@@ -18,7 +18,6 @@ import { useCompaniesQuery } from '@/composables/queries/company'
 
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
-import CompanyUpdateButton from './CompanyUpdateButton.vue'
 import ToggleMapSwitch from './ToggleMapSwitch.vue'
 
 const { data, isError } = useCompaniesQuery()
@@ -35,6 +34,7 @@ const columns = [
         website: row.original.website,
         email: row.original.email,
         logo: row.original.logo,
+        isActive: row.original.is_active,
       })
     },
   },
