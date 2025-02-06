@@ -20,7 +20,6 @@ class OAuthController extends Controller
 
     public function callback(string $provider)
     {
-        dump(Socialite::driver($provider)->user());
         $socialiteUser = Socialite::driver($provider)->user();
 
         $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
@@ -32,7 +31,8 @@ class OAuthController extends Controller
             ]);
         }
 
-        $user = User::updateOrCreate([
+        $userModel = new User;
+        $user = $userModel->updateOrCreate([
             'azure_id' => $socialiteUser->id,
         ], [
             'first_name' => $socialiteUser->user['givenName'],
