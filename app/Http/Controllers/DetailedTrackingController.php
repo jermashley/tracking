@@ -38,8 +38,14 @@ class DetailedTrackingController extends Controller
 
         // Attempt to get local company model from Pipeline company ID.
         $company = Company::where('pipeline_company_id', $pipelineCompanyId)
+            ->where('is_active', true)
             ->with(['logo', 'banner', 'footer', 'theme'])
             ->first();
+
+        // If error in trackingDataResponse, redirect to error page.
+        if (! $company) {
+            return redirect(route('trackShipment.notFound', $trackingNumber));
+        }
 
         $shipmentCoordinates = null;
 
