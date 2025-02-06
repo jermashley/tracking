@@ -20,11 +20,11 @@ export default defineConfig({
     }),
     vueDevTools(),
   ],
-  // server: {
-  //   hmr: {
-  //     host: `tracking.test`,
-  //   },
-  // },
+  server: {
+    hmr: {
+      host: `tracking.test`,
+    },
+  },
   // build: {
   //   watch: {
   //     include: [`resources/**`],
