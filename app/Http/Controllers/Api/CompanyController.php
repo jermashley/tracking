@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateCompanyLogoRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Requests\UpdateCompanyThemeRequest;
 use App\Models\Company;
+use App\Models\Theme;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +30,17 @@ class CompanyController extends Controller
      */
     public function store(StoreCompanyRequest $request): JsonResponse
     {
-        $company = Company::create($request->validated());
+        // Get the first theme to assign to the company if no theme_id is provided.
+        $theme = Theme::first();
+
+        $company = new Company($request->validated());
+
+        // If no theme_id is provided, assign the first theme to the company.
+        if (! $request->has('theme_id')) {
+            $company->theme_id = $theme ? $theme->id : null;
+        }
+
+        $company->save();
 
         return response()->json($company, Response::HTTP_CREATED);
     }
