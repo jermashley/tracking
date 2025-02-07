@@ -62,7 +62,7 @@ onUnmounted(() => {
 
         <img
           v-else
-          src="/images/7tRZNUiuP1fs6cwEbWEHqziL80g4yWnRplt6kRp4.png"
+          :src="imageAssetUrl({ filePath: `images/FW_Logo_Full_Color.png` })"
           alt="Flat World Global Solutions Logo"
           class="h-full w-auto object-contain"
         />
