@@ -25,9 +25,9 @@ class OAuthController extends Controller
         $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
 
         // Return to the login if the user's email domain is not in our valid domain list.
-        if (! in_array($emailDomain, config('socialite.valid_domains'))) {
-            return redirect()->route('auth.login')->withErrors([
-                'email' => 'You must use a valid Prologue email address to login.',
+        if (! in_array($emailDomain, config('socialite.valid_domains')) || ! in_array($socialiteUser->email, config('socialite.valid_users'))) {
+            return redirect()->route('login')->withErrors([
+                'email' => 'You must be an allowed user to login.',
             ]);
         }
 

@@ -28,7 +28,11 @@ Route::prefix('admin')
     ->middleware('auth')
     ->group(function () {
         Route::get('/dashboard', function () {
-            return Inertia::render('admin/Dashboard');
+            $companies = Company::with(['logo', 'theme'])->get();
+
+            return Inertia::render('admin/Dashboard', [
+                'initialCompanies' => $companies,
+            ]);
         })->name('dashboard');
 
         Route::get('/company/create', function () {

@@ -1,7 +1,7 @@
 <script setup>
 import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
@@ -20,7 +20,13 @@ import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
 import CompanyInfoCell from './CompanyInfoCell.vue'
 import ToggleMapSwitch from './ToggleMapSwitch.vue'
 
-const { data, isError } = useCompaniesQuery()
+const { initialCompanies } = usePage().props
+
+const { data, isError } = useCompaniesQuery({
+  config: {
+    initialData: initialCompanies,
+  },
+})
 
 const columns = [
   {
