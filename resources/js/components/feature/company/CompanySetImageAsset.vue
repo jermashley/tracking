@@ -76,7 +76,7 @@ const { mutate: setImageAsset } = useCompanySetImageAssetMutation({
   },
 })
 
-const { mutate: createLogo } = useImageStoreMutation({
+const { mutate: createLogo, isPending } = useImageStoreMutation({
   config: {
     onSuccess: (data) => {
       resetForm()
@@ -169,6 +169,7 @@ const cancelDialog = () => {
                 type="text"
                 placeholder="ACME Inc. Logo"
                 v-bind="componentField"
+                :disabled="isPending"
               />
             </FormControl>
 
@@ -190,6 +191,7 @@ const cancelDialog = () => {
               <Input
                 accept="image/*"
                 type="file"
+                :disabled="isPending"
                 @change="
                   (event) => {
                     console.log(event.target.files[0])
@@ -207,7 +209,12 @@ const cancelDialog = () => {
       <DialogFooter
         class="flex flex-row items-center justify-end space-x-2 pt-4"
       >
-        <Button variant="secondary" size="sm" @click="cancelDialog">
+        <Button
+          variant="secondary"
+          size="sm"
+          :disabled="isPending"
+          @click="cancelDialog"
+        >
           Cancel
         </Button>
 
@@ -216,6 +223,7 @@ const cancelDialog = () => {
           variant="default"
           size="sm"
           class=""
+          :disabled="isPending"
           @click="submitForm"
         >
           Save

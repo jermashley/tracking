@@ -36,6 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { imageAssetUrl } from '@/composables/hooks/disks'
 import { useCompanyUpdateMutation } from '@/composables/mutations/company'
 import { useImagesQuery } from '@/composables/queries/image'
 import { useThemesQuery } from '@/composables/queries/theme'
@@ -378,7 +379,9 @@ const cancelDialog = () => {
                         >
                           <div class="relative aspect-square w-8">
                             <img
-                              :src="`/${image.file_path}`"
+                              :src="
+                                imageAssetUrl({ filePath: image?.file_path })
+                              "
                               class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
                             />
                           </div>

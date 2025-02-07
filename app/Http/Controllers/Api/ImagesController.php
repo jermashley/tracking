@@ -7,6 +7,8 @@ use App\Http\Requests\StoreImageRequest;
 use App\Models\Image;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImagesController extends Controller
@@ -34,15 +36,27 @@ class ImagesController extends Controller
      */
     public function store(StoreImageRequest $request)
     {
-        $image = new Image([
-            'name' => $request->name,
-            'image_type_id' => $request->image_type_id,
-            'file_path' => $request->file('image')->store('images', 'public'),
-        ]);
+        try {
+            $filePath = $request->file('image')->store('images', 'spaces');
 
-        $image->save();
+            if (! $filePath) {
+                throw new \Exception('File path is empty');
+            }
 
-        return response()->json($image, Response::HTTP_CREATED);
+            $image = new Image([
+                'name' => $request->name,
+                'image_type_id' => $request->image_type_id,
+                'file_path' => $filePath,
+            ]);
+
+            $image->save();
+
+            return response()->json($image, Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            Log::error('Error storing image: '.$e->getMessage());
+
+            return response()->json(['error' => 'Failed to store image'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**

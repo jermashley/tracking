@@ -1,4 +1,5 @@
 <script setup>
+import { imageAssetUrl } from '@/composables/hooks/disks'
 import { useCompanyTheme } from '@/composables/hooks/theme'
 
 import Footer from '../footer/Footer.vue'
@@ -35,13 +36,13 @@ defineProps({
       class="relative -z-10 h-[50vh] w-full overflow-hidden"
     >
       <img
-        :src="bannerFilePath"
+        :src="imageAssetUrl({ filePath: bannerFilePath })"
         class="mx-auto h-full w-full max-w-7xl object-cover"
         alt=""
       />
 
       <img
-        :src="bannerFilePath"
+        :src="imageAssetUrl({ filePath: bannerFilePath })"
         class="absolute bottom-0 left-0 right-0 top-0 -z-10 h-[120%] w-[120%] object-cover opacity-75 blur-2xl"
         alt=""
       />
@@ -62,7 +63,11 @@ defineProps({
         v-if="footerFilePath"
         class="mx-auto mt-8 w-full max-w-3xl overflow-hidden rounded-lg shadow-xl"
       >
-        <img :src="footerFilePath" class="w-full object-cover" alt="" />
+        <img
+          :src="imageAssetUrl({ filePath: footerFilePath })"
+          class="w-full object-cover"
+          alt=""
+        />
       </div>
     </div>
 

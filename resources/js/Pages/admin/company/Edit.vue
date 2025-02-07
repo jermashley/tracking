@@ -12,6 +12,7 @@ import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vu
 import SelectThemeDialog from '@/components/feature/theme/SelectThemeDialog.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Label } from '@/components/ui/label'
+import { imageAssetUrl } from '@/composables/hooks/disks'
 import { useCompanyQuery } from '@/composables/queries/company'
 
 const props = defineProps({
@@ -43,7 +44,7 @@ const { data: company, isError } = useCompanyQuery({
         >
           <img
             v-if="company.logo?.file_path"
-            :src="`/${company.logo?.file_path}`"
+            :src="imageAssetUrl({ filePath: company.logo?.file_path })"
             :alt="company.logo?.name"
           />
 

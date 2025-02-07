@@ -3,6 +3,7 @@ import { usePage } from '@inertiajs/vue3'
 import { onMounted, onUnmounted, ref } from 'vue'
 
 import UserDropdown from '@/components/feature/user/navigation/UserDropdown.vue'
+import { imageAssetUrl } from '@/composables/hooks/disks'
 
 const {
   auth: { user },
@@ -54,7 +55,7 @@ onUnmounted(() => {
       >
         <img
           v-if="company && company?.logo"
-          :src="company.logo.file_path"
+          :src="imageAssetUrl({ filePath: company.logo?.file_path })"
           :alt="company.logo?.name ?? `Company logo`"
           class="h-full w-auto object-contain"
         />

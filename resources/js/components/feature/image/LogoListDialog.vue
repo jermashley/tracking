@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { imageAssetUrl } from '@/composables/hooks/disks'
 import { useImagesQuery } from '@/composables/queries/image'
 
 import LogoStoreDialog from '../company/CompanySetImageAsset.vue'
@@ -55,7 +56,7 @@ const { data: images, isError: imagesIsError } = useImagesQuery({
         >
           <div class="relative aspect-square w-20">
             <img
-              :src="`/${image.file_path}`"
+              :src="imageAssetUrl({ filePath: image?.file_path })"
               class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
             />
           </div>
