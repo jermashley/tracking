@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
 use App\Models\Company;
+use App\Models\Theme;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -46,6 +47,14 @@ Route::prefix('admin')
                 'companyInitialValues' => $company,
             ]);
         })->name('company.show');
+
+        Route::get('themes', function () {
+            $themes = Theme::all();
+
+            return Inertia::render('admin/theme/Index', [
+                'initialThemes' => $themes,
+            ]);
+        })->name('theme.index');
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

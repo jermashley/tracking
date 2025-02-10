@@ -43,29 +43,28 @@ const {
             </NavigationMenuLink>
           </NavigationMenuItem>
 
-          <!-- <NavigationMenuItem>
+          <NavigationMenuItem>
             <NavigationMenuTrigger> Manage </NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul
-                class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]"
-              >
+              <ul class="grid min-w-72 grid-cols-1 gap-3 p-4">
                 <li>
                   <NavigationMenuLink as-child>
-                    <a
-                      href="#"
+                    <Link
+                      :href="route('admin.theme.index')"
                       class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div class="text-sm font-medium leading-none">Themes</div>
+
                       <p
                         class="line-clamp-2 text-sm leading-snug text-muted-foreground"
                       >
                         Create and edit custom themes.
                       </p>
-                    </a>
+                    </Link>
                   </NavigationMenuLink>
                 </li>
 
-                <li>
+                <!-- <li>
                   <NavigationMenuLink as-child>
                     <a
                       href="#"
@@ -79,10 +78,10 @@ const {
                       </p>
                     </a>
                   </NavigationMenuLink>
-                </li>
+                </li> -->
               </ul>
             </NavigationMenuContent>
-          </NavigationMenuItem> -->
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
 
