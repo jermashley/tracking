@@ -73,7 +73,7 @@ const statuses = computed(() => {
 })
 
 const numberOfPieces = computed(() => {
-  return props.trackingData.data.trackingObject?.lineItems.reduce(
+  return props.trackingData.data.trackingObject?.lineItems?.reduce(
     (previous, current) => {
       const currentPieces = Number(current.pieces) || 0
 
@@ -194,6 +194,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
               />
 
               <ShipmentDetail
+                v-if="numberOfPieces"
                 :detail="numberOfPieces"
                 :label="`Piece${numberOfPieces > 1 ? `s` : ``}`"
                 :icon="faBoxesStacked"
@@ -245,7 +246,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
                     trackingData.data.trackingObject.actualPickupDate,
                   ).format('MMMM D, YYYY')
                 "
-                :icon="faCalendar"
+                :icon="faCalendarCheck"
                 label="Actual Pickup Date"
               />
 
