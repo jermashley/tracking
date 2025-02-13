@@ -12,7 +12,7 @@ const updateCompany = async (companyId, formData) => {
 
 const useCompanyUpdateMutation = ({ config = {} } = {}) =>
   useMutation({
-    mutationFn: ({ companyId, formData }) => updateCompany(companyId, formData),
+    mutationFn: ({ id, formData }) => updateCompany(id, formData),
 
     ...config,
   })

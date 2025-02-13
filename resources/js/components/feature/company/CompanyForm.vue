@@ -1,7 +1,7 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
 import { useQueryClient } from '@tanstack/vue-query'
-import { useForm } from 'vee-validate'
+import { useForm, useIsFormDirty } from 'vee-validate'
 import { watch } from 'vue'
 import * as yup from 'yup'
 
@@ -54,6 +54,8 @@ const { isFieldDirty, handleSubmit, resetForm } = useForm({
   keepValuesOnUnmount: true,
 })
 
+const isFormDirty = useIsFormDirty()
+
 const { mutate: createCompany, isPending: createCompanyIsPending } =
   useCompanyCreateMutation({
     config: {
@@ -86,7 +88,9 @@ const onValidForm = (values) => {
   if (props.company) {
     updateCompany({
       id: props.company.id,
-      ...values,
+      formData: {
+        ...values,
+      },
     })
   } else {
     createCompany({
@@ -258,7 +262,9 @@ watch(
         size="sm"
         type="button"
         class=""
-        :disabled="createCompanyIsPending || updateCompanyIsPending"
+        :disabled="
+          createCompanyIsPending || updateCompanyIsPending || !isFormDirty
+        "
         @click="submitForm"
       >
         Save

@@ -28,8 +28,6 @@ class UpdateCompanyRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'max:255'],
             'pipeline_company_id' => ['required', 'integer'],
-            'theme_id' => ['required', 'integer'],
-            'enable_map' => ['required', 'boolean'],
         ];
     }
 }
