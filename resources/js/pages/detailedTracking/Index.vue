@@ -99,7 +99,14 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 </script>
 
 <template>
-  <Head :title="`${company?.name ?? appName} - Tracking - ${proNumber}`" />
+  <Head>
+    <title>{{ company?.name ?? appName }} - {{ proNumber }}</title>
+
+    <meta
+      name="description"
+      content="Track and share shipment details with ease."
+    />
+  </Head>
 
   <TrackingLayout
     :banner-file-path="company?.banner?.file_path"
