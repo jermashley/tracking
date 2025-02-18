@@ -59,4 +59,12 @@ onMounted(() => {
   display: none !important;
   visibility: hidden !important;
 }
+
+.trimblemaps-canvas-container {
+  position: relative !important;
+}
+
+.trimblemaps-canvas {
+  width: 100% !important;
+}
 </style>
