@@ -56,6 +56,6 @@ onMounted(() => {
 
 <style scoped>
 .trimblemaps-ctrl-attrib-inner {
-  display: none;
+  display: none !important;
 }
 </style>
