@@ -53,3 +53,9 @@ onMounted(() => {
     class="h-[25rem] w-full overflow-hidden rounded [&_canvas]:!rounded"
   />
 </template>
+
+<style scoped>
+.trimblemaps-ctrl-attrib-inner {
+  display: none;
+}
+</style>
