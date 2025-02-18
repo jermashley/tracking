@@ -55,7 +55,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.trimblemaps-ctrl-attrib-inner {
+.trimblemaps-ctrl-bottom-right {
   display: none !important;
+  visibility: hidden !important;
 }
 </style>
