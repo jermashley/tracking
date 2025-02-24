@@ -12,11 +12,11 @@ class DetailedTrackingController extends Controller
 {
     public function index(Request $request)
     {
-        $trackingNumber = $request->query('trackingNumber') ?? '';
-        $searchOption = $request->query('searchOption') ?? '';
-        $companyId = $request->query('companyId') ?? '';
-        $zipCode = $request->query('zipCode') ?? '';
-        $brand = $request->query('brand') ?? '';
+        $trackingNumber = $request->query('trackingNumber') ?? null;
+        $searchOption = $request->query('searchOption') ?? null;
+        $companyId = $request->query('companyId') ?? null;
+        $zipCode = $request->query('zipCode') ?? null;
+        $brand = $request->query('brand') ?? null;
 
         $pipelineApiTrackingClient = new PipelineApiTracking;
 

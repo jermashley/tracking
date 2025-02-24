@@ -59,12 +59,14 @@ const bolNumber = computed(() => {
 })
 
 const proNumber = computed(() => {
+  const proNumber = props.trackingData.data.trackingObject?.carrierPro
+
   const statusWithProNumber =
     props.trackingData.data.trackingObject?.allStatuses?.find(
       (status) => status.pro_number !== null,
     )
 
-  return statusWithProNumber?.pro_number
+  return proNumber ?? statusWithProNumber?.pro_number
 })
 
 const statuses = computed(() => {
