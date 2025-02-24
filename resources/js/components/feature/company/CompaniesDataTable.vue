@@ -40,7 +40,8 @@ const columns = [
         website: row.original.website,
         email: row.original.email,
         logo: row.original.logo,
-        isActive: row.original.is_active,
+        isActive: Boolean(row.original.is_active),
+        brand: Boolean(row.original.requires_brand) && row.original.brand,
       })
     },
   },
@@ -70,29 +71,23 @@ const columns = [
     accessorKey: `edit`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
     cell: ({ row }) => {
-      return h(Button, { variant: `outline`, size: `sm`, asChild: true }, [
-        h(Link, { href: route(`admin.company.show`, row.original.uuid) }, [
-          h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
-        ]),
-      ])
+      return h(
+        Button,
+        { variant: `outline`, size: `sm`, asChild: true },
+        {
+          default: () =>
+            h(
+              Link,
+              { href: route(`admin.company.show`, row.original.uuid) },
+              {
+                default: () =>
+                  h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
+              },
+            ),
+        },
+      )
     },
   },
-  //   {
-  //     accessorKey: `logo`,
-  //     header: () => h(`div`, { class: `text-base` }, `Logo`),
-  //     cell: ({ row }) => h(`img`, { class: `text-base`, src: row.logo }),
-  //   },
-  //   {
-  //     accessorKey: `theme_id`,
-  //     header: () => h(`div`, { class: `text-base` }, `Theme`),
-  //     cell: ({ row }) => h(`div`, { class: `text-base` }, row.theme_id),
-  //   },
-  //   {
-  //     accessorKey: `background_image_id`,
-  //     header: () => h(`div`, { class: `text-base` }, `Background`),
-  //     cell: ({ row }) =>
-  //       h(`div`, { class: `text-base` }, row.background_image_id),
-  //   },
 ]
 
 const tableOptions = reactive({
@@ -125,6 +120,7 @@ const companiesTable = useVueTable(tableOptions)
           </TableHead>
         </TableRow>
       </TableHeader>
+
       <TableBody>
         <template v-if="companiesTable.getRowModel().rows?.length">
           <TableRow
@@ -139,6 +135,7 @@ const companiesTable = useVueTable(tableOptions)
             </TableCell>
           </TableRow>
         </template>
+
         <template v-else>
           <TableRow>
             <TableCell :colspan="columns.length" class="h-24 text-center">

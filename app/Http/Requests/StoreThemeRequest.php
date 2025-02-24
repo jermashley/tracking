@@ -11,7 +11,7 @@ class StoreThemeRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class StoreThemeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'primary.hue' => 'required|integer|min:0|max:360',
+            'primary.saturation' => 'required|integer|min:0|max:100',
+            'primary.brightness' => 'required|integer|min:0|max:100',
+            'accent.hue' => 'required|integer|min:0|max:360',
+            'accent.saturation' => 'required|integer|min:0|max:100',
+            'accent.brightness' => 'required|integer|min:0|max:100',
+            'deriveFrom' => 'required|string|in:primary,accent',
+            'radius' => 'nullable|string|max:255',
+            'is_system' => 'boolean',
         ];
     }
 }

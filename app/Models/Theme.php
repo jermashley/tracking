@@ -15,15 +15,12 @@ class Theme extends Model
     protected $fillable = [
         'name',
         'colors',
+        'radius',
         'is_system',
     ];
 
     protected $casts = [
-        'colors' => 'json',
+        'colors' => 'array',
+        'is_system' => 'boolean',
     ];
-
-    public function companies(): HasMany
-    {
-        return $this->hasMany(Company::class);
-    }
 }

@@ -16,6 +16,7 @@ class DetailedTrackingController extends Controller
         $searchOption = $request->query('searchOption') ?? '';
         $companyId = $request->query('companyId') ?? '';
         $zipCode = $request->query('zipCode') ?? '';
+        $brand = $request->query('brand') ?? '';
 
         $pipelineApiTrackingClient = new PipelineApiTracking;
 
@@ -36,14 +37,11 @@ class DetailedTrackingController extends Controller
 
         $trackingData = $trackingDataResponse->json();
 
-        // Attempt to get local company model from Pipeline company ID.
-        $company = Company::where('pipeline_company_id', $pipelineCompanyId)
-            ->where('is_active', true)
-            ->with(['logo', 'banner', 'footer', 'theme'])
-            ->first();
+        // Attempt to get local company model from either the slug or the Pipeline company ID.
+        $company = Company::findByIdentifier($brand, $companyId, $pipelineCompanyId);
 
         // If error in trackingDataResponse, redirect to error page.
-        if (! $company) {
+        if (! $company || ($company->requires_brand && !$brand)) {
             return redirect(route('trackShipment.notFound', $trackingNumber));
         }
 

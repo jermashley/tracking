@@ -3,7 +3,6 @@ import {
   faArrowRight,
   faArrowUpFromBracket,
   faBoxesStacked,
-  faCalendar,
   faCalendarArrowDown,
   faCalendarArrowUp,
   faCalendarCheck,

@@ -2,10 +2,9 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const updateCompany = async (companyId, formData) => {
-  const { data } = await axios.patch(
-    route(`api.companies.update`, companyId),
-    formData,
-  )
+  const { data } = await axios.patch(route(`api.companies.update`, companyId), {
+    ...formData,
+  })
 
   return data
 }

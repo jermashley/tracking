@@ -27,6 +27,8 @@ return new class extends Migration
             $table->foreignIdFor(Image::class, 'footer_image_id')->nullable();
             $table->foreignIdFor(Theme::class)->nullable();
             $table->boolean('enable_map')->default(false);
+            $table->boolean('requires_brand')->default(false);
+            $table->string('brand')->nullable();
             $table->timestamps();
         });
     }

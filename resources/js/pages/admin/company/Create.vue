@@ -8,7 +8,7 @@ import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vu
 <template>
   <Head title="Create Company`" />
 
-  <AuthenticatedLayout>
+  <AuthenticatedLayout title="Create Company">
     <div class="">
       <h1 class="text-4xl font-bold">Create Company</h1>
 

@@ -34,7 +34,7 @@ const { data: company, isError } = useCompanyQuery({
 <template>
   <Head :title="`${company?.name} - Manage Company`" />
 
-  <AuthenticatedLayout>
+  <AuthenticatedLayout :title="company?.name">
     <div v-if="company && !isError" class="group relative h-72">
       <div
         class="absolute left-8 top-40 mb-4 flex flex-col items-stretch justify-start space-y-4"

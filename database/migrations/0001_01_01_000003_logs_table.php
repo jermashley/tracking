@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('themes', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->uuid('uuid');
-            $table->string('name');
-            $table->json('colors');
-            $table->string('radius')->nullable();
-            $table->boolean('is_system')->default(false);
-            $table->enum('deriveFrom', ['primary', 'accent']);
+            $table->string('level');
+            $table->text('message');
+            $table->text('context')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('themes');
+        Schema::dropIfExists('logs');
     }
 };

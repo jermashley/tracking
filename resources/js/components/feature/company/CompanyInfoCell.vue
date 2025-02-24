@@ -42,6 +42,11 @@ defineProps({
     required: false,
     default: null,
   },
+  brand: {
+    type: [String, Boolean],
+    required: false,
+    default: null,
+  },
   logo: {
     type: Object,
     required: false,
@@ -104,7 +109,7 @@ defineProps({
           </Button>
         </HoverCardTrigger>
 
-        <HoverCardContent class="w-96" align="start">
+        <HoverCardContent class="w-[28rem]" align="start">
           <div class="flex flex-col items-start justify-start gap-4">
             <div class="flex w-full flex-row justify-between gap-1">
               <h4 class="text-xl font-semibold">{{ name }}</h4>
@@ -142,6 +147,12 @@ defineProps({
                 <Button variant="link" class="h-auto p-0 underline" as-child>
                   <a :href="`mailto:${email}`" target="_blank">{{ email }}</a>
                 </Button>
+              </p>
+
+              <p v-if="brand" class="flex flex-col items-start justify-start">
+                <span class="font-semibold">Brand: </span>
+
+                <span>{{ brand }}</span>
               </p>
             </div>
           </div>

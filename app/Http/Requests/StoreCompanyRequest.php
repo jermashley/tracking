@@ -23,13 +23,12 @@ class StoreCompanyRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'logo_image_id' => ['nullable', 'integer', 'exists:images,id'],
             'website' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'max:255'],
             'pipeline_company_id' => ['required', 'integer'],
-            'theme_id' => ['integer'],
-            'enable_map' => ['boolean'],
+            'requires_brand' => ['boolean'],
+            'brand' => ['required_if:requires_brand,true', 'string', 'max:255'],
         ];
     }
 }

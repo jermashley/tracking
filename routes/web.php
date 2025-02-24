@@ -28,6 +28,9 @@ Route::prefix('admin')
     ->as('admin.')
     ->middleware('auth')
     ->group(function () {
+        // Admin routes
+
+        // Dashboard
         Route::get('/dashboard', function () {
             $companies = Company::with(['logo', 'theme'])->get();
 
@@ -36,10 +39,14 @@ Route::prefix('admin')
             ]);
         })->name('dashboard');
 
+        // Company routes
+
+        // Company index
         Route::get('/company/create', function () {
             return Inertia::render('admin/company/Create');
         })->name('company.create');
 
+        // Company show
         Route::get('/company/{company:uuid}', function (Company $company) {
             $company->load(['logo', 'banner', 'footer', 'theme']);
 
@@ -48,6 +55,9 @@ Route::prefix('admin')
             ]);
         })->name('company.show');
 
+        // Theme routes
+
+        // Theme index
         Route::get('themes', function () {
             $themes = Theme::all();
 
@@ -55,6 +65,13 @@ Route::prefix('admin')
                 'initialThemes' => $themes,
             ]);
         })->name('theme.index');
+
+        // Theme show
+        Route::get('themes/{theme:uuid}', function (Theme $theme) {
+            return Inertia::render('admin/theme/Edit', [
+                'initialTheme' => $theme,
+            ]);
+        })->name('theme.show');
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

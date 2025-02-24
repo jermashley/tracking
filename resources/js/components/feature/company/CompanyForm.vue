@@ -15,6 +15,7 @@ import {
   FormLabel,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 import {
   useCompanyCreateMutation,
   useCompanyUpdateMutation,
@@ -33,23 +34,35 @@ const props = defineProps({
 
 const queryClient = useQueryClient()
 
-const updateCompanyFormSchema = yup.object({
+const companyFormSchema = yup.object({
   name: yup.string().min(1).required(),
   pipeline_company_id: yup.number().min(1).required(),
   logo_image_id: yup.number().nullable(),
   website: yup.string().nullable(),
   phone: yup.string().nullable(),
   email: yup.string().nullable(),
+  requires_brand: yup.boolean(),
+  brand: yup
+    .string()
+    .nullable()
+    .when(`requires_brand`, {
+      is: (value) => value === true,
+      then: (schema) =>
+        schema.required(`Brand is required when requiring a brand.`),
+      otherwise: (schema) => schema.nullable(),
+    }),
 })
 
-const { isFieldDirty, handleSubmit, resetForm } = useForm({
-  validationSchema: updateCompanyFormSchema,
+const { isFieldDirty, handleSubmit, resetForm, values } = useForm({
+  validationSchema: companyFormSchema,
   initialValues: {
     name: props.company?.name,
     pipeline_company_id: props.company?.pipeline_company_id,
     website: props.company?.website,
     phone: props.company?.phone,
     email: props.company?.email,
+    requires_brand: Boolean(props.company?.requires_brand),
+    brand: props.company?.brand,
   },
   keepValuesOnUnmount: true,
 })
@@ -94,15 +107,15 @@ const onValidForm = (values) => {
     })
   } else {
     createCompany({
-      formData: values,
+      formData: {
+        ...values,
+      },
     })
   }
 }
 
 const onInvalidForm = ({ values, errors, results }) => {
-  console.log(values)
-  console.log(errors)
-  console.log(results)
+  console.error({ values, errors, results })
 }
 
 const submitForm = () => {
@@ -120,9 +133,9 @@ watch(
           website: newCompany.website,
           phone: newCompany.phone,
           email: newCompany.email,
-          theme_id: `${newCompany.theme_id}`,
-          enable_map: Boolean(newCompany.enable_map),
           logo_image_id: `${newCompany.logo?.id}`,
+          requires_brand: Boolean(newCompany?.requires_brand),
+          brand: newCompany?.brand,
         },
       })
     }
@@ -237,6 +250,46 @@ watch(
         </FormControl>
 
         <FormDescription> The company's email address. </FormDescription>
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ value, handleChange }" name="requires_brand">
+      <FormItem
+        class="flex flex-row items-center justify-between rounded-lg border p-4"
+      >
+        <div class="space-y-0.5">
+          <FormLabel class="text-base">Requires Brand</FormLabel>
+
+          <FormDescription>
+            Require that the tracking URL contain a brand query parameter.
+          </FormDescription>
+        </div>
+
+        <FormControl>
+          <Switch :checked="value" @update:checked="handleChange" />
+        </FormControl>
+      </FormItem>
+    </FormField>
+
+    <FormField
+      v-if="values.requires_brand"
+      v-slot="{ componentField }"
+      name="brand"
+      :validate-on-blur="!isFieldDirty"
+    >
+      <FormItem>
+        <FormLabel>Brand</FormLabel>
+
+        <FormControl>
+          <Input
+            type="text"
+            placeholder="acme_corp"
+            v-bind="componentField"
+            :disabled="createCompanyIsPending || updateCompanyIsPending"
+          />
+        </FormControl>
+
+        <FormDescription> The company's brand string. </FormDescription>
       </FormItem>
     </FormField>
 

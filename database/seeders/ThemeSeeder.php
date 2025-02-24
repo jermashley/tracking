@@ -41,6 +41,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Cranberry',
@@ -69,6 +70,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Rostro',
@@ -97,6 +99,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Spruce',
@@ -125,6 +128,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Honeybee',
@@ -153,6 +157,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Strawbaerie',
@@ -181,6 +186,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
+                'deriveFrom' => 'primary',
             ],
             // Company Themes
             [
@@ -210,6 +216,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
+                'deriveFrom' => 'accent',
             ],
             [
                 'name' => 'Jayco',
@@ -238,6 +245,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'Loftwall',
@@ -266,6 +274,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
+                'deriveFrom' => 'primary',
             ],
             [
                 'name' => 'The Ubique Group',
@@ -294,6 +303,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
+                'deriveFrom' => 'primary',
             ],
         ];
 
