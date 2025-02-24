@@ -2,6 +2,7 @@
 import { faCircle } from '@fortawesome/pro-duotone-svg-icons'
 import { faImageSlash } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Link } from '@inertiajs/vue3'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -19,43 +20,9 @@ import {
 import { imageAssetUrl } from '@/composables/hooks/disks'
 
 defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  pipelineCompanyId: {
-    type: Number,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  website: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  email: {
-    type: String,
-    required: false,
-    default: null,
-  },
-  brand: {
-    type: [String, Boolean],
-    required: false,
-    default: null,
-  },
-  logo: {
+  company: {
     type: Object,
-    required: false,
-    default: null,
-  },
-  isActive: {
-    type: Boolean,
-    required: false,
-    default: false,
+    required: true,
   },
 })
 </script>
@@ -64,8 +31,8 @@ defineProps({
   <div class="flex flex-row items-center justify-start space-x-6">
     <div class="relative aspect-square w-16">
       <img
-        v-if="logo?.file_path"
-        :src="imageAssetUrl({ filePath: logo?.file_path })"
+        v-if="company.logo?.file_path"
+        :src="imageAssetUrl({ filePath: company.logo?.file_path })"
         class="absolute left-0 top-0 block h-full w-full scale-90 transform object-contain transition-all duration-300 group-hover:scale-95"
       />
 
@@ -90,22 +57,24 @@ defineProps({
               :icon="faCircle"
               fixed-width=""
               :class="{
-                'text-lime-600': isActive,
-                'text-red-600': !isActive,
+                'text-lime-600': company.is_active,
+                'text-red-600': !company.is_active,
               }"
             />
           </TooltipTrigger>
 
           <TooltipContent>
-            <p>{{ isActive ? `Enabled` : `Disabled` }}</p>
+            <p>{{ company.is_active ? `Enabled` : `Disabled` }}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
 
       <HoverCard :open-delay="300">
         <HoverCardTrigger as-child>
-          <Button variant="link" class="p-0 underline">
-            {{ name }}
+          <Button variant="link" class="p-0 underline" as-child>
+            <Link :href="route(`admin.company.show`, company.uuid)">
+              {{ company.name }}
+            </Link>
           </Button>
         </HoverCardTrigger>
 
@@ -114,45 +83,61 @@ defineProps({
             <div class="flex w-full flex-row justify-between gap-1">
               <h4 class="text-xl font-semibold">{{ name }}</h4>
 
-              <Badge v-if="pipelineCompanyId" variant="secondary">
-                Pipeline ID: {{ pipelineCompanyId }}
+              <Badge v-if="company.pipelineCompanyId" variant="secondary">
+                Pipeline ID: {{ company.pipelineCompanyId }}
               </Badge>
             </div>
 
             <div class="flex flex-col gap-4 text-sm">
-              <p v-if="phone" class="flex flex-col items-start justify-start">
+              <p
+                v-if="company.phone"
+                class="flex flex-col items-start justify-start"
+              >
                 <span class="font-semibold">Phone: </span>
 
                 <Button variant="link" class="h-auto p-0 underline" as-child>
                   <a
-                    :href="`tel:+1${phone.replace(/\D/g, ``)}`"
+                    :href="`tel:+1${company.phone.replace(/\D/g, ``)}`"
                     target="_blank"
                   >
-                    {{ phone }}
+                    {{ company.phone }}
                   </a>
                 </Button>
               </p>
 
-              <p v-if="website" class="flex flex-col items-start justify-start">
+              <p
+                v-if="company.website"
+                class="flex flex-col items-start justify-start"
+              >
                 <span class="font-semibold">Website: </span>
 
                 <Button variant="link" class="h-auto p-0 underline" as-child>
-                  <a :href="website" target="_blank">{{ website }}</a>
+                  <a :href="company.website" target="_blank">
+                    {{ company.website }}
+                  </a>
                 </Button>
               </p>
 
-              <p v-if="email" class="flex flex-col items-start justify-start">
+              <p
+                v-if="company.email"
+                class="flex flex-col items-start justify-start"
+              >
                 <span class="font-semibold">Email: </span>
 
                 <Button variant="link" class="h-auto p-0 underline" as-child>
-                  <a :href="`mailto:${email}`" target="_blank">{{ email }}</a>
+                  <a :href="`mailto:${company.email}`" target="_blank">
+                    {{ company.email }}
+                  </a>
                 </Button>
               </p>
 
-              <p v-if="brand" class="flex flex-col items-start justify-start">
+              <p
+                v-if="company.brand && company.requires_brand"
+                class="flex flex-col items-start justify-start"
+              >
                 <span class="font-semibold">Brand: </span>
 
-                <span>{{ brand }}</span>
+                <span>{{ company.brand }}</span>
               </p>
             </div>
           </div>

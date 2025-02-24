@@ -33,15 +33,9 @@ const columns = [
     accessorKey: `name`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Name`),
     cell: ({ row }) => {
+      console.log(row.original)
       return h(CompanyInfoCell, {
-        name: row.getValue(`name`),
-        pipelineCompanyId: row.original.pipeline_company_id,
-        phone: row.original.phone,
-        website: row.original.website,
-        email: row.original.email,
-        logo: row.original.logo,
-        isActive: Boolean(row.original.is_active),
-        brand: Boolean(row.original.requires_brand) && row.original.brand,
+        company: row.original,
       })
     },
   },

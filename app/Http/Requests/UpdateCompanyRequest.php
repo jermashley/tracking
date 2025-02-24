@@ -28,7 +28,7 @@ class UpdateCompanyRequest extends FormRequest
             'email' => ['nullable', 'string', 'max:255'],
             'pipeline_company_id' => ['required', 'integer'],
             'requires_brand' => ['boolean'],
-            'brand' => ['required_if:requires_brand,true', 'string', 'max:255'],
+            'brand' => ['nullable', 'string', 'max:255', 'required_if:requires_brand,true'],
         ];
     }
 }
