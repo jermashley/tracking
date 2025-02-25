@@ -85,7 +85,7 @@ const { data: company, isError } = useCompanyQuery({
         class="absolute left-0 top-0 -z-10 h-full w-full overflow-hidden rounded-lg opacity-65 transition-opacity duration-500 ease-in-out group-hover:opacity-100"
       >
         <img
-          src="https://jayco.com/uploads/sections/1-bg-Homepage-Picture-2023-B.jpg"
+          :src="imageAssetUrl({ filePath: company.banner?.file_path })"
           :alt="company.banner?.name"
           class="h-full w-full object-cover"
         />
@@ -171,6 +171,7 @@ const { data: company, isError } = useCompanyQuery({
 
       <div class="mx-2 mt-4 md:mx-0">
         <Label>Footer</Label>
+
         <div class="relative mt-2 h-72">
           <div
             class="absolute right-2 top-2 flex flex-row items-center justify-end space-x-2"
@@ -192,7 +193,7 @@ const { data: company, isError } = useCompanyQuery({
             class="absolute left-0 top-0 -z-10 h-full w-full overflow-hidden rounded-lg"
           >
             <img
-              src="https://jayco.com/uploads/sections/1-bg-Homepage-Picture-2023-B.jpg"
+              :src="imageAssetUrl({ filePath: company.footer?.file_path })"
               :alt="company.footer.name"
               class="h-full w-full object-cover"
             />
