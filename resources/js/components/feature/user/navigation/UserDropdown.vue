@@ -1,8 +1,7 @@
 <script setup>
 import { faBars, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { router, usePage } from '@inertiajs/vue3'
-import axios from 'axios'
+import { usePage } from '@inertiajs/vue3'
 
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
@@ -12,12 +11,11 @@ import DropdownMenuItem from '@/components/ui/dropdown-menu/DropdownMenuItem.vue
 import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.vue'
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
+import { useLogout } from '@/composables/hooks/auth'
 
 const { user } = usePage().props.auth
 
-const logout = () => {
-  axios.post(route(`oauth.logout`)).then(() => router.visit(route(`home`)))
-}
+const { logout } = useLogout()
 </script>
 
 <template>
@@ -43,6 +41,16 @@ const logout = () => {
             {{ user.email }}
           </span>
         </DropdownMenuLabel>
+
+        <!-- <DropdownMenuSeparator /> -->
+
+        <!-- <DropdownMenuItem as-child>
+          <Link :href="route(`admin.dashboard`)">
+            <FontAwesomeIcon class="mr-2" :icon="faGear" fixed-width />
+
+            <span>Settings</span>
+          </Link>
+        </DropdownMenuItem> -->
 
         <DropdownMenuSeparator />
 

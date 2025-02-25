@@ -1,4 +1,5 @@
 const animate = require(`tailwindcss-animate`)
+const colors = require(`tailwindcss/colors`)
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -27,6 +28,7 @@ module.exports = {
         monospace: `jetbrains-mono, "Courier New"`,
       },
       colors: {
+        ...colors,
         border: `hsl(var(--border))`,
         input: `hsl(var(--input))`,
         ring: `hsl(var(--ring))`,

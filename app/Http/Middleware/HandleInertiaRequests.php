@@ -39,6 +39,12 @@ class HandleInertiaRequests extends Middleware
             'app' => [
                 'env' => App::environment(),
                 'name' => config('app.name'),
+                'disks' => [
+                    'spaces' => [
+                        'region' => config('filesystems.disks.spaces.region'),
+                        'bucket' => config('filesystems.disks.spaces.bucket'),
+                    ],
+                ],
             ],
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [

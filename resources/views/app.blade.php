@@ -5,14 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="title" content="{{ config('app.name', 'Prologue Alert System') }}" />
-    <meta name="description" content="Decode and encode your data with ease!" />
-
     <title inertia>{{ config('app.name', 'Prologue Alert System') }}</title>
 
-    @env('local')
+    {{-- @env('local')
     <script src="http://localhost:8098"></script>
-    @endenv
+    @endenv --}}
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
