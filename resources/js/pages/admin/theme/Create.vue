@@ -1,14 +1,14 @@
 <script setup>
 import { Head } from '@inertiajs/vue3'
 
-import CompanyForm from '@/components/feature/company/CompanyForm.vue'
+import ThemeForm from '@/components/feature/theme/ThemeForm.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 </script>
 
 <template>
-  <Head title="Create Company`" />
+  <Head title="Create a Theme" />
 
-  <AuthenticatedLayout title="Create Company">
-    <CompanyForm />
+  <AuthenticatedLayout title="Create a Theme">
+    <ThemeForm />
   </AuthenticatedLayout>
 </template>

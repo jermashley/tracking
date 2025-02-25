@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const createTheme = async (formData) => {
-  const { data } = await axios.post(route(`api.formData.store`), {
+  const { data } = await axios.post(route(`api.themes.store`), {
     ...formData,
   })
 

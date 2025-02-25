@@ -41,7 +41,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Cranberry',
@@ -70,7 +70,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Rostro',
@@ -99,7 +99,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Spruce',
@@ -128,7 +128,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Honeybee',
@@ -157,7 +157,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Strawbaerie',
@@ -186,7 +186,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => true,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             // Company Themes
             [
@@ -216,7 +216,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
-                'deriveFrom' => 'accent',
+                'derive_from' => 'accent',
             ],
             [
                 'name' => 'Jayco',
@@ -245,7 +245,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'Loftwall',
@@ -274,7 +274,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
             [
                 'name' => 'The Ubique Group',
@@ -303,7 +303,7 @@ class ThemeSeeder extends Seeder
                 ],
                 'radius' => '0.5rem',
                 'is_system' => false,
-                'deriveFrom' => 'primary',
+                'derive_from' => 'primary',
             ],
         ];
 

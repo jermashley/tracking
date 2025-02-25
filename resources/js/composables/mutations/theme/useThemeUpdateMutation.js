@@ -2,7 +2,9 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const updateTheme = async (themeId, formData) => {
-  const { data } = await axios.patch(route(`api.formData.update`, themeId), {
+  console.log(`themeId`, themeId)
+  console.log(`formData`, formData)
+  const { data } = await axios.patch(route(`api.themes.update`, themeId), {
     ...formData,
   })
 

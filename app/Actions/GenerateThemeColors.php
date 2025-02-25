@@ -6,15 +6,15 @@ class GenerateThemeColors
 {
     public static function execute(array $data): array
     {
-        $primaryHue = $data['primary']['hue'];
-        $primarySaturation = $data['primary']['saturation'];
-        $primaryLightness = $data['primary']['brightness'];
+        $primaryHue = $data['primary_hue'][0];
+        $primarySaturation = $data['primary_saturation'][0];
+        $primaryLightness = $data['primary_lightness'][0];
 
-        $accentHue = $data['accent']['hue'];
-        $accentSaturation = $data['accent']['saturation'];
-        $accentLightness = $data['accent']['brightness'];
+        $accentHue = $data['accent_hue'][0];
+        $accentSaturation = $data['accent_saturation'][0];
+        $accentLightness = $data['accent_lightness'][0];
 
-        $deriveFrom = $data['deriveFrom'];
+        $deriveFrom = $data['derive_from'];
 
         switch ($deriveFrom) {
             case 'primary':

@@ -61,7 +61,7 @@ const googleMapsLink = computed(() => {
         <address class="flex flex-col text-sm not-italic">
           <span
             v-if="location?.name"
-            class="mb-2 text-lg font-semibold leading-none"
+            class="mb-2 text-lg font-semibold capitalize leading-none"
           >
             {{ location?.name }}
           </span>

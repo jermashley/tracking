@@ -66,6 +66,11 @@ Route::prefix('admin')
             ]);
         })->name('theme.index');
 
+        // Theme create
+        Route::get('themes/create', function (Theme $theme) {
+            return Inertia::render('admin/theme/Create');
+        })->name('theme.create');
+
         // Theme show
         Route::get('themes/{theme:uuid}', function (Theme $theme) {
             return Inertia::render('admin/theme/Edit', [

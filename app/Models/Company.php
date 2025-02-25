@@ -65,17 +65,24 @@ class Company extends Model
 
             switch (true) {
                 case $brand:
-                    $company = $query->where('brand', $brand)->first();
+                    $company = $query->whereRaw('BINARY `brand` = ?', [$brand])->first();
 
                     if ($company->pipeline_company_id !== $pipelineCompanyId) {
                         return $company = null;
                     }
+
                     break;
                 case $companyId:
                     $company = $query->where('pipeline_company_id', $companyId)->first();
+
+                    if ($company->pipeline_company_id !== $pipelineCompanyId) {
+                        return $company = null;
+                    }
+
                     break;
                 case $pipelineCompanyId:
                     $company = $query->where('pipeline_company_id', $pipelineCompanyId)->first();
+
                     break;
                 default:
                     return null;

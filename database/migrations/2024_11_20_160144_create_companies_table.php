@@ -21,14 +21,14 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->integer('pipeline_company_id')->unique();
+            $table->integer('pipeline_company_id');
             $table->foreignIdFor(Image::class, 'logo_image_id')->nullable();
             $table->foreignIdFor(Image::class, 'banner_image_id')->nullable();
             $table->foreignIdFor(Image::class, 'footer_image_id')->nullable();
             $table->foreignIdFor(Theme::class)->nullable();
             $table->boolean('enable_map')->default(false);
             $table->boolean('requires_brand')->default(false);
-            $table->string('brand')->nullable();
+            $table->string('brand')->unique()->nullable();
             $table->timestamps();
         });
     }

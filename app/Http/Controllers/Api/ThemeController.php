@@ -27,15 +27,16 @@ class ThemeController extends Controller
      */
     public function store(StoreThemeRequest $request): JsonResponse
     {
+        dump($request->input('derive_from'));
         $data = $request->validated();
         $colors = GenerateThemeColors::execute($data);
 
         $theme = (new Theme)->create([
             'name' => $request->input('name'),
             'colors' => $colors,
-            'radius' => $request->input('radius'),
+            'radius' => $request->input('radius') ?? '0.5rem',
             'is_system' => $request->input('is_system', false),
-            'deriveFrom' => $request->input('deriveFrom'),
+            'derive_from' => $request->input('derive_from'),
         ]);
 
         return response()->json($theme, Response::HTTP_CREATED);
@@ -60,9 +61,9 @@ class ThemeController extends Controller
         $theme->update([
             'name' => $request->input('name'),
             'colors' => $colors,
-            'radius' => $request->input('radius'),
+            'radius' => $request->input('radius') ?? '0.5rem',
             'is_system' => $request->input('is_system', false),
-            'deriveFrom' => $request->input('deriveFrom'),
+            'derive_from' => $request->input('derive_from'),
         ]);
 
         return response()->json($theme, Response::HTTP_OK);
@@ -73,6 +74,8 @@ class ThemeController extends Controller
      */
     public function destroy(Theme $theme)
     {
-        //
+        $theme->delete();
+
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }

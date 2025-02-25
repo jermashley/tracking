@@ -16,7 +16,7 @@ class DetailedTrackingController extends Controller
         $searchOption = $request->query('searchOption') ?? null;
         $companyId = $request->query('companyId') ?? null;
         $zipCode = $request->query('zipCode') ?? null;
-        $brand = $request->query('brand') ?? null;
+        $brand = $request->query('brand') ? strtoupper($request->query('brand')) : null;
 
         $pipelineApiTrackingClient = new PipelineApiTracking;
 

@@ -25,8 +25,8 @@ defineProps({
   <div
     class="relative grid min-h-screen items-start bg-background/0"
     :class="{
-      'grid-rows-[auto,1fr,auto,auto]': bannerFilePath,
-      'grid-rows-[auto,auto,auto]': !bannerFilePath,
+      'grid-rows-[auto,auto,1fr,auto]': bannerFilePath,
+      'grid-rows-[auto,1fr,auto]': !bannerFilePath,
     }"
   >
     <Navbar />

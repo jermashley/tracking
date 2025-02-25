@@ -18,7 +18,7 @@ return new class extends Migration
             $table->json('colors');
             $table->string('radius')->nullable();
             $table->boolean('is_system')->default(false);
-            $table->enum('deriveFrom', ['primary', 'accent']);
+            $table->enum('derive_from', ['primary', 'accent']);
             $table->timestamps();
         });
     }

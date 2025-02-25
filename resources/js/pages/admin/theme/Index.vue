@@ -1,6 +1,7 @@
 <script setup>
 import { Head, Link, usePage } from '@inertiajs/vue3'
 
+import ThemeCreateButton from '@/components/feature/theme/ThemeCreateButton.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -18,7 +19,7 @@ const { data: themes, isError } = useThemesQuery({
 <template>
   <Head title="Manage Themes" />
 
-  <AuthenticatedLayout title="Manage Themes">
+  <AuthenticatedLayout title="Manage Themes" :action="ThemeCreateButton">
     <div v-if="themes && !isError">
       <div class="flex flex-col justify-stretch space-y-4">
         <div

@@ -9,6 +9,11 @@ defineProps({
     required: false,
     default: null,
   },
+  action: {
+    type: Function,
+    required: false,
+    default: () => null,
+  },
 })
 </script>
 
@@ -17,7 +22,13 @@ defineProps({
     <AuthenticatedNavbar />
 
     <main class="mx-auto h-full w-full max-w-3xl px-6 pb-20 pt-12 lg:px-0">
-      <h1 v-if="title" class="mb-4 text-2xl font-semibold">{{ title }}</h1>
+      <div
+        class="mb-4 flex flex-col items-stretch justify-start space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0"
+      >
+        <h1 v-if="title" class="mb-4 text-2xl font-semibold">{{ title }}</h1>
+
+        <action v-if="action" />
+      </div>
 
       <slot />
     </main>

@@ -9,19 +9,7 @@ import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vu
 <template>
   <Head title="Dashboard" />
 
-  <AuthenticatedLayout>
-    <div
-      class="mb-4 flex flex-col items-stretch justify-start space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0"
-    >
-      <h2 class="text-2xl font-semibold">Companies</h2>
-
-      <div class="flex flex-row items-center justify-start space-x-2">
-        <!-- <LogoListDialog /> -->
-
-        <CompanyCreateButton />
-      </div>
-    </div>
-
+  <AuthenticatedLayout title="Companies" :action="CompanyCreateButton">
     <CompaniesDataTable />
   </AuthenticatedLayout>
 </template>
