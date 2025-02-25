@@ -49,7 +49,7 @@ defineProps({
     </div>
 
     <div
-      class="mx-auto mb-8 w-auto max-w-3xl rounded-lg bg-background px-6 py-4"
+      class="mx-auto mb-8 w-full max-w-4xl rounded-lg bg-background px-6 py-4"
       :class="{
         'mt-8 lg:-mt-24': bannerFilePath,
         'mt-32 lg:mt-32': !bannerFilePath,
