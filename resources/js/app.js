@@ -4,6 +4,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import { createApp, h } from 'vue'
 
 import { ZiggyVue } from '../../vendor/tightenco/ziggy'
+import { postHogPlugin } from './lib/plugins'
 
 createInertiaApp({
   title: (title) => `${title}`,
@@ -19,6 +20,7 @@ createInertiaApp({
         enableDevtoolsV6Plugin: true,
       })
       .use(ZiggyVue)
+      .use(postHogPlugin)
       .mount(el)
   },
   progress: {
