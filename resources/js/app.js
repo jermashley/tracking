@@ -1,10 +1,16 @@
 import { createInertiaApp } from '@inertiajs/vue3'
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import posthog from 'posthog-js'
 import { createApp, h } from 'vue'
 
 import { ZiggyVue } from '../../vendor/tightenco/ziggy'
-import { postHogPlugin } from './lib/plugins'
+
+if (import.meta.env.VITE_APP_ENV === `production`) {
+  posthog.init(import.meta.env.VITE_POSTHOG_TOKEN, {
+    api_host: import.meta.env.VITE_POSTHOG_API_HOST,
+  })
+}
 
 createInertiaApp({
   title: (title) => `${title}`,
@@ -20,7 +26,6 @@ createInertiaApp({
         enableDevtoolsV6Plugin: true,
       })
       .use(ZiggyVue)
-      .use(postHogPlugin)
       .mount(el)
   },
   progress: {
