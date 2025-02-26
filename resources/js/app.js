@@ -9,6 +9,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy'
 if (import.meta.env.VITE_APP_ENV === `production`) {
   posthog.init(import.meta.env.VITE_POSTHOG_TOKEN, {
     api_host: import.meta.env.VITE_POSTHOG_API_HOST,
+    person_profiles: `always`,
   })
 }
 
