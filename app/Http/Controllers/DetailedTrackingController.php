@@ -61,7 +61,7 @@ class DetailedTrackingController extends Controller
             $shipmentCoordinates = $shipmentCoordinatesResponse->json();
         }
 
-        return Inertia::render('detailedTracking/Index', [
+        return Inertia::render('brandedTracking/Index', [
             'trackingData' => $trackingData,
             'company' => $company,
             'shipmentCoordinates' => $shipmentCoordinates,
@@ -70,7 +70,7 @@ class DetailedTrackingController extends Controller
 
     public function trackingDataNotFound($trackingNumber)
     {
-        return Inertia::render('detailedTracking/Error', [
+        return Inertia::render('brandedTracking/Error', [
             'trackingNumber' => $trackingNumber,
         ]);
     }
