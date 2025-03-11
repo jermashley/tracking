@@ -1,6 +1,8 @@
 <script setup>
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 
+import { Toaster } from '@/components/ui/toast'
+
 import AuthenticatedNavbar from '../navigation/AuthenticatedNavbar.vue'
 
 defineProps({
@@ -18,6 +20,8 @@ defineProps({
 </script>
 
 <template>
+  <Toaster />
+
   <div class="grid min-h-screen grid-rows-[auto,1fr] items-start">
     <AuthenticatedNavbar />
 

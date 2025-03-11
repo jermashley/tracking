@@ -33,7 +33,6 @@ const columns = [
     accessorKey: `name`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Name`),
     cell: ({ row }) => {
-      console.log(row.original)
       return h(CompanyInfoCell, {
         company: row.original,
       })
