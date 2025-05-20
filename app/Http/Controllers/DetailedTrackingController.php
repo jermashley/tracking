@@ -40,8 +40,8 @@ class DetailedTrackingController extends Controller
         // Attempt to get local company model from either the slug or the Pipeline company ID.
         $company = Company::findByIdentifier($brand, $companyId, $pipelineCompanyId);
 
-        // If error in trackingDataResponse, redirect to error page.
-        if (! $company || ($company->requires_brand && !$brand)) {
+        // If company requires brand and brand is not provided, redirect to error page.
+        if ($company?->requires_brand && !$brand) {
             return redirect(route('trackShipment.notFound', $trackingNumber));
         }
 
