@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Switch } from '@/components/ui/switch'
+import { useToast } from '@/components/ui/toast'
 import {
   useCompanyCreateMutation,
   useCompanyUpdateMutation,
@@ -69,6 +70,8 @@ const { isFieldDirty, handleSubmit, resetForm, values } = useForm({
 
 const isFormDirty = useIsFormDirty()
 
+const { toast } = useToast()
+
 const { mutate: createCompany, isPending: createCompanyIsPending } =
   useCompanyCreateMutation({
     config: {
@@ -79,6 +82,12 @@ const { mutate: createCompany, isPending: createCompanyIsPending } =
           queryKey: [`companies`],
         })
 
+        await toast({
+          title: `Created company: ${data.name}`,
+          description: `The company has been created successfully.`,
+          duration: 5000,
+        })
+
         router.visit(route(`admin.company.show`, data.uuid))
       },
     },
@@ -87,9 +96,15 @@ const { mutate: createCompany, isPending: createCompanyIsPending } =
 const { mutate: updateCompany, isPending: updateCompanyIsPending } =
   useCompanyUpdateMutation({
     config: {
-      onSuccess: async () => {
+      onSuccess: async (data) => {
         await queryClient.invalidateQueries({
           queryKey: [`companies`],
+        })
+
+        await toast({
+          title: `Updated company: ${data.name}`,
+          description: `The company has been updated successfully.`,
+          duration: 5000,
         })
 
         router.visit(route(`admin.dashboard`))

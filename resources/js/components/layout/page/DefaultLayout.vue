@@ -25,7 +25,12 @@ defineProps({
       :use-app-name="true"
     />
 
-    <main class="mx-auto mb-20 mt-12 h-full w-full max-w-3xl px-6 lg:px-0">
+    <main
+      class="mx-auto h-full w-full max-w-3xl px-6 lg:px-0"
+      :class="{
+        'mb-20 mt-12': hasNavbar,
+      }"
+    >
       <slot />
     </main>
   </div>
