@@ -11,7 +11,7 @@ const getImages = async (imageTypeId) => {
 
 const useImagesQuery = ({
   config = {},
-  imageType = null,
+  imageType = `all`,
   imageTypeId = null,
 } = {}) =>
   useQuery({

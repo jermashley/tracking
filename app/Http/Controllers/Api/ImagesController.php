@@ -26,7 +26,7 @@ class ImagesController extends Controller
             $imagesQuery->where('image_type_id', $imageTypeId);
         }
 
-        $images = Image::get();
+        $images = $imagesQuery->with('imageType')->get();
 
         return response()->json($images, Response::HTTP_OK);
     }
@@ -34,18 +34,20 @@ class ImagesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreImageRequest $request)
+    public function store(StoreImageRequest $request): JsonResponse
     {
+        $validated = $request->validated();
+
         try {
-            $filePath = $request->file('image')->store('images', 'spaces');
+            $filePath = $validated['image']->store('images', 'spaces');
 
             if (! $filePath) {
                 throw new \Exception('File path is empty');
             }
 
             $image = new Image([
-                'name' => $request->name,
-                'image_type_id' => $request->image_type_id,
+                'name' => $validated['name'],
+                'image_type_id' => $validated['image_type_id'],
                 'file_path' => $filePath,
             ]);
 

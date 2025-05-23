@@ -2,6 +2,7 @@
 import { Head, usePage } from '@inertiajs/vue3'
 
 import AlienGhostSvg from '@/components/art/AlienGhostSvg.vue'
+import DefaultLayout from '@/components/layout/page/DefaultLayout.vue'
 import TrackingLayout from '@/components/layout/page/TrackingLayout.vue'
 
 const {
@@ -19,8 +20,10 @@ defineProps({
 <template>
   <Head :title="`${appName} - Tracking - Shipment not found`" />
 
-  <TrackingLayout>
-    <section class="flex flex-col">
+  <DefaultLayout :has-navbar="false">
+    <section
+      class="flex min-h-full flex-col items-center justify-center space-y-12"
+    >
       <h2 class="text-center text-3xl font-semibold text-primary">
         Shipment not found.
       </h2>
@@ -47,5 +50,5 @@ defineProps({
         >.
       </p>
     </section>
-  </TrackingLayout>
+  </DefaultLayout>
 </template>

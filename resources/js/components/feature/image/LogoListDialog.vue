@@ -1,4 +1,5 @@
 <script setup>
+import LogoStoreDialog from '@components/feature/company/CompanySetImageAsset.vue'
 import { faEdit, faImages } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import dayjs from 'dayjs'
@@ -17,7 +18,6 @@ import {
 import { imageAssetUrl } from '@/composables/hooks/disks'
 import { useImagesQuery } from '@/composables/queries/image'
 
-import LogoStoreDialog from '../company/CompanySetImageAsset.vue'
 import LogoDestroyDialog from './ImageDestroyDialog.vue'
 
 const { data: images, isError: imagesIsError } = useImagesQuery({

@@ -1,10 +1,12 @@
 <script setup>
-import { faChartTreeMap } from '@fortawesome/pro-duotone-svg-icons'
+import {
+  faChartTreeMap,
+  faMagnifyingGlassLocation,
+} from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Link, usePage } from '@inertiajs/vue3'
 
 import UserDropdown from '@/components/feature/user/navigation/UserDropdown.vue'
-import { Button } from '@/components/ui/button'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -31,7 +33,7 @@ const {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
-              <Link :href="route('admin.dashboard')">
+              <Link :href="route(`admin.dashboard`)">
                 <FontAwesomeIcon
                   class="mr-2"
                   :icon="faChartTreeMap"
@@ -44,13 +46,28 @@ const {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
+            <NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
+              <Link :href="route(`admin.tracking.index`)">
+                <FontAwesomeIcon
+                  class="mr-2"
+                  :icon="faMagnifyingGlassLocation"
+                  fixed-width
+                />
+
+                Track Shipment
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
             <NavigationMenuTrigger> Manage </NavigationMenuTrigger>
+
             <NavigationMenuContent>
               <ul class="grid min-w-72 grid-cols-1 gap-3 p-4">
                 <li>
                   <NavigationMenuLink as-child>
                     <Link
-                      :href="route('admin.theme.index')"
+                      :href="route(`admin.theme.index`)"
                       class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div class="text-sm font-medium leading-none">Themes</div>
@@ -64,21 +81,22 @@ const {
                   </NavigationMenuLink>
                 </li>
 
-                <!-- <li>
+                <li>
                   <NavigationMenuLink as-child>
-                    <a
-                      href="#"
+                    <Link
+                      :href="route(`admin.image.index`)"
                       class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div class="text-sm font-medium leading-none">Images</div>
+
                       <p
                         class="line-clamp-2 text-sm leading-snug text-muted-foreground"
                       >
                         Manage image library.
                       </p>
-                    </a>
+                    </Link>
                   </NavigationMenuLink>
-                </li> -->
+                </li>
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
