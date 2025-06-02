@@ -54,7 +54,7 @@ const props = defineProps({
 const { refetch, dataUpdatedAt, isRefetching } = useTrackShipmentQuery({
   trackingNumber: props.trackingData.bolNum,
   searchOption: `bol`,
-  companyId: props.company.pipeline_company_id ?? ``,
+  companyId: props.company?.pipeline_company_id ?? ``,
 })
 
 const bolNumber = computed(() => {

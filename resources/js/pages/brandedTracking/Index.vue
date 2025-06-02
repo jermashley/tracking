@@ -1,6 +1,6 @@
 <script setup>
 import { Head, usePage } from '@inertiajs/vue3'
-import { computed, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 
 import ShipmentDetailsAndTracking from '@/components/feature/tracking/ShipmentDetailsAndTracking.vue'
 import TrackingLayout from '@/components/layout/page/TrackingLayout.vue'
@@ -29,17 +29,6 @@ const { data, refetch, dataUpdatedAt } = useTrackShipmentQuery({
     initialData: initialData,
   },
 })
-
-onMounted(() => {
-  console.log(data.value)
-})
-
-watch(
-  () => data.value,
-  (newValue) => {
-    console.log(newValue)
-  },
-)
 
 const proNumber = computed(() => {
   const proNumber = data.value.trackingData.carrierPro

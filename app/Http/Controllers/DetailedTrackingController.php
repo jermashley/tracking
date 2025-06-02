@@ -34,6 +34,8 @@ class DetailedTrackingController extends Controller
 
         $trackingData = $trackingDataResponse->json();
 
+        dump($trackingData);
+
         // Attempt to get local company model from either the slug or the Pipeline company ID.
         $company = Company::findByIdentifier($brand, $companyId, $pipelineCompanyId);
 
