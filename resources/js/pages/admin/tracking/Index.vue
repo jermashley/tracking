@@ -54,9 +54,7 @@ const submitForm = () => {
       </CardHeader>
 
       <CardContent>
-        <section
-          class="flex flex-col items-stretch justify-start space-x-0 space-y-4 md:flex-row md:space-x-4 md:space-y-0"
-        >
+        <section class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_25%]">
           <div class="w-full">
             <Label for="trackingNumber">Tracking Number</Label>
 
