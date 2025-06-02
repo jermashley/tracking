@@ -45,7 +45,7 @@ const submitForm = () => {
 <template>
   <Head title="Tracking" />
 
-  <AuthenticatedLayout title="Tracking">
+  <AuthenticatedLayout>
     <Card class="group w-full shadow-lg">
       <CardHeader>
         <CardTitle class="flex flex-row items-end space-x-4">
