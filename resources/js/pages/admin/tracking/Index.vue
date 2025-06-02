@@ -2,6 +2,7 @@
 import { Head } from '@inertiajs/vue3'
 import { ref } from 'vue'
 
+import AlienGhostSvg from '@/components/art/AlienGhostSvg.vue'
 import ShipmentDetailsAndTracking from '@/components/feature/tracking/ShipmentDetailsAndTracking.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Button } from '@/components/ui/button'
@@ -22,7 +23,7 @@ import { useTrackShipmentQuery } from '@/composables/queries/trackShipment'
 const trackingNumber = ref(``)
 const searchOption = ref(``)
 
-const { data, refetch } = useTrackShipmentQuery({
+const { data, refetch, isError } = useTrackShipmentQuery({
   config: {
     enabled: false,
   },
@@ -98,7 +99,7 @@ const submitForm = () => {
       </CardContent>
     </Card>
 
-    <div v-if="data?.trackingData" class="mt-8">
+    <div v-if="data?.trackingData && !isError" class="mt-8">
       <ShipmentDetailsAndTracking
         :tracking-data="data?.trackingData"
         :company="data?.company"
@@ -107,5 +108,36 @@ const submitForm = () => {
         :last-updated="dataUpdatedAt"
       />
     </div>
+
+    <section
+      v-if="isError && !data?.trackingData?.bol_num"
+      class="mt-24 flex flex-col items-center justify-center space-y-12"
+    >
+      <h2 class="text-center text-3xl font-semibold text-primary">
+        Shipment not found.
+      </h2>
+
+      <p
+        class="mx-auto mt-4 w-2/3 text-center text-lg font-medium text-primary"
+      >
+        Oh no! We couldn&apos;t locate shipment
+        <span class="font-bold">{{ trackingNumber }}</span> or tracking data for
+        it.
+      </p>
+
+      <div class="mt-24 flex flex-row justify-center p-12">
+        <AlienGhostSvg />
+      </div>
+
+      <p
+        class="font-regular mx-auto mt-4 w-2/3 text-center text-base text-primary"
+      >
+        If you're sure this shipment exists and are experiencing issues getting
+        tracking data for it, please
+        <a href="mailto:help@prologuetechnology.com" class="underline">
+          contact our support team</a
+        >.
+      </p>
+    </section>
   </AuthenticatedLayout>
 </template>
