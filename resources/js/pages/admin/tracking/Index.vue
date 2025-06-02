@@ -23,14 +23,16 @@ import { useTrackShipmentQuery } from '@/composables/queries/trackShipment'
 const trackingNumber = ref(``)
 const searchOption = ref(``)
 
-const { data, refetch, isError } = useTrackShipmentQuery({
-  config: {
-    enabled: false,
-  },
+const { data, refetch, isError, isLoading, isFetching } = useTrackShipmentQuery(
+  {
+    config: {
+      enabled: false,
+    },
 
-  trackingNumber: trackingNumber,
-  searchOption: searchOption,
-})
+    trackingNumber: trackingNumber,
+    searchOption: searchOption,
+  },
+)
 
 const resetForm = () => {
   trackingNumber.value = ``
@@ -63,6 +65,7 @@ const submitForm = () => {
               v-model="trackingNumber"
               name="trackingNumber"
               type="text"
+              :disabled="isLoading || isFetching"
               placeholder="Enter tracking number"
             />
           </div>
@@ -74,6 +77,7 @@ const submitForm = () => {
               id="searchOption"
               v-model="searchOption"
               name="searchOption"
+              :disabled="isLoading || isFetching"
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a type" />
@@ -88,9 +92,21 @@ const submitForm = () => {
         </section>
 
         <section class="mt-6 flex flex-row items-center justify-end space-x-2">
-          <Button variant="outline" size="sm" @click="resetForm">Reset</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            :disabled="isLoading || isFetching"
+            @click="resetForm"
+          >
+            Reset
+          </Button>
 
-          <Button variant="default" size="sm" @click="submitForm">
+          <Button
+            variant="default"
+            size="sm"
+            :disabled="isLoading || isFetching"
+            @click="submitForm"
+          >
             Submit
           </Button>
         </section>
