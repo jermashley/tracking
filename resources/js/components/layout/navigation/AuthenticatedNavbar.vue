@@ -54,7 +54,7 @@ const {
                   fixed-width
                 />
 
-                Track Shipment
+                Track
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
