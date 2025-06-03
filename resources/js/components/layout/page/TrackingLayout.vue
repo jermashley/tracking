@@ -108,15 +108,16 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 
       <div
         v-else
-        class="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center bg-gradient-to-r from-primary-foreground to-accent md:rounded-b-lg"
+        class="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center bg-gradient-to-r from-muted to-accent-foreground md:rounded-b-lg"
       >
         <img
+          v-if="!initialCompany"
           :src="imageAssetUrl({ filePath: `images/hero-image.jpg` })"
           alt="Flat World Global Solutions Hero Image"
           class="h-full w-full object-cover md:rounded-b-lg"
         />
 
-        <div v-if="!company">
+        <div v-if="!initialCompany">
           <p
             class="absolute right-6 top-[calc(40vh-3.75rem)] w-40 transform text-right font-sans text-base font-light tracking-wide text-background/50 md:top-[calc(40vh-2.75rem)] md:w-auto md:text-lg"
           >

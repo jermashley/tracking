@@ -2,8 +2,8 @@ import { usePage } from '@inertiajs/vue3'
 import { onMounted } from 'vue'
 
 const useCompanyTheme = () => {
-  const { company } = usePage().props
-  const { theme } = company ?? { theme: undefined }
+  const { initialCompany } = usePage().props
+  const { theme } = initialCompany ?? { theme: undefined }
   const { colors } = theme ?? { colors: undefined }
 
   onMounted(() => {

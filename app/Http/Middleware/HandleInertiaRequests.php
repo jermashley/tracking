@@ -39,6 +39,7 @@ class HandleInertiaRequests extends Middleware
             'app' => [
                 'env' => App::environment(),
                 'name' => config('app.name'),
+                'appUrl' => config('app.url'),
                 'disks' => [
                     'spaces' => [
                         'region' => config('filesystems.disks.spaces.region'),

@@ -1,5 +1,7 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
+import { faSquareArrowUpRight } from '@fortawesome/pro-duotone-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Head, usePage } from '@inertiajs/vue3'
 import { ref } from 'vue'
 
 import AlienGhostSvg from '@/components/art/AlienGhostSvg.vue'
@@ -12,13 +14,15 @@ import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
 import { useTrackShipmentQuery } from '@/composables/queries/trackShipment'
+
+const {
+  app: { appUrl },
+} = usePage().props
 
 const trackingNumber = ref(``)
 const searchOption = ref(``)
@@ -92,6 +96,28 @@ const submitForm = () => {
         </section>
 
         <section class="mt-6 flex flex-row items-center justify-end space-x-2">
+          <Button
+            v-if="trackingNumber && searchOption"
+            variant="ghost"
+            size="sm"
+            class="mr-auto"
+            as-child
+          >
+            <a
+              :href="`${appUrl}/trackShipment?searchOption=${searchOption}&trackingNumber=${trackingNumber}`"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FontAwesomeIcon
+                class="mr-1"
+                :icon="faSquareArrowUpRight"
+                fixed-width
+              />
+
+              <span>Track in Portal</span>
+            </a>
+          </Button>
+
           <Button
             variant="outline"
             size="sm"
