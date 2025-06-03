@@ -15,8 +15,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 
 Route::as('api.')
     ->group(function () {
-        Route::post('trackShipment', [TrackingController::class, 'trackShipment'])
-            ->name('trackShipment');
+        Route::post('shipmentTracking', [TrackingController::class, 'trackingStatuses'])->name('shipmentTracking');
+        Route::post('shipmentCoordinates', [TrackingController::class, 'shipmentCoordinates'])->name('shipmentCoordinates');
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
         Route::patch('companies/{company}/toggleActive', [CompanyController::class, 'toggleActive'])->name('companies.toggleActive');

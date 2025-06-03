@@ -6,6 +6,7 @@ use App\Enums\ImageTypeEnum;
 use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Image extends Model
 {
@@ -23,11 +24,11 @@ class Image extends Model
                     break;
 
                 case ImageTypeEnum::BANNER->value:
-                    Company::where('logo_banner_id', $image->id)->update(['logo_banner_id' => null]);
+                    Company::where('banner_image_id', $image->id)->update(['banner_image_id' => null]);
                     break;
 
                 case ImageTypeEnum::FOOTER->value:
-                    Company::where('logo_footer_id', $image->id)->update(['logo_footer_id' => null]);
+                    Company::where('footer_image_id', $image->id)->update(['footer_image_id' => null]);
                     break;
 
                 default:
@@ -41,4 +42,9 @@ class Image extends Model
         'file_path',
         'image_type_id',
     ];
+
+    public function imageType(): BelongsTo
+    {
+        return $this->belongsTo(ImageType::class, 'image_type_id');
+    }
 }

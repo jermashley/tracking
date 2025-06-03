@@ -12,20 +12,17 @@ class PipelineApiTracking extends PipelineApiBaseService
     {
         parent::__construct();
 
-        $this->endpoint = '/TrackingData';
+        $this->endpoint = '/shipmentSearch';
     }
 
     public function getTrackingData(
         ?string $trackingNumber = '',
         ?string $searchOption = '',
-        ?string $companyId = '',
-        ?string $zipCode = ''
     ): Response {
         $data = [
-            'trackingNum' => $trackingNumber,
+            'trackNum' => $trackingNumber,
             'searchOption' => $searchOption,
-            'companyId' => $companyId,
-            'zipCode' => $zipCode,
+            'globalSearch' => true,
         ];
 
         $response = $this->makeRequest('POST', $this->endpoint, $data);

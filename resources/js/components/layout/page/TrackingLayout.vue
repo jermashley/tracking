@@ -5,6 +5,7 @@ import {
 } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { usePage } from '@inertiajs/vue3'
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 import { useShare } from '@vueuse/core'
 import { useClipboard } from '@vueuse/core'
 import { computed } from 'vue'
@@ -17,8 +18,8 @@ import Footer from '../footer/Footer.vue'
 
 const {
   app: { name: appName },
-  company,
-  trackingData,
+  initialTrackingData,
+  initialCompany,
 } = usePage().props
 
 useCompanyTheme()
@@ -37,22 +38,21 @@ defineProps({
 })
 
 const bolNumber = computed(() => {
-  return trackingData.data.trackingObject.bolNum
+  return initialTrackingData?.data.bolNum
 })
 
 const proNumber = computed(() => {
-  const proNumber = trackingData.data.trackingObject?.carrierPro
+  const proNumber = initialTrackingData?.data?.carrierPro
 
-  const statusWithProNumber =
-    trackingData.data.trackingObject?.allStatuses?.find(
-      (status) => status.pro_number !== null,
-    )
+  const statusWithProNumber = initialTrackingData?.data?.allStatuses?.find(
+    (status) => status.pro_number !== null,
+  )
 
   return proNumber ?? statusWithProNumber?.pro_number
 })
 
 const sharePage = useShare({
-  title: `${company?.name ?? appName} - Tracking - ${bolNumber.value}`,
+  title: `${initialCompany?.name ?? appName} - Tracking - ${bolNumber.value}`,
   text: `Track your shipment ${bolNumber.value} - ${proNumber.value}`,
   url: location.href,
 })
@@ -77,7 +77,7 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
     <!-- <Navbar /> -->
     <div class="group relative mx-auto mb-16 h-[40vh] w-full max-w-4xl">
       <div
-        v-if="company?.banner?.file_path"
+        v-if="initialCompany?.banner?.file_path"
         class="absolute left-0 top-0 h-full w-full transition-opacity duration-500 ease-in-out group-hover:opacity-100"
       >
         <div
@@ -100,23 +100,24 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
         </div>
 
         <img
-          :src="imageAssetUrl({ filePath: company.banner?.file_path })"
-          :alt="company.banner?.name"
+          :src="imageAssetUrl({ filePath: initialCompany?.banner?.file_path })"
+          :alt="initialCompany?.banner?.name"
           class="h-full w-full object-cover md:rounded-b-lg"
         />
       </div>
 
       <div
         v-else
-        class="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center bg-gradient-to-r from-primary-foreground to-accent md:rounded-b-lg"
+        class="absolute left-0 top-0 flex h-full w-full flex-row items-center justify-center bg-gradient-to-r from-muted to-accent-foreground md:rounded-b-lg"
       >
         <img
+          v-if="!initialCompany"
           :src="imageAssetUrl({ filePath: `images/hero-image.jpg` })"
           alt="Flat World Global Solutions Hero Image"
           class="h-full w-full object-cover md:rounded-b-lg"
         />
 
-        <div v-if="!company">
+        <div v-if="!initialCompany">
           <p
             class="absolute right-6 top-[calc(40vh-3.75rem)] w-40 transform text-right font-sans text-base font-light tracking-wide text-background/50 md:top-[calc(40vh-2.75rem)] md:w-auto md:text-lg"
           >
@@ -152,11 +153,11 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
         >
           <img
             :src="
-              company?.logo?.file_path
-                ? imageAssetUrl({ filePath: company.logo?.file_path })
+              initialCompany?.logo?.file_path
+                ? imageAssetUrl({ filePath: initialCompany?.logo?.file_path })
                 : imageAssetUrl({ filePath: `images/FW_Logo_Full_Color.png` })
             "
-            :alt="company?.logo?.name"
+            :alt="initialCompany?.logo?.name"
           />
         </div>
       </div>
@@ -183,4 +184,6 @@ const copyPageHref = () => pageHrefClipboard.copy(location.href)
 
     <Footer />
   </div>
+
+  <VueQueryDevtools />
 </template>

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
 use App\Models\Company;
+use App\Models\Image;
 use App\Models\Theme;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::prefix('admin')
 
         // Company routes
 
-        // Company index
+        // Company create
         Route::get('/company/create', function () {
             return Inertia::render('admin/company/Create');
         })->name('company.create');
@@ -77,6 +78,24 @@ Route::prefix('admin')
                 'initialTheme' => $theme,
             ]);
         })->name('theme.show');
+
+        // Images routes
+
+        // Images index
+        Route::get('images', function () {
+            $images = Image::with('imageType')->get();
+
+            return Inertia::render('admin/image/Index', [
+                'initialImages' => $images,
+            ]);
+        })->name('image.index');
+
+        // Tracking routes
+
+        // Tracking index
+        Route::get('tracking', function () {
+            return Inertia::render('admin/tracking/Index');
+        })->name('tracking.index');
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

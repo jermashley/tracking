@@ -1,16 +1,7 @@
 <script setup>
-import { faMapLocationDot } from '@fortawesome/pro-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { computed } from 'vue'
 
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
 
 const props = defineProps({
   type: {
@@ -22,27 +13,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-})
-
-const googleMapsLink = computed(() => {
-  if (!props.location?.address) {
-    return null
-  }
-
-  const addressParts = [
-    props.location.address,
-    props.location.address2,
-    props.location.city,
-    props.location.state,
-    props.location.zipCode,
-  ].filter(Boolean)
-
-  const fullAddress = addressParts.join(`, `)
-
-  const encodedAddress = encodeURIComponent(fullAddress)
-
-  // Construct the Google Maps URL
-  return `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`
 })
 </script>
 

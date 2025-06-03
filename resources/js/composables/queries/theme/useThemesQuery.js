@@ -12,7 +12,6 @@ const useThemesQuery = ({ config = {} } = {}) =>
     queryKey: [`themes`],
     queryFn: getThemes,
     staleTime: Infinity,
-    cacheTime: Infinity,
 
     ...config,
   })

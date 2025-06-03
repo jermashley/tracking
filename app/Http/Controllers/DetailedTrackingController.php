@@ -15,27 +15,26 @@ class DetailedTrackingController extends Controller
         $trackingNumber = $request->query('trackingNumber') ?? null;
         $searchOption = $request->query('searchOption') ?? null;
         $companyId = $request->query('companyId') ?? null;
-        $zipCode = $request->query('zipCode') ?? null;
         $brand = $request->query('brand') ? strtoupper($request->query('brand')) : null;
 
         $pipelineApiTrackingClient = new PipelineApiTracking;
 
         $trackingDataResponse = $pipelineApiTrackingClient->getTrackingData(
             $trackingNumber,
-            $searchOption,
-            $companyId,
-            $zipCode
+            $searchOption
         );
 
         // If error in trackingDataResponse, redirect to error page.
-        if ($trackingDataResponse->failed() || $trackingDataResponse->clientError() || empty($trackingDataResponse->object()->data?->trackingObject)) {
+        if ($trackingDataResponse->failed() || $trackingDataResponse->clientError() || empty($trackingDataResponse->object()->data)) {
             return redirect(route('trackShipment.notFound', $trackingNumber));
         }
 
         // Pipeline ID of the company the shipment belongs to.
-        $pipelineCompanyId = $trackingDataResponse->object()->data?->trackingObject?->companyId;
+        $pipelineCompanyId = $trackingDataResponse->object()->data[0]?->companyId;
 
         $trackingData = $trackingDataResponse->json();
+
+        dump($trackingData);
 
         // Attempt to get local company model from either the slug or the Pipeline company ID.
         $company = Company::findByIdentifier($brand, $companyId, $pipelineCompanyId);
@@ -62,9 +61,9 @@ class DetailedTrackingController extends Controller
         }
 
         return Inertia::render('brandedTracking/Index', [
-            'trackingData' => $trackingData,
-            'company' => $company,
-            'shipmentCoordinates' => $shipmentCoordinates,
+            'initialTrackingData' => $trackingData,
+            'initialCompany' => $company,
+            'initialShipmentCoordinates' => $shipmentCoordinates,
         ]);
     }
 

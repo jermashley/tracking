@@ -12,7 +12,6 @@ const useCompanyQuery = ({ config = {}, id = null } = {}) =>
     queryKey: [`companies`, id],
     queryFn: () => getCompany(id),
     staleTime: Infinity,
-    cacheTime: Infinity,
 
     ...config,
   })
