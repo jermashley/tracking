@@ -27,7 +27,6 @@ class ThemeController extends Controller
      */
     public function store(StoreThemeRequest $request): JsonResponse
     {
-        dump($request->input('derive_from'));
         $data = $request->validated();
         $colors = GenerateThemeColors::execute($data);
 
