@@ -205,9 +205,7 @@ const numberOfPieces = computed(() => {
                 trackingData?.estimatedPickupDate
               "
               :detail="
-                dayjs(trackingData?.estimatedDeliveryDate).format(
-                  'MMMM D, YYYY',
-                )
+                dayjs(trackingData?.estimatedPickupDate).format('MMMM D, YYYY')
               "
               :icon="faCalendarArrowUp"
               label="Estimated Pickup Date"
