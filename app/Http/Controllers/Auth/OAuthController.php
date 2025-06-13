@@ -23,9 +23,11 @@ class OAuthController extends Controller
         $socialiteUser = Socialite::driver($provider)->user();
 
         $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
+        $allowedDomains = config('socialite.valid_domains', []);
+        $allowedUsers = config('socialite.valid_users', []);
 
-        // Return to the login if the user's email domain is not in our valid domain list.
-        if (! in_array($emailDomain, config('socialite.valid_domains')) || ! in_array($socialiteUser->email, config('socialite.valid_users'))) {
+        // Check if the email domain is allowed, and if valid_users is set, also check the email
+        if (!in_array($emailDomain, $allowedDomains) || (!empty($allowedUsers) && !in_array($socialiteUser->email, $allowedUsers))) {
             return redirect()->route('login')->withErrors([
                 'email' => 'You must be an allowed user to login.',
             ]);
