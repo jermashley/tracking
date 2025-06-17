@@ -12,6 +12,7 @@ import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.v
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
 import { useLogout } from '@/composables/hooks/auth'
+import {faUser} from "@fortawesome/pro-thin-svg-icons";
 
 const { user } = usePage().props.auth
 
@@ -58,6 +59,11 @@ const { logout } = useLogout()
           <FontAwesomeIcon class="mr-2" :icon="faSignOut" fixed-width />
 
           <span>Sign out</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem @click="logout">
+          <FontAwesomeIcon class="mr-2" :icon="faUser" fixed-width />
+
+          <span>User Management</span>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
