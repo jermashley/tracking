@@ -5,6 +5,7 @@ use App\Http\Controllers\DetailedTrackingController;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -98,8 +99,11 @@ Route::prefix('admin')
         })->name('tracking.index');
 
         Route::get('userManagement', function () {
-            return Inertia::render('admin/userManagement/Index');
+            return Inertia::render('admin/userManagement/Index', [
+                'users' => User::all(),
+            ]);
         })->name('userManagement.index');
+
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');
