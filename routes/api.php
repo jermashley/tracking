@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
+use App\Http\Controllers\Api\DocumentController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::as('api.')
     ->group(function () {
         Route::post('shipmentTracking', [TrackingController::class, 'trackingStatuses'])->name('shipmentTracking');
+        Route::post('shipmentDocuments', [DocumentController::class, 'shipmentDocuments'])->name('shipmentDocuments');
         Route::post('shipmentCoordinates', [TrackingController::class, 'shipmentCoordinates'])->name('shipmentCoordinates');
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
