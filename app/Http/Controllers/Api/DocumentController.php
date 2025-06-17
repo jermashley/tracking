@@ -29,7 +29,7 @@ class DocumentController extends Controller
                 continue;
             }
             $documents[] = [
-                'name' => $document['name'],
+                'name' => strtoupper($document['name']),
                 'url' => $document['file'],
             ];
         }
