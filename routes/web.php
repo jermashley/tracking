@@ -27,7 +27,7 @@ Route::get('/login', function () {
 
 Route::prefix('admin')
     ->as('admin.')
-    ->middleware('auth')
+    ->middleware(['auth', 'role:Super Admin'])
     ->group(function () {
         // Admin routes
 
