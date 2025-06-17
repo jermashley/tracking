@@ -8,6 +8,7 @@ const props = defineProps({
 </script>
 
 <template>
+  <h2 class="text-lg font-semibold mb-4">Shipment Documents</h2>
   <table>
     <thead>
       <tr>
