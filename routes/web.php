@@ -96,6 +96,10 @@ Route::prefix('admin')
         Route::get('tracking', function () {
             return Inertia::render('admin/tracking/Index');
         })->name('tracking.index');
+
+        Route::get('userManagement', function () {
+            return Inertia::render('admin/userManagement/Index');
+        })->name('userManagement.index');
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

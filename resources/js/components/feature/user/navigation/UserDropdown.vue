@@ -1,7 +1,7 @@
 <script setup>
 import { faBars, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { usePage } from '@inertiajs/vue3'
+import {Link, usePage} from '@inertiajs/vue3'
 
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
@@ -60,10 +60,11 @@ const { logout } = useLogout()
 
           <span>Sign out</span>
         </DropdownMenuItem>
-        <DropdownMenuItem @click="logout">
-          <FontAwesomeIcon class="mr-2" :icon="faUser" fixed-width />
-
-          <span>User Management</span>
+        <DropdownMenuItem>
+          <Link :href="route(`admin.userManagement.index`)">
+            <FontAwesomeIcon class="mr-2" :icon="faUser" fixed-width />
+            <span>User Management</span>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
