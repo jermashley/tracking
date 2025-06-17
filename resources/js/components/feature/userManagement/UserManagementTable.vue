@@ -46,11 +46,26 @@ const columns = [
     },
   },
   {
+    accessorKey: `roles`,
+    header: () => h(`div`, { class: `text-base` }, `Roles`),
+    cell: ({ row }) => {
+      return h(
+        `span`,
+        { class: `text-sm font-semibold` },
+        row.original.roles[0],
+      )
+    },
+  },
+  {
     accessorKey: `edit`,
     header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
     cell: ({ row }) => {
       return h(UserRolesDropdown, {
-        currentRole: row.original.id, //TODO this needs to get the current role from the composable that fernando is creating
+        userId: row.original.id,
+        onRoleUpdated: (newRole) => {
+          // call your update function here
+          updateUserRole(row.original.id, newRole, row)
+        },
       })
     },
   },
@@ -67,6 +82,9 @@ const tableOptions = reactive({
 })
 
 const companiesTable = useVueTable(tableOptions)
+const updateUserRole = (userId, newRole, row) => {
+  row.original.roles[0] = newRole.name // Update the role in the row data
+}
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { faEllipsisVertical } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { ref } from 'vue'
 
 import {
   DropdownMenu,
@@ -11,15 +10,39 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useUpdateUserRoleMutation } from '@/composables/mutations/user'
+import { useRolesQuery } from '@/composables/queries/roles'
 
-const roles = ref([
-  { name: `Admin`, value: `admin` },
-  { name: `User`, value: `user` },
-  { name: `Guest`, value: `guest` },
-]) // TODO this needs to hit the api from a composable that MM is creating
+const { data: roles } = useRolesQuery()
+const props = defineProps({
+  userId: {
+    type: Number,
+    required: true,
+  },
+})
 
-const handleRoleChange = (role) => {
-  console.log(`Selected role: ${role.name}`)
+const emit = defineEmits([`role-updated`])
+
+const mutation = useUpdateUserRoleMutation({
+  onSuccess: () => {
+    console.log(`Role updated`)
+    // optional: show toast or refetch
+  },
+  onError: (error) => {
+    console.error(`Failed to update role:`, error)
+  },
+})
+
+const handleRoleChange = async (role) => {
+  try {
+    await mutation.mutateAsync({
+      userId: props.userId,
+      formData: { role: role },
+    })
+    emit(`role-updated`, role)
+  } catch (error) {
+    console.error(`Failed to update role`, error)
+  }
 }
 </script>
 
