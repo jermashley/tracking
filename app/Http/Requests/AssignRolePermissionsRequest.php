@@ -6,16 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AssignRolePermissionsRequest extends FormRequest
 {
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     public function rules(): array
     {
         return [
-            'permissions' => ['required', 'array'],
-            'permissions.*' => ['exists:permissions,name'],
+            'permissions' => ['required', 'array', 'distinct'],
+            'permissions.*' => ['string', 'exists:permissions,name'],
         ];
     }
 }
