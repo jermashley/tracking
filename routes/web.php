@@ -49,7 +49,7 @@ Route::prefix('admin')
 
         // Company show
         Route::get('/company/{company:uuid}', function (Company $company) {
-            $company->load(['logo', 'banner', 'footer', 'theme']);
+            $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             return Inertia::render('admin/company/Edit', [
                 'companyInitialValues' => $company,
