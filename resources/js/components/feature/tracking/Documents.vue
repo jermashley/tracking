@@ -8,10 +8,9 @@ const props = defineProps({
   },
 })
 
-const notEmptyDocumentsList = ref(true)
 </script>
 <template>
-  <template v-if="notEmptyDocumentsList">
+  <template v-if="props.documents?.length">
     <h2 class="mb-4 text-lg font-semibold">Shipment Documents</h2>
     <table>
       <thead>
