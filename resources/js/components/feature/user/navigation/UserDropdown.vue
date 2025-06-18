@@ -1,7 +1,7 @@
 <script setup>
-import { faBars, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
+import { faBars, faGlobePointer,faSignOut } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { usePage } from '@inertiajs/vue3'
+import { Link, usePage } from '@inertiajs/vue3'
 
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
@@ -30,7 +30,7 @@ const { logout } = useLogout()
       </Button>
     </DropdownMenuTrigger>
 
-    <DropdownMenuContent class="w-64" align="end">
+    <DropdownMenuContent class="w-68" align="end">
       <DropdownMenuGroup>
         <DropdownMenuLabel class="flex flex-col">
           <span class="text-zinc-700">
@@ -42,15 +42,15 @@ const { logout } = useLogout()
           </span>
         </DropdownMenuLabel>
 
-        <!-- <DropdownMenuSeparator /> -->
+        <DropdownMenuSeparator />
 
-        <!-- <DropdownMenuItem as-child>
-          <Link :href="route(`admin.dashboard`)">
-            <FontAwesomeIcon class="mr-2" :icon="faGear" fixed-width />
+        <DropdownMenuItem as-child>
+          <Link :href="route(`admin.manageAllowedDomains`)">
+            <FontAwesomeIcon class="mr-2" :icon="faGlobePointer" fixed-width />
 
-            <span>Settings</span>
+            <span>Manage Allowed Domains</span>
           </Link>
-        </DropdownMenuItem> -->
+        </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\TrackingController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AllowedDomainController; // Add this line at the top
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -32,4 +33,6 @@ Route::as('api.')
         Route::apiResource('themes', ThemeController::class);
 
         Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
+
+        Route::apiResource('allowedDomains', AllowedDomainController::class);
     })->middleware(Authenticate::using('sanctum'));
