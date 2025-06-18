@@ -100,7 +100,13 @@ Route::prefix('admin')
 
         Route::get('userManagement', function () {
             return Inertia::render('admin/userManagement/Index', [
-                'users' => User::all(),
+                'users' => User::with('roles')->get()->map(fn ($user) => [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'roles' => $user->getRoleNames(), // returns a Collection of role names
+                ])
             ]);
         })->name('userManagement.index');
 
