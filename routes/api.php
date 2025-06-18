@@ -3,10 +3,10 @@
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
+use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
-use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
@@ -34,7 +34,12 @@ Route::as('api.')
         Route::apiResource('themes', ThemeController::class);
 
         Route::apiResource('roles', RoleController::class);
-        Route::apiResource('permissions', PermissionController::class)->only(['index']);
+
+        Route::get('admin/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+        Route::post('admin/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+        Route::put('admin/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+        Route::delete('admin/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
         Route::put('users/{user}/role', [UserController::class, 'updateRole'])->name('users.update.role');
 
         Route::put('roles/{role}/assign-permissions', [RoleController::class, 'assignPermissions'])->name('roles.assignPermissions');
