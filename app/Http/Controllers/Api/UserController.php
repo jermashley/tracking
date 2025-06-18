@@ -12,9 +12,9 @@ class UserController extends Controller
 {
     public function index(): JsonResponse
     {
-        $roles = User::all();
+        $users = User::all();
 
-        return response()->json($roles, Response::HTTP_OK);
+        return response()->json($users, Response::HTTP_OK);
     }
 
     /**
