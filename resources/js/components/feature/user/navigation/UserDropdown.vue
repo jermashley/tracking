@@ -1,7 +1,7 @@
 <script setup>
-import { faBars, faSignOut } from '@fortawesome/pro-duotone-svg-icons'
+import {faBars, faSignOut} from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { usePage } from '@inertiajs/vue3'
+import {Link, usePage} from '@inertiajs/vue3'
 
 import Button from '@/components/ui/button/Button.vue'
 import DropdownMenu from '@/components/ui/dropdown-menu/DropdownMenu.vue'
@@ -12,6 +12,7 @@ import DropdownMenuLabel from '@/components/ui/dropdown-menu/DropdownMenuLabel.v
 import DropdownMenuSeparator from '@/components/ui/dropdown-menu/DropdownMenuSeparator.vue'
 import DropdownMenuTrigger from '@/components/ui/dropdown-menu/DropdownMenuTrigger.vue'
 import { useLogout } from '@/composables/hooks/auth'
+import {faShieldKeyhole, faUser} from "@fortawesome/pro-thin-svg-icons";
 
 const { user } = usePage().props.auth
 
@@ -58,6 +59,18 @@ const { logout } = useLogout()
           <FontAwesomeIcon class="mr-2" :icon="faSignOut" fixed-width />
 
           <span>Sign out</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link :href="route(`admin.userManagement.index`)">
+            <FontAwesomeIcon class="mr-2" :icon="faUser" fixed-width />
+            <span>User Management</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link :href="route(`admin.role.index`)">
+            <FontAwesomeIcon class="mr-2" :icon="faShieldKeyhole" fixed-width />
+            <span>Role Management</span>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>

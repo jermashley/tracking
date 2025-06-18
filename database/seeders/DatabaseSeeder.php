@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ImageTypeSeeder::class,
             ImageSeeder::class,
             CompanySeeder::class,
+            RolesAndPermissionsSeeder::class,
         ]);
     }
 }
