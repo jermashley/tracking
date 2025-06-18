@@ -17,7 +17,7 @@ class ExampleTest extends DuskTestCase
             $browser->visit('/testing/oauth-login')
                 ->assertPathIs('/admin/dashboard');
             $browser->waitFor('h1')->assertSee('Companies');
-            Sleep::for(10)->seconds();
+            Sleep::for(3)->seconds();
         });
     }
 }
