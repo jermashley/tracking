@@ -16,7 +16,8 @@ class PipelineApiDocuments extends PipelineApiBaseService
     }
 
     public function getShipmentDocuments(
-        ?string $trackingNumber = ''
+        ?string $trackingNumber = '',
+        ?string $apiKey = null
     ): Response {
         $data = [
             'RequestOptions' => [
@@ -26,9 +27,7 @@ class PipelineApiDocuments extends PipelineApiBaseService
                 'BOLNumber' => $trackingNumber,
             ],
         ];
-
-        $response = $this->makeRequest('POST', $this->endpoint, $data);
-
-        return $response;
+        $this->headers['apiKey'] = $apiKey;
+        return $this->makeRequest('POST', $this->endpoint, $data);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Services\Pipeline\PipelineApiDocuments;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,8 +14,10 @@ class DocumentController extends Controller
     public function shipmentDocuments(Request $request): JsonResponse
     {
         $shipmentDocumentsData = new PipelineApiDocuments;
+        $company = Company::where('pipeline_company_id', '=', $request->input('companyId'))->with('apiToken')->first();
         $shipmentDocumentsResponse = $shipmentDocumentsData->getShipmentDocuments(
             $request->input('trackingNumber'),
+            $company->apiToken->api_token
         );
 
         // If error in shipmentDocumentsResponse, redirect to error page.

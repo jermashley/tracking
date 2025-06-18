@@ -59,9 +59,10 @@ const { refetch, dataUpdatedAt, isRefetching } = useTrackShipmentQuery({
   searchOption: `bol`,
   companyId: props.company?.pipeline_company_id ?? ``,
 })
+
 const { data } = useShipmentDocumentsQuery({
   trackingNumber: props.trackingData.bolNum,
-  companyId: props.company?.pipeline_company_id ?? ``,
+  companyId: props.trackingData.companyId ?? ``,
 })
 
 const bolNumber = computed(() => {
