@@ -12,7 +12,7 @@ class DocumentController extends Controller
 {
     public function shipmentDocuments(Request $request): JsonResponse
     {
-        $shipmentDocumentsData = new PipelineApiDocuments();
+        $shipmentDocumentsData = new PipelineApiDocuments;
         $shipmentDocumentsResponse = $shipmentDocumentsData->getShipmentDocuments(
             $request->input('trackingNumber'),
         );
@@ -25,16 +25,28 @@ class DocumentController extends Controller
         }
         $documents = [];
         foreach ($shipmentDocumentsResponse->json() as $document) {
-            if (!in_array($document['name'], ['bol', 'pod'])) {
+            if (! in_array($document['name'], ['bol', 'pod'])) {
                 continue;
             }
             $documents[] = [
                 'name' => strtoupper($document['name']),
                 'url' => $document['file'],
+                'size' => $this->getFileSize($document['file']),
             ];
         }
+
         return response()->json([
             'shipmentDocuments' => $documents,
         ], Response::HTTP_OK);
+    }
+
+    private function getFileSize(string $fileUrl): string
+    {
+        $headers = get_headers($fileUrl, 1);
+        if (isset($headers['Content-Length'])) {
+            return is_array($headers['Content-Length']) ? $headers['Content-Length'][array_key_last($headers['Content-Length'])] : $headers['Content-Length'];
+        }
+
+        return 'Unknown size';
     }
 }
