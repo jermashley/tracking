@@ -16,7 +16,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useCompanyDestroyMutation } from '@/composables/mutations/company'
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
 
+const { hasPermissions } = useHasPermissions()
 const props = defineProps({
   company: {
     type: Object,
@@ -51,13 +53,14 @@ const cancelDialog = () => {
 
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button variant="destructive" size="sm">
-        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
-
-        <span>Delete</span>
-      </Button>
-    </DialogTrigger>
+    <template v-if="hasPermissions('company.delete')">
+      <DialogTrigger as-child>
+        <Button variant="destructive" size="sm">
+          <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+          <span>Delete</span>
+        </Button>
+      </DialogTrigger>
+    </template>
 
     <DialogContent>
       <DialogHeader>

@@ -5,6 +5,9 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
+const { hasPermissions } = useHasPermissions()
+
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -60,28 +63,30 @@ const columns = [
       })
     },
   },
-  {
-    accessorKey: `edit`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
-    cell: ({ row }) => {
-      return h(
-        Button,
-        { variant: `outline`, size: `sm`, asChild: true },
-        {
-          default: () =>
-            h(
-              Link,
-              { href: route(`admin.company.show`, row.original.uuid) },
-              {
-                default: () =>
-                  h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
-              },
-            ),
+  hasPermissions(`company.edit`)
+    ? {
+        accessorKey: `edit`,
+        header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
+        cell: ({ row }) => {
+          return h(
+            Button,
+            { variant: `outline`, size: `sm`, asChild: true },
+            {
+              default: () =>
+                h(
+                  Link,
+                  { href: route(`admin.company.show`, row.original.uuid) },
+                  {
+                    default: () =>
+                      h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
+                  },
+                ),
+            },
+          )
         },
-      )
-    },
-  },
-]
+      }
+    : null,
+].filter(Boolean)
 
 const tableOptions = reactive({
   get data() {
