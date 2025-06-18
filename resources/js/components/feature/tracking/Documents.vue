@@ -1,13 +1,10 @@
 <script setup>
-import { ref } from 'vue'
-
 const props = defineProps({
   documents: {
     type: Array,
     required: true,
   },
 })
-
 </script>
 <template>
   <template v-if="props.documents?.length">
