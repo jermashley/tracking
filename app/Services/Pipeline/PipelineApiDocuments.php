@@ -17,18 +17,18 @@ class PipelineApiDocuments extends PipelineApiBaseService
 
     public function getShipmentDocuments(
         ?string $trackingNumber = ''
-    ): Response
-    {
+    ): Response {
         $data = [
             'RequestOptions' => [
-                'testMode' => false
+                'testMode' => false,
             ],
             'Request' => [
-                'BOLNumber' => $trackingNumber
-            ]
+                'BOLNumber' => $trackingNumber,
+            ],
         ];
 
         $response = $this->makeRequest('POST', $this->endpoint, $data);
+
         return $response;
     }
 }
