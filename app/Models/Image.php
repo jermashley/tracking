@@ -8,6 +8,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $uuid
+ * @property string $name
+ * @property int $image_type_id
+ * @property string $file_path
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $deleted_at
+ * @property-read \App\Models\ImageType|null $imageType
+ * @method static \Database\Factories\ImageFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereFilePath($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereImageTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Image whereUuid($value)
+ * @mixin \Eloquent
+ */
 class Image extends Model
 {
     /** @use HasFactory<\Database\Factories\ImageFactory> */

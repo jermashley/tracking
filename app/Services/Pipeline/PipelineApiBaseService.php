@@ -13,13 +13,13 @@ class PipelineApiBaseService
 
     protected $headers;
 
-    public function __construct($urlOverride = null)
+    public function __construct($urlOverride = null, string $apiKey = null)
     {
         $this->baseUrl = $urlOverride ?? config('services.pipeline.api_url');
         $this->apiKey = config('services.pipeline.api_key');
 
         $this->headers = [
-            'apiKey' => $this->apiKey,
+            'apiKey' => $apiKey ?? $this->apiKey,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
