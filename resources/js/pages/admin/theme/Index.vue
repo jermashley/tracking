@@ -6,7 +6,9 @@ import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vu
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useThemesQuery } from '@/composables/queries/theme'
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
 
+const { hasPermissions } = useHasPermissions()
 const { initialThemes } = usePage().props
 
 const { data: themes, isError } = useThemesQuery({
@@ -53,7 +55,11 @@ const { data: themes, isError } = useThemesQuery({
             class="ml-auto flex w-full flex-row items-center justify-end space-x-4"
           >
             <Button as-child variant="outline" size="sm">
-              <Link :href="`/admin/themes/${theme.uuid}`">Edit</Link>
+              <Link
+                v-if="hasPermissions('theme.update')"
+                :href="`/admin/themes/${theme.uuid}`"
+                >Edit</Link
+              >
             </Button>
           </div>
         </div>

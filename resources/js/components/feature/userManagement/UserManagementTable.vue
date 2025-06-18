@@ -3,6 +3,8 @@ import { usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
+const { hasPermissions } = useHasPermissions()
 import UserRolesDropdown from '@/components/feature/userManagement/UserRolesDropdown.vue'
 import {
   Table,
@@ -56,20 +58,21 @@ const columns = [
       )
     },
   },
-  {
-    accessorKey: `edit`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
-    cell: ({ row }) => {
-      return h(UserRolesDropdown, {
-        userId: row.original.id,
-        onRoleUpdated: (newRole) => {
-          // call your update function here
-          updateUserRole(row.original.id, newRole, row)
+  hasPermissions(`role.update`)
+    ? {
+        accessorKey: `edit`,
+        header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
+        cell: ({ row }) => {
+          return h(UserRolesDropdown, {
+            userId: row.original.id,
+            onRoleUpdated: (newRole) => {
+              updateUserRole(row.original.id, newRole, row)
+            },
+          })
         },
-      })
-    },
-  },
-]
+      }
+    : null,
+].filter(Boolean)
 
 const tableOptions = reactive({
   get data() {

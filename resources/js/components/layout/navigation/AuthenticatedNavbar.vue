@@ -17,6 +17,9 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
+const { hasPermissions } = useHasPermissions()
+
 const {
   auth: { user },
 } = usePage().props
@@ -67,6 +70,7 @@ const {
                 <li>
                   <NavigationMenuLink as-child>
                     <Link
+                      v-if="hasPermissions('theme.read')"
                       :href="route(`admin.theme.index`)"
                       class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
