@@ -9,7 +9,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 use Spatie\Permission\Models\Permission;
+
+use Spatie\Permission\Models\Role;
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -111,6 +115,7 @@ Route::prefix('admin')
             ]);
         })->name('userManagement.index');
 
+
         // Permissions routes
         Route::get('permissions', function () {
             return Inertia::render('admin/permissions/Index', [
@@ -128,6 +133,28 @@ Route::prefix('admin')
             ]);
         })->name('permissions.create');
 
+
+        Route::get('role', function () {
+            return Inertia::render('admin/role/Index', [
+                'roles' => Role::with('permissions')->get()->map(fn ($role) => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'permissions' => $role->permissions->pluck('name'),
+                ]),
+            ]);
+        })->name('role.index');
+
+        Route::get('role/show/{role}', function (Role $role) {
+            $role->load('permissions');
+
+            return Inertia::render('admin/role/Edit', [
+                'initialRole' => $role,
+                'allPermissions' => \Spatie\Permission\Models\Permission::all()->map(fn ($permission) => [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                ]),
+            ]);
+        })->name('role.show');
 
     });
 
