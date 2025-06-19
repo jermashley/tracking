@@ -1,5 +1,5 @@
 <script setup>
-import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+import { faEdit, faTrashPlus } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
@@ -58,6 +58,27 @@ const columns = [
               {
                 default: () =>
                   h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
+              },
+            ),
+        },
+      )
+    },
+  },
+  {
+    accessorKey: `delete`,
+    header: () => h(`div`, { class: `text-sm font-semibold` }, `Delete`),
+    cell: ({ row }) => {
+      return h(
+        Button,
+        { variant: `outline`, size: `sm`, asChild: true },
+        {
+          default: () =>
+            h(
+              Link,
+              { href: route(`admin.permissions.show`, row.original.id) },
+              {
+                default: () =>
+                  h(FontAwesomeIcon, { icon: faTrashPlus, fixedWidth: true }),
               },
             ),
         },

@@ -22,9 +22,7 @@ const { data: permission, isError } = usePermissionQuery({
 </script>
 
 <template>
-
   <AuthenticatedLayout :title="'Permission Information'">
     <permissionForm v-if="permission && !isError" :permission="permission" />
-
   </AuthenticatedLayout>
 </template>

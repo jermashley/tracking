@@ -122,6 +122,12 @@ Route::prefix('admin')
                 'permissions' => $permission,
             ]);
         })->name('permissions.show');
+        Route::get('permissions/create', function (Permission $permission) {
+            return Inertia::render('admin/permissions/Create', [
+                'permissions' => $permission,
+            ]);
+        })->name('permissions.create');
+
 
     });
 

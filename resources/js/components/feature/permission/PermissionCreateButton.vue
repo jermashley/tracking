@@ -13,11 +13,10 @@ const { hasPermissions } = useHasPermissions()
   <Button variant="default" as-child size="sm">
     <Link
       v-if="hasPermissions('company.create')"
-      :href="route('admin.company.create')"
+      :href="route('admin.permissions.create')"
     >
       <FontAwesomeIcon :icon="faPlus" class="mr-2" fixed-width />
-
-      <span>Create Company</span></Link
+      <span>Create Permission</span></Link
     >
   </Button>
 </template>

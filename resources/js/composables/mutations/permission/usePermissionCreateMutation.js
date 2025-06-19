@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const createCompany = async (formData) => {
-  const { data } = await axios.post(route(`api.companies.store`), formData)
+  const { data } = await axios.post(route(`api.permissions.store`), formData)
 
   return data
 }
