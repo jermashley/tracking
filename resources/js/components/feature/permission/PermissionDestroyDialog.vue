@@ -31,6 +31,7 @@ const queryClient = useQueryClient()
 const { mutate: destroyPermission } = usePermissionDestroyMutation({
   config: {
     onSuccess: async () => {
+      debugger;
       await queryClient.invalidateQueries({
         queryKey: [`permissions`],
       })

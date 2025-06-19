@@ -1,5 +1,5 @@
 <script setup>
-import { faEdit, faTrashPlus } from '@fortawesome/pro-duotone-svg-icons'
+import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
@@ -64,27 +64,6 @@ const columns = [
       )
     },
   },
-  {
-    accessorKey: `delete`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `Delete`),
-    cell: ({ row }) => {
-      return h(
-        Button,
-        { variant: `outline`, size: `sm`, asChild: true },
-        {
-          default: () =>
-            h(
-              Link,
-              { href: route(`admin.permissions.show`, row.original.id) },
-              {
-                default: () =>
-                  h(FontAwesomeIcon, { icon: faTrashPlus, fixedWidth: true }),
-              },
-            ),
-        },
-      )
-    },
-  },
 ]
 
 const tableOptions = reactive({
@@ -97,7 +76,7 @@ const tableOptions = reactive({
   getCoreRowModel: getCoreRowModel(),
 })
 
-const companiesTable = useVueTable(tableOptions)
+const permissionsTable = useVueTable(tableOptions)
 </script>
 
 <template>
@@ -105,7 +84,7 @@ const companiesTable = useVueTable(tableOptions)
     <Table v-if="data && !isError">
       <TableHeader>
         <TableRow
-          v-for="headerGroup in companiesTable.getHeaderGroups()"
+          v-for="headerGroup in permissionsTable.getHeaderGroups()"
           :key="headerGroup.id"
         >
           <TableHead v-for="header in headerGroup.headers" :key="header.id">
@@ -119,9 +98,9 @@ const companiesTable = useVueTable(tableOptions)
       </TableHeader>
 
       <TableBody>
-        <template v-if="companiesTable.getRowModel().rows?.length">
+        <template v-if="permissionsTable.getRowModel().rows?.length">
           <TableRow
-            v-for="row in companiesTable.getRowModel().rows"
+            v-for="row in permissionsTable.getRowModel().rows"
             :key="row.uuid"
           >
             <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">

@@ -5,7 +5,6 @@ import { useForm, useIsFormDirty } from 'vee-validate'
 import { watch } from 'vue'
 import * as yup from 'yup'
 
-import permissionDestroyDialog from '@/components/feature/permission/permissionDestroyDialog.vue'
 import { Button } from '@/components/ui/button'
 import {
   FormControl,
@@ -20,6 +19,7 @@ import {
   usePermissionCreateMutation,
   usePermissionUpdateMutation,
 } from '@/composables/mutations/permission'
+import PermissionDestroyDialog from '@/components/feature/permission/PermissionDestroyDialog.vue'
 
 const props = defineProps({
   permission: {
