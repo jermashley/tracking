@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
+use App\Models\AllowedDomain;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
@@ -39,6 +40,15 @@ Route::prefix('admin')
                 'initialCompanies' => $companies,
             ]);
         })->name('dashboard');
+
+        // AllowedDomains
+        Route::get('/manageAllowedDomains', function () {
+            $allowedDomains = AllowedDomain::all();
+
+            return Inertia::render('admin/ManageAllowedDomains', [
+                'initialAllowedDomains' => $allowedDomains,
+            ]);
+        })->name('manageAllowedDomains');
 
         // Company routes
 
