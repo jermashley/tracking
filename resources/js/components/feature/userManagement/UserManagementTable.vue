@@ -3,9 +3,7 @@ import { usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
-import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
-const { hasPermissions } = useHasPermissions()
-import UserRolesDropdown from '@/components/feature/userManagement/UserRolesDropdown.vue'
+import UserAssignRoleDropdown from '@/components/feature/userManagement/UserAssignRoleDropdown.vue'
 import {
   Table,
   TableBody,
@@ -14,29 +12,25 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table/index.js'
+import { useUsersQuery } from '@/composables/queries/user'
 
-const { users } = usePage().props
+import ImpersonateUserButton from './ImpersonateUserButton.vue'
+
+const { initialUsers } = usePage().props
+
+const { data, isError } = useUsersQuery({
+  initialData: initialUsers,
+})
 
 const columns = [
   {
-    accessorKey: `first_name`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `First Name`),
+    accessorKey: `name`,
+    header: () => h(`div`, { class: `text-sm font-semibold` }, `Name`),
     cell: ({ row }) => {
       return h(
         `span`,
         { class: `text-sm font-semibold` },
-        row.original.first_name,
-      )
-    },
-  },
-  {
-    accessorKey: `last_name`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `Last Name`),
-    cell: ({ row }) => {
-      return h(
-        `span`,
-        { class: `text-sm font-semibold` },
-        row.original.last_name,
+        `${row.original.first_name} ${row.original.last_name}`,
       )
     },
   },
@@ -48,35 +42,28 @@ const columns = [
     },
   },
   {
-    accessorKey: `roles`,
-    header: () => h(`div`, { class: `text-base` }, `Roles`),
+    accessorKey: `edit`,
+    header: () => h(`div`, { class: `text-sm font-semibold` }, `Assign Role`),
     cell: ({ row }) => {
-      return h(
-        `span`,
-        { class: `text-sm font-semibold` },
-        row.original.roles[0],
-      )
+      return h(UserAssignRoleDropdown, {
+        user: row.original,
+      })
     },
   },
-  hasPermissions(`role.update`)
-    ? {
-        accessorKey: `edit`,
-        header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
-        cell: ({ row }) => {
-          return h(UserRolesDropdown, {
-            userId: row.original.id,
-            onRoleUpdated: (newRole) => {
-              updateUserRole(row.original.id, newRole, row)
-            },
-          })
-        },
-      }
-    : null,
+  {
+    accessorKey: `impersonate`,
+    header: () => h(`div`, { class: `text-sm font-semibold` }, `Impersonate`),
+    cell: ({ row }) => {
+      return h(ImpersonateUserButton, {
+        user: row.original,
+      })
+    },
+  },
 ].filter(Boolean)
 
 const tableOptions = reactive({
   get data() {
-    return users
+    return data
   },
   get columns() {
     return columns
@@ -85,14 +72,11 @@ const tableOptions = reactive({
 })
 
 const companiesTable = useVueTable(tableOptions)
-const updateUserRole = (userId, newRole, row) => {
-  row.original.roles[0] = newRole.name // Update the role in the row data
-}
 </script>
 
 <template>
   <div class="rounded border border-border">
-    <Table v-if="users">
+    <Table v-if="data && !isError">
       <TableHeader>
         <TableRow
           v-for="headerGroup in companiesTable.getHeaderGroups()"

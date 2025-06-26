@@ -5,10 +5,10 @@ import ThemeCreateButton from '@/components/feature/theme/ThemeCreateButton.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useThemesQuery } from '@/composables/queries/theme'
-import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
 
-const { hasPermissions } = useHasPermissions()
+const { userCan } = useRolesAndPermissions()
 const { initialThemes } = usePage().props
 
 const { data: themes, isError } = useThemesQuery({
@@ -56,7 +56,7 @@ const { data: themes, isError } = useThemesQuery({
           >
             <Button as-child variant="outline" size="sm">
               <Link
-                v-if="hasPermissions('theme.update')"
+                v-if="userCan(`theme:update`)"
                 :href="`/admin/themes/${theme.uuid}`"
                 >Edit</Link
               >

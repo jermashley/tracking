@@ -8,11 +8,10 @@ use App\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * 
- *
  * @property string $uuid
  * @property int $id
  * @property string $first_name
@@ -29,6 +28,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ *
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
@@ -47,14 +47,16 @@ use Spatie\Permission\Traits\HasRoles;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUuid($value)
+ *
  * @mixin \Eloquent
  */
 class User extends Authenticatable
 {
+    use HasApiTokens;
     use HasFactory;
+    use HasRoles;
     use HasUuid;
     use Notifiable;
-    use HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -80,6 +82,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'azure_token',
     ];
 
     /**

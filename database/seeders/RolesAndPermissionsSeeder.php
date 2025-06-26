@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
@@ -12,28 +12,35 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         // All permissions
         $permissions = [
-            'company.create',
-            'company.read',
-            'company.update',
-            'company.delete',
-            'user.read',
-            'user.update',
-            'theme.create',
-            'theme.read',
-            'theme.update',
-            'theme.delete',
-            'role.create',
-            'role.read',
-            'role.update',
-            'role.delete',
-            'permission.create',
-            'permission.read',
-            'permission.update',
-            'permission.delete',
-            'allowed_domain.create',
-            'allowed_domain.read',
-            'allowed_domain.update',
-            'allowed_domain.delete',
+            'company:create',
+            'company:read',
+            'company:update',
+            'company:delete',
+            'user:create',
+            'user:read',
+            'user:update',
+            'user:delete',
+            'user:impersonate',
+            'image:create',
+            'image:read',
+            'image:update',
+            'image:delete',
+            'theme:create',
+            'theme:read',
+            'theme:update',
+            'theme:delete',
+            'role:create',
+            'role:read',
+            'role:update',
+            'role:delete',
+            'permission:create',
+            'permission:read',
+            'permission:update',
+            'permission:delete',
+            'allowed_domain:create',
+            'allowed_domain:read',
+            'allowed_domain:update',
+            'allowed_domain:delete',
         ];
 
         foreach ($permissions as $perm) {
@@ -50,14 +57,14 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Assign only company and theme permissions to Company Admin
         $companyAdminPermissions = [
-            'company.create',
-            'company.read',
-            'company.update',
-            'company.delete',
-            'theme.create',
-            'theme.read',
-            'theme.update',
-            'theme.delete',
+            'company:create',
+            'company:read',
+            'company:update',
+            'company:delete',
+            'theme:create',
+            'theme:read',
+            'theme:update',
+            'theme:delete',
         ];
         $companyAdmin->syncPermissions($companyAdminPermissions);
 

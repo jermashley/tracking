@@ -6,9 +6,9 @@ import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vu
 </script>
 
 <template>
-  <Head title="Tracking" />
+  <Head title="Admin | Users" />
 
-  <AuthenticatedLayout>
+  <AuthenticatedLayout title="Users">
     <UserManagementTable />
   </AuthenticatedLayout>
 </template>

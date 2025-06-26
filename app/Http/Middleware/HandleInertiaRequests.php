@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
                 'roles' => $request->user()?->getRoleNames() ?? [],
                 'permissions' => $request->user()?->getAllPermissions()->pluck('name') ?? [],
             ],
+            'is_impersonating' => $request->session()->has('impersonate_original_id'),
             'app' => [
                 'env' => App::environment(),
                 'name' => config('app.name'),

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
+use App\Http\Middleware\EnsureSuperAdmin;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
@@ -9,15 +10,16 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
 use Spatie\Permission\Models\Permission;
-
 use Spatie\Permission\Models\Role;
 
-
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect(route('admin.dashboard'));
+    if (Auth::check() && ! Auth::user()->can('company:read')) {
+        return redirect(route('admin.tracking.index'));
+    }
+
+    if (Auth::check() && Auth::user()->can('company:read')) {
+        return redirect(route('admin.companies.index'));
     }
 
     return redirect(route('login'));
@@ -31,59 +33,56 @@ Route::get('/login', function () {
     return Inertia::render('auth/Login');
 })->name('login');
 
+// Admin routes
 Route::prefix('admin')
     ->as('admin.')
     ->middleware(['auth'])
     ->group(function () {
-        // Admin routes
-
-        // Dashboard
-        Route::get('/dashboard', function () {
+        // Company routes
+        // Company index
+        Route::get('/companies', function () {
             $companies = Company::with(['logo', 'theme'])->get();
 
-            return Inertia::render('admin/Dashboard', [
+            return Inertia::render('admin/companies/Index', [
                 'initialCompanies' => $companies,
             ]);
-        })->name('dashboard');
-
-        // Company routes
+        })->name('companies.index');
 
         // Company create
-        Route::get('/company/create', function () {
-            return Inertia::render('admin/company/Create');
-        })->name('company.create');
+        Route::get('/companies/create', function () {
+            return Inertia::render('admin/companies/Create');
+        })->name('companies.create');
 
         // Company show
-        Route::get('/company/{company:uuid}', function (Company $company) {
+        Route::get('/companies/{company:uuid}', function (Company $company) {
             $company->load(['logo', 'banner', 'footer', 'theme']);
 
-            return Inertia::render('admin/company/Edit', [
+            return Inertia::render('admin/companies/Edit', [
                 'companyInitialValues' => $company,
             ]);
-        })->name('company.show');
+        })->name('companies.show');
 
         // Theme routes
-
         // Theme index
         Route::get('themes', function () {
             $themes = Theme::all();
 
-            return Inertia::render('admin/theme/Index', [
+            return Inertia::render('admin/themes/Index', [
                 'initialThemes' => $themes,
             ]);
-        })->name('theme.index');
+        })->name('themes.index');
 
         // Theme create
         Route::get('themes/create', function (Theme $theme) {
-            return Inertia::render('admin/theme/Create');
-        })->name('theme.create');
+            return Inertia::render('admin/themes/Create');
+        })->name('themes.create');
 
         // Theme show
         Route::get('themes/{theme:uuid}', function (Theme $theme) {
-            return Inertia::render('admin/theme/Edit', [
+            return Inertia::render('admin/themes/Edit', [
                 'initialTheme' => $theme,
             ]);
-        })->name('theme.show');
+        })->name('themes.show');
 
         // Images routes
 
@@ -103,53 +102,57 @@ Route::prefix('admin')
             return Inertia::render('admin/tracking/Index');
         })->name('tracking.index');
 
-        Route::get('userManagement', function () {
-            return Inertia::render('admin/userManagement/Index', [
-                'users' => User::with('roles')->get()->map(fn ($user) => [
-                    'id' => $user->id,
-                    'first_name' => $user->first_name,
-                    'last_name' => $user->last_name,
-                    'email' => $user->email,
-                    'roles' => $user->getRoleNames(), // returns a Collection of role names
-                ])
-            ]);
-        })->name('userManagement.index');
+        // Admin Routes for Roles and Permissions
+        Route::middleware(EnsureSuperAdmin::class)
+            ->group(function () {
+                // Users routes
+                Route::get('users', function () {
+                    $users = User::with('roles')->get();
 
+                    return Inertia::render('admin/users/Index', [
+                        'initialUsers' => $users,
+                        'allRoles' => Role::all()->map(fn ($role) => [
+                            'id' => $role->id,
+                            'name' => $role->name,
+                        ]),
+                    ]);
+                })->name('users.index');
 
-        // Permissions routes
-        Route::get('permissions', function () {
-            return Inertia::render('admin/permissions/Index', [
-                'permissions' => Permission::all()
-            ]);
-        })->name('permissions.index');
-        Route::get('/permission/{permission:id}', function (Permission $permission) {
-            return Inertia::render('admin/permissions/Edit', [
-                'permissions' => $permission,
-            ]);
-        })->name('permissions.show');
+                // Permissions routes
+                Route::get('permissions', function () {
+                    return Inertia::render('admin/permissions/Index', [
+                        'initialPermissions' => Permission::all(),
+                    ]);
+                })->name('permissions.index');
 
-        Route::get('role', function () {
-            return Inertia::render('admin/role/Index', [
-                'roles' => Role::with('permissions')->get()->map(fn ($role) => [
-                    'id' => $role->id,
-                    'name' => $role->name,
-                    'permissions' => $role->permissions->pluck('name'),
-                ]),
-            ]);
-        })->name('role.index');
+                Route::get('/permissions/{permission}', function (Permission $permission) {
+                    return Inertia::render('admin/permissions/Edit', [
+                        'initialPermission' => $permission,
+                    ]);
+                })->name('permissions.show');
 
-        Route::get('role/show/{role}', function (Role $role) {
-            $role->load('permissions');
+                Route::get('role', function () {
+                    return Inertia::render('admin/role/Index', [
+                        'roles' => Role::with('permissions')->get()->map(fn ($role) => [
+                            'id' => $role->id,
+                            'name' => $role->name,
+                            'permissions' => $role->permissions->pluck('name'),
+                        ]),
+                    ]);
+                })->name('role.index');
 
-            return Inertia::render('admin/role/Edit', [
-                'initialRole' => $role,
-                'allPermissions' => \Spatie\Permission\Models\Permission::all()->map(fn ($permission) => [
-                    'id' => $permission->id,
-                    'name' => $permission->name,
-                ]),
-            ]);
-        })->name('role.show');
+                Route::get('role/show/{role}', function (Role $role) {
+                    $role->load('permissions');
 
+                    return Inertia::render('admin/role/Edit', [
+                        'initialRole' => $role,
+                        'allPermissions' => \Spatie\Permission\Models\Permission::all()->map(fn ($permission) => [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                        ]),
+                    ]);
+                })->name('role.show');
+            });
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

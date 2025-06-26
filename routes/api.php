@@ -8,7 +8,9 @@ use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
 use App\Http\Controllers\Api\UserController;
-use Illuminate\Auth\Middleware\Authenticate;
+use App\Http\Controllers\ImpersonationController;
+use App\Http\Middleware\EnsureSuperAdmin;
+use App\Http\Middleware\EnsureUserCanImpersonate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +19,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 
 Route::as('api.')
+    ->middleware(['auth:sanctum'])
     ->group(function () {
         Route::post('shipmentTracking', [TrackingController::class, 'trackingStatuses'])->name('shipmentTracking');
         Route::post('shipmentCoordinates', [TrackingController::class, 'shipmentCoordinates'])->name('shipmentCoordinates');
@@ -33,14 +36,28 @@ Route::as('api.')
 
         Route::apiResource('themes', ThemeController::class);
 
-        Route::apiResource('roles', RoleController::class);
+        Route::post('/impersonate/stop', [ImpersonationController::class, 'stopImpersonate'])
+            ->withoutMiddleware(EnsureUserCanImpersonate::class)
+            ->name('impersonate.stop');
 
-        Route::get('admin/permissions', [PermissionController::class, 'index'])->name('permissions.index');
-        Route::post('admin/permissions', [PermissionController::class, 'store'])->name('permissions.store');
-        Route::put('admin/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
-        Route::delete('admin/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+        Route::as('admin.')
+            ->group(function () {
+                Route::put('roles/{role}/assign-permissions', [RoleController::class, 'assignPermissions'])
+                    ->name('roles.assignPermissions');
 
-        Route::put('users/{user}/role', [UserController::class, 'updateRole'])->name('users.update.role');
+                Route::apiResource('roles', RoleController::class);
 
-        Route::put('roles/{role}/assign-permissions', [RoleController::class, 'assignPermissions'])->name('roles.assignPermissions');
-    })->middleware(Authenticate::using('sanctum'));
+                Route::patch('users/{user}/role', [UserController::class, 'updateRole'])
+                    ->middleware(EnsureSuperAdmin::class)
+                    ->name('users.update.role');
+
+                Route::apiResource('users', UserController::class);
+
+                Route::post('/impersonate/{userId}', [ImpersonationController::class, 'impersonate'])
+                    ->middleware(EnsureUserCanImpersonate::class)
+                    ->name('impersonate.start');
+
+                Route::apiResource('permissions', PermissionController::class)
+                    ->middleware(EnsureSuperAdmin::class);
+            });
+    });

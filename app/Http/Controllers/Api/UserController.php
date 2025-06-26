@@ -12,17 +12,20 @@ class UserController extends Controller
 {
     public function index(): JsonResponse
     {
-        $users = User::all();
+        $users = User::with('roles')->get();
 
         return response()->json($users, Response::HTTP_OK);
     }
 
+    public function show(User $user): JsonResponse
+    {
+        $user->load(['roles', 'roles.permissions', 'permissions']);
+
+        return response()->json($user, Response::HTTP_OK);
+    }
+
     /**
      * Update the role of a user.
-     *
-     * @param Request $request
-     * @param User $user
-     * @return \Illuminate\Http\JsonResponse
      */
     public function updateRole(Request $request, User $user): \Illuminate\Http\JsonResponse
     {
@@ -34,8 +37,6 @@ class UserController extends Controller
 
         $user->syncRoles([$roleName]);
 
-        return response()->json([
-            'message' => "Role updated to {$roleName}",
-        ], Response::HTTP_OK);
+        return response()->json($user, Response::HTTP_OK);
     }
 }

@@ -107,7 +107,7 @@ const { mutate: updateCompany, isPending: updateCompanyIsPending } =
           duration: 5000,
         })
 
-        router.visit(route(`admin.dashboard`))
+        router.visit(route(`admin.companies.index`))
       },
     },
   })
@@ -322,7 +322,7 @@ watch(
         size="sm"
         :disabled="createCompanyIsPending || updateCompanyIsPending"
       >
-        <Link :href="route(`admin.dashboard`)">Cancel</Link>
+        <Link :href="route(`admin.companies.index`)">Cancel</Link>
       </Button>
 
       <Button
