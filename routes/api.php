@@ -63,4 +63,4 @@ Route::as('api.')
 
                 Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
             });
-    })->middleware(['auth:sanctum']);
+    });
