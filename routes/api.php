@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CompanyApiTokenController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
@@ -59,5 +60,7 @@ Route::as('api.')
 
                 Route::apiResource('permissions', PermissionController::class)
                     ->middleware(EnsureSuperAdmin::class);
+
+                Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
             });
-    });
+    })->middleware(Authenticate::using('sanctum'));

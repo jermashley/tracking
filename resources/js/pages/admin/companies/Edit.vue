@@ -4,6 +4,7 @@ import { faImageSlash, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Head } from '@inertiajs/vue3'
 
+import CompanyAuthForm from '@/components/feature/company/CompanyAuthForm.vue'
 import CompanyForm from '@/components/feature/company/CompanyForm.vue'
 import CompanySetImageAsset from '@/components/feature/company/CompanySetImageAsset.vue'
 import ToggleCompanyIsActive from '@/components/feature/company/ToggleCompanyIsActive.vue'
@@ -213,6 +214,7 @@ const { data: company, isError } = useCompanyQuery({
       </div>
 
       <CompanyForm v-if="company && !isError" :company="company" />
+      <CompanyAuthForm v-if="company && !isError" :company="company" />
     </section>
   </AuthenticatedLayout>
 </template>

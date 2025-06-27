@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Traits\HasUuid;
+use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Log;
 
 /**
- * 
- *
  * @property int $id
  * @property string $uuid
  * @property int $is_active
@@ -28,11 +28,13 @@ use Illuminate\Support\Facades\Log;
  * @property string|null $brand
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read CompanyApiToken|null $apiToken
  * @property-read \App\Models\Image|null $banner
  * @property-read \App\Models\Image|null $footer
  * @property-read \App\Models\Image|null $logo
  * @property-read \App\Models\Theme|null $theme
- * @method static \Database\Factories\CompanyFactory factory($count = null, $state = [])
+ *
+ * @method static CompanyFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company query()
@@ -53,11 +55,12 @@ use Illuminate\Support\Facades\Log;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereWebsite($value)
+ *
  * @mixin \Eloquent
  */
 class Company extends Model
 {
-    /** @use HasFactory<\Database\Factories\CompanyFactory> */
+    /** @use HasFactory<CompanyFactory> */
     use HasFactory, HasUuid;
 
     protected $fillable = [
@@ -73,7 +76,7 @@ class Company extends Model
         'theme_id',
         'enable_map',
         'requires_brand',
-        'brand'
+        'brand',
     ];
 
     public function logo(): BelongsTo
@@ -94,6 +97,11 @@ class Company extends Model
     public function theme(): BelongsTo
     {
         return $this->belongsTo(Theme::class);
+    }
+
+    public function apiToken(): HasOne
+    {
+        return $this->hasOne(CompanyApiToken::class);
     }
 
     public static function booleanFields(): array
@@ -135,13 +143,14 @@ class Company extends Model
                     return null;
             }
 
-            if ($company && $company->requires_brand && !$brand) {
+            if ($company && $company->requires_brand && ! $brand) {
                 return null;
             }
 
             return $company;
         } catch (\Exception $e) {
-            Log::channel('database')->error('Error finding company by identifier: ' . $e->getMessage());
+            Log::channel('database')->error('Error finding company by identifier: '.$e->getMessage());
+
             return null;
         }
     }

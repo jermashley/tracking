@@ -54,8 +54,8 @@ Route::prefix('admin')
         })->name('companies.create');
 
         // Company show
-        Route::get('/companies/{company:uuid}', function (Company $company) {
-            $company->load(['logo', 'banner', 'footer', 'theme']);
+        Route::get('/company/{company:uuid}', function (Company $company) {
+            $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             return Inertia::render('admin/companies/Edit', [
                 'companyInitialValues' => $company,

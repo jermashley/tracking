@@ -82,7 +82,7 @@ const { mutate: createCompany, isPending: createCompanyIsPending } =
           queryKey: [`companies`],
         })
 
-        await toast({
+        toast({
           title: `Created company: ${data.name}`,
           description: `The company has been created successfully.`,
           duration: 5000,
@@ -101,7 +101,7 @@ const { mutate: updateCompany, isPending: updateCompanyIsPending } =
           queryKey: [`companies`],
         })
 
-        await toast({
+        toast({
           title: `Updated company: ${data.name}`,
           description: `The company has been updated successfully.`,
           duration: 5000,
@@ -164,7 +164,7 @@ watch(
   </h2>
 
   <form
-    id="companyForm`"
+    id="companyForm"
     class="mt-4 flex w-full flex-col space-y-4 rounded-lg border border-border p-4"
     @submit="submitForm"
   >
