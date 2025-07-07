@@ -1,7 +1,6 @@
 <script setup>
-import { faKey } from '@fortawesome/pro-duotone-svg-icons'
+import { faKey, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { router } from '@inertiajs/vue3'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ref } from 'vue'
 
@@ -29,7 +28,7 @@ const isOpen = ref(false)
 
 const queryClient = useQueryClient()
 
-const { mutate: updateCompanyApiToken } = useCompanyApiTokenDestroyMutation({
+const { mutate: destroyCompanyApiToken } = useCompanyApiTokenDestroyMutation({
   config: {
     onSuccess: async () => {
       await queryClient.refetchQueries({ queryKey: [`companies`] })
@@ -39,6 +38,7 @@ const { mutate: updateCompanyApiToken } = useCompanyApiTokenDestroyMutation({
         description: `The API token has been successfully deleted.`,
         duration: 5000,
       })
+
       isOpen.value = false
     },
   },
@@ -52,7 +52,7 @@ const { mutate: updateCompanyApiToken } = useCompanyApiTokenDestroyMutation({
 })
 
 const handleDeleteToken = () => {
-  updateCompanyApiToken({
+  destroyCompanyApiToken({
     id: props.company.api_token.id,
   })
 }
@@ -65,8 +65,9 @@ const cancelDialog = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="destructive" size="sm">
-        <FontAwesomeIcon class="mr-2" :icon="faKey" fixed-width />
+      <Button variant="destructive" size="sm" class="w-full">
+        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+
         <span>Delete API Token</span>
       </Button>
     </DialogTrigger>

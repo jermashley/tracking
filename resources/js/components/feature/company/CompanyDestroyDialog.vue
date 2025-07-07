@@ -18,7 +18,8 @@ import {
 import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useCompanyDestroyMutation } from '@/composables/mutations/company'
 
-const { userCan } = useRolesAndPermissions()
+const { userCannot } = useRolesAndPermissions()
+
 const props = defineProps({
   company: {
     type: Object,
@@ -53,14 +54,17 @@ const cancelDialog = () => {
 
 <template>
   <Dialog v-model:open="isOpen">
-    <template v-if="userCan('company:delete')">
-      <DialogTrigger as-child>
-        <Button variant="destructive" size="sm">
-          <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
-          <span>Delete</span>
-        </Button>
-      </DialogTrigger>
-    </template>
+    <DialogTrigger as-child>
+      <Button
+        :disabled="userCannot('company:destroy')"
+        variant="destructive"
+        size="sm"
+      >
+        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+
+        <span>Delete {{ company.name }}</span>
+      </Button>
+    </DialogTrigger>
 
     <DialogContent>
       <DialogHeader>

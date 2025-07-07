@@ -1,14 +1,13 @@
 <script setup>
-// import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 import { faImageSlash, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Head } from '@inertiajs/vue3'
 
-import CompanyAuthForm from '@/components/feature/company/CompanyAuthForm.vue'
 import CompanyForm from '@/components/feature/company/CompanyForm.vue'
 import CompanySetImageAsset from '@/components/feature/company/CompanySetImageAsset.vue'
 import ToggleCompanyIsActive from '@/components/feature/company/ToggleCompanyIsActive.vue'
 import ToggleMapSwitch from '@/components/feature/company/ToggleMapSwitch.vue'
+import CompanyApiTokenForm from '@/components/feature/companyApiToken/CompanyApiTokenForm.vue'
 import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vue'
 import SelectThemeDialog from '@/components/feature/theme/SelectThemeDialog.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
@@ -213,8 +212,9 @@ const { data: company, isError } = useCompanyQuery({
         </div>
       </div>
 
+      <CompanyApiTokenForm v-if="company && !isError" :company="company" />
+
       <CompanyForm v-if="company && !isError" :company="company" />
-      <CompanyAuthForm v-if="company && !isError" :company="company" />
     </section>
   </AuthenticatedLayout>
 </template>

@@ -21,7 +21,11 @@ const useRolesAndPermissions = () => {
     return user.value.roles[0].permissions.some((p) => p.name === permission)
   }
 
-  return { userIs, userCan }
+  const userCannot = (permission) => {
+    return !user.value.roles[0].permissions.some((p) => p.name === permission)
+  }
+
+  return { userIs, userCan, userCannot }
 }
 
 export default useRolesAndPermissions

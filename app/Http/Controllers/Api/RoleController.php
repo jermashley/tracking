@@ -15,7 +15,7 @@ class RoleController extends Controller
 {
     public function index(): JsonResponse
     {
-        if (Auth::user()->cannot('role:read')) {
+        if (Auth::user()->cannot('role:show')) {
             return response()->json(null, Response::HTTP_FORBIDDEN);
         }
 
@@ -49,7 +49,7 @@ class RoleController extends Controller
      */
     public function show(Role $role): JsonResponse
     {
-        if (Auth::user()->cannot('role:read')) {
+        if (Auth::user()->cannot('role:show')) {
             return response()->json(null, Response::HTTP_FORBIDDEN);
         }
 

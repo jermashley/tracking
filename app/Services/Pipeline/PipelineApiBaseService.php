@@ -13,7 +13,7 @@ class PipelineApiBaseService
 
     protected $headers;
 
-    public function __construct($urlOverride = null, string $apiKey = null)
+    public function __construct($urlOverride = null, ?string $apiKey = null)
     {
         $this->baseUrl = $urlOverride ?? config('services.pipeline.api_url');
         $this->apiKey = config('services.pipeline.api_key');

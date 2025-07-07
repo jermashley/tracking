@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AllowedDomainController;
 use App\Http\Controllers\Api\CompanyApiTokenController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ImagesController;
@@ -62,5 +63,10 @@ Route::as('api.')
                     ->middleware(EnsureSuperAdmin::class);
 
                 Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
+
+                Route::patch('allowedDomains/{allowedDomain}/toggle-active-status', [AllowedDomainController::class, 'toggleActiveStatus'])
+                    ->name('allowedDomains.toggleActiveStatus');
+
+                Route::apiResource('allowedDomains', AllowedDomainController::class);
             });
     });

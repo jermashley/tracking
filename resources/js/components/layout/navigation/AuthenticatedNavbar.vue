@@ -35,7 +35,7 @@ const {
     >
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem v-if="userCan(`company:read`)">
+          <NavigationMenuItem v-if="userCan(`company:show`)">
             <NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
               <Link :href="route(`admin.companies.index`)">
                 <FontAwesomeIcon class="mr-2" :icon="faBuildings" fixed-width />
@@ -60,13 +60,13 @@ const {
           </NavigationMenuItem>
 
           <NavigationMenuItem
-            v-if="userCan(`theme:read`) || userCan(`image:read`)"
+            v-if="userCan(`theme:show`) || userCan(`image:show`)"
           >
             <NavigationMenuTrigger> Manage </NavigationMenuTrigger>
 
             <NavigationMenuContent>
               <ul class="grid min-w-72 grid-cols-1 gap-3 p-4">
-                <li v-if="userCan(`theme:read`)">
+                <li v-if="userCan(`theme:show`)">
                   <NavigationMenuLink as-child>
                     <Link
                       :href="route(`admin.themes.index`)"
@@ -83,7 +83,7 @@ const {
                   </NavigationMenuLink>
                 </li>
 
-                <li v-if="userCan(`image:read`)">
+                <li v-if="userCan(`image:show`)">
                   <NavigationMenuLink as-child>
                     <Link
                       :href="route(`admin.image.index`)"

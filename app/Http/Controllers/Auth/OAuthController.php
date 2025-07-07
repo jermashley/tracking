@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllowedDomain;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -21,13 +22,13 @@ class OAuthController extends Controller
     public function callback(string $provider)
     {
         $socialiteUser = Socialite::driver($provider)->user();
-        dump($socialiteUser);
-        $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
-        $allowedDomains = config('socialite.valid_domains', []);
-        $allowedUsers = config('socialite.valid_users', []);
 
-        // Check if the email domain is allowed, and if valid_users is set, also check the email
-        if (! in_array($emailDomain, $allowedDomains) || (! empty($allowedUsers) && ! in_array($socialiteUser->email, $allowedUsers))) {
+        $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
+
+        $allowedDomains = AllowedDomain::pluck('domain')->toArray();
+
+        // Check if the email domain is allowed
+        if (! in_array($emailDomain, $allowedDomains)) {
             return redirect()->route('login')->withErrors([
                 'email' => 'You must be an allowed user to login.',
             ]);

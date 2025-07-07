@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
 use App\Http\Middleware\EnsureSuperAdmin;
+use App\Models\AllowedDomain;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
@@ -12,13 +13,14 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\Response;
 
 Route::get('/', function () {
-    if (Auth::check() && ! Auth::user()->can('company:read')) {
+    if (Auth::check() && ! Auth::user()->can('company:show')) {
         return redirect(route('admin.tracking.index'));
     }
 
-    if (Auth::check() && Auth::user()->can('company:read')) {
+    if (Auth::check() && Auth::user()->can('company:show')) {
         return redirect(route('admin.companies.index'));
     }
 
@@ -41,6 +43,10 @@ Route::prefix('admin')
         // Company routes
         // Company index
         Route::get('/companies', function () {
+            if (Auth::user()->cannot('company:show')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to view companies.');
+            }
+
             $companies = Company::with(['logo', 'theme'])->get();
 
             return Inertia::render('admin/companies/Index', [
@@ -50,11 +56,19 @@ Route::prefix('admin')
 
         // Company create
         Route::get('/companies/create', function () {
+            if (Auth::user()->cannot('company:create')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to create companies.');
+            }
+
             return Inertia::render('admin/companies/Create');
         })->name('companies.create');
 
         // Company show
         Route::get('/company/{company:uuid}', function (Company $company) {
+            if (Auth::user()->cannot('company:show')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to view companies.');
+            }
+
             $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             return Inertia::render('admin/companies/Edit', [
@@ -65,6 +79,10 @@ Route::prefix('admin')
         // Theme routes
         // Theme index
         Route::get('themes', function () {
+            if (Auth::user()->cannot('theme:show')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to view themes.');
+            }
+
             $themes = Theme::all();
 
             return Inertia::render('admin/themes/Index', [
@@ -74,11 +92,19 @@ Route::prefix('admin')
 
         // Theme create
         Route::get('themes/create', function (Theme $theme) {
+            if (Auth::user()->cannot('theme:create')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to create themes.');
+            }
+
             return Inertia::render('admin/themes/Create');
         })->name('themes.create');
 
         // Theme show
         Route::get('themes/{theme:uuid}', function (Theme $theme) {
+            if (Auth::user()->cannot('theme:show')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to view themes.');
+            }
+
             return Inertia::render('admin/themes/Edit', [
                 'initialTheme' => $theme,
             ]);
@@ -88,6 +114,10 @@ Route::prefix('admin')
 
         // Images index
         Route::get('images', function () {
+            if (Auth::user()->cannot('image:show')) {
+                abort(Response::HTTP_FORBIDDEN, 'You do not have permission to view images.');
+            }
+
             $images = Image::with('imageType')->get();
 
             return Inertia::render('admin/image/Index', [
@@ -105,6 +135,13 @@ Route::prefix('admin')
         // Admin Routes for Roles and Permissions
         Route::middleware(EnsureSuperAdmin::class)
             ->group(function () {
+                // Allowed Domains routes
+                Route::get('allowed-domains', function () {
+                    return Inertia::render('admin/allowedDomains/Index', [
+                        'initialAllowedDomains' => AllowedDomain::all(),
+                    ]);
+                })->name('allowed-domains.index');
+
                 // Users routes
                 Route::get('users', function () {
                     $users = User::with('roles')->get();

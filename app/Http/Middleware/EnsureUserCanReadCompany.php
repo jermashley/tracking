@@ -17,8 +17,8 @@ class EnsureUserCanReadCompany
     {
         $user = $request->user();
 
-        // Check if the user is authenticated and has the 'company:read' permission
-        if (! $user || ! $user->can('company:read')) {
+        // Check if the user is authenticated and has the 'company:show' permission
+        if (! $user || ! $user->can('company:show')) {
             abort(403, 'Unauthorized');
         }
 

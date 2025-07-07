@@ -74,7 +74,7 @@ defineProps({
 
       <HoverCard :open-delay="300">
         <HoverCardTrigger as-child>
-          <template v-if="userCan(`company:read`)">
+          <template v-if="userCan(`company:show`)">
             <Button variant="link" class="p-0 underline" as-child>
               <Link :href="route('admin.companies.show', company.uuid)">
                 {{ company.name }}

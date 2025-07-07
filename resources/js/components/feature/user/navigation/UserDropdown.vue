@@ -1,6 +1,7 @@
 <script setup>
 import {
   faBars,
+  faGlobePointer,
   faShieldKeyhole,
   faSignOut,
   faStop,
@@ -80,6 +81,13 @@ const { mutate: mutateImpersonateUserStop } = useImpersonateUserStopMutation({
 
       <DropdownMenuGroup v-if="userIs(`Super Admin`)">
         <DropdownMenuLabel>Administration</DropdownMenuLabel>
+
+        <DropdownMenuItem>
+          <Link :href="route(`admin.allowed-domains.index`)" class="w-full">
+            <FontAwesomeIcon class="mr-2" :icon="faGlobePointer" fixed-width />
+            <span>Allowed Domains</span>
+          </Link>
+        </DropdownMenuItem>
 
         <DropdownMenuItem>
           <Link :href="route(`admin.users.index`)" class="w-full">

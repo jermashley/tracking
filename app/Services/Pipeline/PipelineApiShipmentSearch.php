@@ -4,7 +4,7 @@ namespace App\Services\Pipeline;
 
 use Illuminate\Http\Client\Response;
 
-class PipelineApiAccessorialsList extends PipelineApiBaseService
+class PipelineApiShipmentSearch extends PipelineApiBaseService
 {
     protected $endpoint;
 
@@ -14,12 +14,12 @@ class PipelineApiAccessorialsList extends PipelineApiBaseService
     {
         parent::__construct(apiKey: $apiToken);
 
-        $this->endpoint = '/Execute/AccessorialsList';
+        $this->endpoint = '/shipmentSearch';
     }
 
-    public function getAccessorialsList(): Response
+    public function searchShipment(string $quoteId): Response
     {
-        $response = $this->makeRequest('GET', $this->endpoint);
+        $response = $this->makeRequest('POST', $this->endpoint, ['quoteId' => $quoteId]);
 
         return $response;
     }
