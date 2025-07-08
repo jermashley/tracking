@@ -239,9 +239,8 @@ const numberOfPieces = computed(() => {
     </section>
 
     <!-- Shipment Documents -->
-    <section>
+    <section v-if="shipmentDocuments?.length >= 1">
       <ShipmentDocuments
-        v-if="shipmentDocuments?.length >= 1"
         :documents="shipmentDocuments"
         :bol-number="bolNumber"
       />
