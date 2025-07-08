@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\DetailedTrackingController;
+use App\Models\AllowedDomain;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
@@ -40,6 +41,15 @@ Route::prefix('admin')
             ]);
         })->name('dashboard');
 
+        // AllowedDomains
+        Route::get('/manageAllowedDomains', function () {
+            $allowedDomains = AllowedDomain::all();
+
+            return Inertia::render('admin/ManageAllowedDomains', [
+                'initialAllowedDomains' => $allowedDomains,
+            ]);
+        })->name('manageAllowedDomains');
+
         // Company routes
 
         // Company create
@@ -49,7 +59,7 @@ Route::prefix('admin')
 
         // Company show
         Route::get('/company/{company:uuid}', function (Company $company) {
-            $company->load(['logo', 'banner', 'footer', 'theme']);
+            $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             return Inertia::render('admin/company/Edit', [
                 'companyInitialValues' => $company,
@@ -108,5 +118,15 @@ Route::prefix('oauth')
         Route::get('/{provider}/callback', [OAuthController::class, 'callback'])->name('callback');
         Route::post('/logout', [OAuthController::class, 'logout'])->name('logout');
     });
+
+//Dusk testing route
+Route::get('/testing/oauth-login', function () {
+    $user = \App\Models\User::firstOrCreate(
+        ['email' => 'dusk@example.com'],
+        ['first_name' => 'Dusk', 'last_name' => 'Tester', 'password' => bcrypt('password')]
+    );
+    Auth::login($user);
+    return redirect('/admin/dashboard');
+});
 
 require __DIR__.'/auth.php';

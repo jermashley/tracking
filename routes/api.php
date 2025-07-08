@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\Api\CompanyApiTokenController;
 use App\Http\Controllers\Api\CompanyController;
 use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
+use App\Http\Controllers\Api\DocumentController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AllowedDomainController; // Add this line at the top
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -16,6 +19,7 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::as('api.')
     ->group(function () {
         Route::post('shipmentTracking', [TrackingController::class, 'trackingStatuses'])->name('shipmentTracking');
+        Route::post('shipmentDocuments', [DocumentController::class, 'shipmentDocuments'])->name('shipmentDocuments');
         Route::post('shipmentCoordinates', [TrackingController::class, 'shipmentCoordinates'])->name('shipmentCoordinates');
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
@@ -29,4 +33,8 @@ Route::as('api.')
         Route::apiResource('images', ImagesController::class);
 
         Route::apiResource('themes', ThemeController::class);
+
+        Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
+
+        Route::apiResource('allowedDomains', AllowedDomainController::class);
     })->middleware(Authenticate::using('sanctum'));
