@@ -23,6 +23,7 @@ class PipelineApiBaseService
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ];
+
     }
 
     public function makeRequest(string $method, string $endpoint, array $data = []): Response

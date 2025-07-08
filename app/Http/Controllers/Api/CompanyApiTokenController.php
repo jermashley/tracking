@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyApiTokenRequest;
+use App\Http\Requests\ValidateCompanyApiTokenRequest;
 use App\Models\Company;
 use App\Models\CompanyApiToken;
 use App\Services\Pipeline\PipelineApiShipmentSearch;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,9 +38,12 @@ class CompanyApiTokenController extends Controller
             return response()->json(['error' => 'Company already has api token.'], Response::HTTP_CONFLICT);
         }
 
-        $shipmentSearch = new PipelineApiShipmentSearch($request->input('api_token'));
+        $shipmentSearchClient = new PipelineApiShipmentSearch($request->input('api_token'));
 
-        $shipmentSearchResponse = $shipmentSearch->searchShipment($validated['quote_id']);
+        $shipmentSearchResponse = $shipmentSearchClient->searchShipment(
+            trackingNumber: $validated['trackingNumber'],
+            searchOption: 'bol', // Search by Bill of Lading, as that is how we are validating the API key.
+        );
 
         if ($shipmentSearchResponse->failed() || (int) $shipmentSearchResponse->object()->data[0]->companyId === (int) $request->input('company_id')) {
             return response()->json(['error' => 'Invalid API token.'], Response::HTTP_UNAUTHORIZED);
@@ -49,6 +52,7 @@ class CompanyApiTokenController extends Controller
         CompanyApiToken::create([
             'company_id' => $request->input('company_id'),
             'api_token' => $request->input('api_token'),
+            'bol' => $validated['trackingNumber'],
             'is_valid' => true,
         ]);
 
@@ -56,19 +60,29 @@ class CompanyApiTokenController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Validate the status of the API token.
      */
-    public function show(CompanyApiToken $companyApiToken)
+    public function validateToken(ValidateCompanyApiTokenRequest $request, Company $company): JsonResponse
     {
-        //
-    }
+        $company->load('apiToken');
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, CompanyApiToken $companyApiToken)
-    {
-        //
+        if (! $company->apiToken) {
+            return response()->json(['error' => 'Company does not have an API token.'], Response::HTTP_NOT_FOUND);
+        }
+
+        $shipmentSearchClient = new PipelineApiShipmentSearch($company->apiToken->api_token);
+
+        $shipmentSearchResponse = $shipmentSearchClient->searchShipment(
+            trackingNumber: $company->apiToken->bol,
+            searchOption: 'bol', // Search by Bill of Lading, as that is how we are validating the API key.
+            globalSearch: false,
+        );
+
+        if ($shipmentSearchResponse->failed() || (int) $shipmentSearchResponse->object()->data[0]->companyId === (int) $company->id) {
+            return response()->json(['error' => 'Invalid API token.'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return response()->json($company->apiToken->is_valid, Response::HTTP_OK);
     }
 
     /**

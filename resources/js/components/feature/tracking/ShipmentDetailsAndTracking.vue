@@ -18,6 +18,7 @@ import { computed } from 'vue'
 
 import AddressCard from '@/components/feature/tracking/AddressCard.vue'
 import ShipmentDetail from '@/components/feature/tracking/ShipmentDetail.vue'
+import ShipmentDocuments from '@/components/feature/tracking/ShipmentDocuments.vue'
 import StatusStepper from '@/components/feature/tracking/StatusStepper.vue'
 import TrackingMap from '@/components/feature/tracking/TrackingMap.vue'
 import { Button } from '@/components/ui/button'
@@ -38,6 +39,10 @@ const props = defineProps({
     type: Object,
     required: true,
     default: null,
+  },
+  shipmentDocuments: {
+    type: Array,
+    required: true,
   },
   useTrackShipmentQueryRefetch: {
     type: Function,
@@ -230,6 +235,15 @@ const numberOfPieces = computed(() => {
       <AddressCard
         :location="trackingData?.destinationLocation"
         type="Destination"
+      />
+    </section>
+
+    <!-- Shipment Documents -->
+    <section>
+      <ShipmentDocuments
+        v-if="shipmentDocuments?.length >= 1"
+        :documents="shipmentDocuments"
+        :bol-number="bolNumber"
       />
     </section>
 

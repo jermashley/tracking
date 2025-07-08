@@ -1,5 +1,5 @@
 <script setup>
-import { faKey, faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
+import { faTrashAlt } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ref } from 'vue'
@@ -15,7 +15,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { toast } from '@/components/ui/toast/index.js'
-import { useCompanyApiTokenDestroyMutation } from '@/composables/mutations/company'
+import { useCompanyApiTokenDestroyMutation } from '@/composables/mutations/companyApiToken'
 
 const props = defineProps({
   company: {

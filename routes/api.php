@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AllowedDomainController;
 use App\Http\Controllers\Api\CompanyApiTokenController;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
 use App\Http\Controllers\Api\PermissionController;
@@ -14,7 +15,7 @@ use App\Http\Controllers\ImpersonationController;
 use App\Http\Middleware\EnsureSuperAdmin;
 use App\Http\Middleware\EnsureUserCanImpersonate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route; // Add this line at the top
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -24,6 +25,7 @@ Route::as('api.')
     ->middleware(['auth:sanctum'])
     ->group(function () {
         Route::post('shipmentTracking', [TrackingController::class, 'trackingStatuses'])->name('shipmentTracking');
+        Route::post('shipmentDocuments', [DocumentController::class, 'shipmentDocuments'])->name('shipmentDocuments');
         Route::post('shipmentCoordinates', [TrackingController::class, 'shipmentCoordinates'])->name('shipmentCoordinates');
 
         Route::patch('companies/{company}/toggleMapOption', [CompanyController::class, 'toggleMapOption'])->name('companies.toggleMapOption');
@@ -61,6 +63,9 @@ Route::as('api.')
 
                 Route::apiResource('permissions', PermissionController::class)
                     ->middleware(EnsureSuperAdmin::class);
+
+                Route::get('companyApiTokens/validate/{company}', [CompanyApiTokenController::class, 'validateToken'])
+                    ->name('companyApiTokens.validate');
 
                 Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
 

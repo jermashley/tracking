@@ -11,8 +11,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Log;
 
 /**
- * 
- *
  * @property int $id
  * @property string $uuid
  * @property int $is_active
@@ -35,6 +33,7 @@ use Illuminate\Support\Facades\Log;
  * @property-read \App\Models\Image|null $footer
  * @property-read \App\Models\Image|null $logo
  * @property-read \App\Models\Theme|null $theme
+ *
  * @method static CompanyFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
@@ -56,6 +55,7 @@ use Illuminate\Support\Facades\Log;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUuid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereWebsite($value)
+ *
  * @mixin \Eloquent
  */
 class Company extends Model
@@ -116,7 +116,7 @@ class Company extends Model
         try {
             $query = self::query()
                 ->where('is_active', true)
-                ->with(['logo', 'banner', 'footer', 'theme']);
+                ->with(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             switch (true) {
                 case $brand:

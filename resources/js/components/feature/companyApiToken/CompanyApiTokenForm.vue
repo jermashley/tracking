@@ -1,15 +1,11 @@
 <script setup>
 import {
   faBadgeCheck,
-  faClipboard,
   faTriangleExclamation,
 } from '@fortawesome/pro-duotone-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { useQueryClient } from '@tanstack/vue-query'
-import { useClipboard } from '@vueuse/core'
-import { Eye, EyeOff } from 'lucide-vue-next'
 import { useForm, useIsFormDirty } from 'vee-validate'
-import { computed, ref, watch } from 'vue'
 import * as yup from 'yup'
 
 import { Button } from '@/components/ui/button'
@@ -29,7 +25,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/toast'
-import { useCompanyApiTokenStoreMutation } from '@/composables/mutations/company'
+import { useCompanyApiTokenStoreMutation } from '@/composables/mutations/companyApiToken'
+import { useCompanyApiTokenValidateQuery } from '@/composables/queries/companyApiToken'
 
 import CompanyApiTokenDeleteDialog from './CompanyApiTokenDeleteDialog.vue'
 
@@ -46,25 +43,31 @@ const { toast } = useToast()
 
 const apiTokenSchema = yup.object({
   api_token: yup.string().required(`API token is required`),
-  quote_id: yup.number().required(`Quote ID is required`),
+  trackingNumber: yup.string().required(`Bill of Lading is required`),
 })
 
 const { handleSubmit, resetForm, isFieldDirty } = useForm({
   validationSchema: apiTokenSchema,
   initialValues: {
     api_token: null,
-    quote_id: null,
+    trackingNumber: null,
   },
   keepValuesOnUnmount: true,
 })
 
 const isFormDirty = useIsFormDirty()
 
-const { mutate: updateCompanyApiToken, isPending: companyApiTokenIsPending } =
+const { mutate: storeCompanyApiToken, isPending: companyApiTokenIsPending } =
   useCompanyApiTokenStoreMutation({
     config: {
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: [`companies`] })
+
+        await queryClient.invalidateQueries({
+          queryKey: [`companyApiToken`, props.company?.id, `validate`],
+        })
+
+        resetForm()
 
         toast({
           title: `API Token Saved`,
@@ -85,11 +88,21 @@ const { mutate: updateCompanyApiToken, isPending: companyApiTokenIsPending } =
     },
   })
 
+const { data: tokenIsValid } = useCompanyApiTokenValidateQuery({
+  companyId: props.company?.id,
+
+  config: {
+    initialData: props.company?.api_token?.is_valid,
+
+    enabled: !!props.company?.api_token?.api_token,
+  },
+})
+
 const onValidSubmit = (values) => {
-  updateCompanyApiToken({
+  storeCompanyApiToken({
     companyId: props.company?.id,
     apiToken: values.api_token,
-    quoteId: values.quote_id,
+    trackingNumber: values.trackingNumber,
   })
 }
 
@@ -100,30 +113,6 @@ const onInvalidSubmit = ({ values, errors }) => {
 const submitForm = () => {
   handleSubmit(onValidSubmit, onInvalidSubmit)()
 }
-
-const showPassword = ref(false)
-const refApiTokenInput = ref(props.company?.api_token?.api_token ?? null)
-
-const togglePasswordVisibility = () => {
-  showPassword.value = !showPassword.value
-}
-
-const hasApiToken = ref(props.company?.api_token)
-
-const tokenIsValid = computed(() => props.company?.api_token?.is_valid)
-
-watch(
-  () => [props.company, props.company.api_token],
-  () => {
-    resetForm({ values: { api_token: `` } })
-
-    refApiTokenInput.value = props.company?.api_token?.api_token ?? null
-
-    hasApiToken.value = props.company.api_token !== null
-  },
-)
-
-const apiTokenClipboard = useClipboard()
 </script>
 
 <template>
@@ -132,12 +121,14 @@ const apiTokenClipboard = useClipboard()
       <CardTitle>Pipeline Authentication</CardTitle>
     </CardHeader>
 
-    <CardContent v-if="hasApiToken">
+    <CardContent v-if="company?.api_token?.api_token">
       <div
         class="relative flex w-full flex-row items-center justify-start space-x-2"
       >
         <p class="w-full">
-          <span class="font-mono text-sm">{{ refApiTokenInput }}</span>
+          <span class="font-mono text-sm">
+            {{ company?.api_token?.api_token }}
+          </span>
         </p>
 
         <FontAwesomeIcon
@@ -193,23 +184,23 @@ const apiTokenClipboard = useClipboard()
 
         <FormField
           v-slot="{ componentField }"
-          name="quote_id"
+          name="trackingNumber"
           :validate-on-blur="!isFieldDirty"
         >
           <FormItem>
-            <FormLabel>Quote ID</FormLabel>
+            <FormLabel>Bill of Lading</FormLabel>
 
             <FormControl>
               <Input
-                type="number"
-                placeholder="Quote ID"
+                type="text"
+                placeholder="Bill of Lading"
                 v-bind="componentField"
                 :disabled="companyApiTokenIsPending"
               />
             </FormControl>
 
             <FormDescription>
-              Quote ID associated with
+              Bill of Lading associated with
               <strong> {{ company.name }} </strong>.
             </FormDescription>
           </FormItem>
@@ -219,7 +210,10 @@ const apiTokenClipboard = useClipboard()
 
     <CardFooter>
       <div class="flex w-full justify-end space-x-2 pt-4">
-        <CompanyApiTokenDeleteDialog v-if="hasApiToken" :company="company" />
+        <CompanyApiTokenDeleteDialog
+          v-if="company?.api_token?.api_token"
+          :company="company"
+        />
 
         <Button
           v-else

@@ -13,20 +13,23 @@ const {
   initialTrackingData,
   initialCompany,
   initialShipmentCoordinates,
+  initialShipmentDocuments,
 } = usePage().props
 
 const initialData = {
   trackingData: initialTrackingData,
   company: initialCompany,
   shipmentCoordinates: initialShipmentCoordinates,
+  shipmentDocuments: initialShipmentDocuments,
 }
 
 const { data, refetch, dataUpdatedAt } = useTrackShipmentQuery({
   trackingNumber: initialTrackingData.data[0].bolNum,
   searchOption: params.get(`searchOption`),
   companyId: initialCompany?.pipeline_company_id ?? ``,
+
   config: {
-    initialData: initialData,
+    initialData,
   },
 })
 
@@ -61,6 +64,7 @@ const proNumber = computed(() => {
       :tracking-data="data?.trackingData"
       :company="data?.company"
       :shipment-coordinates="data?.shipmentCoordinates"
+      :shipment-documents="data?.shipmentDocuments"
       :use-track-shipment-query-refetch="refetch"
       :last-updated="dataUpdatedAt"
     />

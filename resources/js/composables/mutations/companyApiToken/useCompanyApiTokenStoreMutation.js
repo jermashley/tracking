@@ -13,11 +13,11 @@ const setCompanyApiToken = async (formData) => {
 
 const useCompanyApiTokenStoreMutation = ({ config = {} } = {}) =>
   useMutation({
-    mutationFn: ({ companyId, apiToken, quoteId }) =>
+    mutationFn: ({ companyId, apiToken, trackingNumber }) =>
       setCompanyApiToken({
         company_id: companyId,
         api_token: apiToken,
-        quote_id: quoteId,
+        trackingNumber: trackingNumber,
       }),
 
     ...config,
