@@ -1,16 +1,19 @@
 <?php
 
+use App\Http\Controllers\Api\AllowedDomainController;
 use App\Http\Controllers\Api\CompanyApiTokenController;
 use App\Http\Controllers\Api\CompanyController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ImagesController;
 use App\Http\Controllers\Api\ImageTypesController;
+use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\ThemeController;
 use App\Http\Controllers\Api\TrackingController;
-use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AllowedDomainController; // Add this line at the top
+use Illuminate\Support\Facades\Route; // Add this line at the top
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
@@ -37,4 +40,14 @@ Route::as('api.')
         Route::apiResource('companyApiTokens', CompanyApiTokenController::class);
 
         Route::apiResource('allowedDomains', AllowedDomainController::class);
+        Route::apiResource('roles', RoleController::class);
+
+        Route::get('admin/permissions', [PermissionController::class, 'index'])->name('permissions.index');
+        Route::post('admin/permissions', [PermissionController::class, 'store'])->name('permissions.store');
+        Route::put('admin/permissions/{permission}', [PermissionController::class, 'update'])->name('permissions.update');
+        Route::delete('admin/permissions/{permission}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
+
+        Route::put('users/{user}/role', [UserController::class, 'updateRole'])->name('users.update.role');
+
+        Route::put('roles/{role}/assign-permissions', [RoleController::class, 'assignPermissions'])->name('roles.assignPermissions');
     })->middleware(Authenticate::using('sanctum'));

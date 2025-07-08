@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { router } from '@inertiajs/vue3'
 import { useQueryClient } from '@tanstack/vue-query'
 import { ref } from 'vue'
+import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
+const { hasPermissions } = useHasPermissions()
 
 import { Button } from '@/components/ui/button'
 import {
@@ -51,13 +53,15 @@ const cancelDialog = () => {
 
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button variant="destructive" size="sm">
-        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+    <template v-if="hasPermissions('theme.delete')">
+      <DialogTrigger as-child>
+        <Button variant="destructive" size="sm">
+          <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
 
-        <span>Delete</span>
-      </Button>
-    </DialogTrigger>
+          <span>Delete</span>
+        </Button>
+      </DialogTrigger>
+    </template>
 
     <DialogContent>
       <DialogHeader>

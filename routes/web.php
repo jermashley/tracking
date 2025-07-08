@@ -6,9 +6,15 @@ use App\Models\AllowedDomain;
 use App\Models\Company;
 use App\Models\Image;
 use App\Models\Theme;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+use Spatie\Permission\Models\Permission;
+
+use Spatie\Permission\Models\Role;
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -28,7 +34,7 @@ Route::get('/login', function () {
 
 Route::prefix('admin')
     ->as('admin.')
-    ->middleware('auth')
+    ->middleware(['auth'])
     ->group(function () {
         // Admin routes
 
@@ -106,6 +112,54 @@ Route::prefix('admin')
         Route::get('tracking', function () {
             return Inertia::render('admin/tracking/Index');
         })->name('tracking.index');
+
+        Route::get('userManagement', function () {
+            return Inertia::render('admin/userManagement/Index', [
+                'users' => User::with('roles')->get()->map(fn ($user) => [
+                    'id' => $user->id,
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'email' => $user->email,
+                    'roles' => $user->getRoleNames(), // returns a Collection of role names
+                ])
+            ]);
+        })->name('userManagement.index');
+
+
+        // Permissions routes
+        Route::get('permissions', function () {
+            return Inertia::render('admin/permissions/Index', [
+                'permissions' => Permission::all()
+            ]);
+        })->name('permissions.index');
+        Route::get('/permission/{permission:id}', function (Permission $permission) {
+            return Inertia::render('admin/permissions/Edit', [
+                'permissions' => $permission,
+            ]);
+        })->name('permissions.show');
+
+        Route::get('role', function () {
+            return Inertia::render('admin/role/Index', [
+                'roles' => Role::with('permissions')->get()->map(fn ($role) => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'permissions' => $role->permissions->pluck('name'),
+                ]),
+            ]);
+        })->name('role.index');
+
+        Route::get('role/show/{role}', function (Role $role) {
+            $role->load('permissions');
+
+            return Inertia::render('admin/role/Edit', [
+                'initialRole' => $role,
+                'allPermissions' => \Spatie\Permission\Models\Permission::all()->map(fn ($permission) => [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                ]),
+            ]);
+        })->name('role.show');
+
     });
 
 Route::get('/trackShipment', [DetailedTrackingController::class, 'index'])->name('trackShipment.index');

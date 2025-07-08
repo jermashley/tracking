@@ -1,5 +1,10 @@
 <script setup>
-import { faBars, faGlobePointer,faSignOut } from '@fortawesome/pro-duotone-svg-icons'
+import {
+  faBars,
+  faGlobePointer,
+  faSignOut,
+} from '@fortawesome/pro-duotone-svg-icons'
+import { faShieldKeyhole, faUser } from '@fortawesome/pro-thin-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Link, usePage } from '@inertiajs/vue3'
 
@@ -58,6 +63,18 @@ const { logout } = useLogout()
           <FontAwesomeIcon class="mr-2" :icon="faSignOut" fixed-width />
 
           <span>Sign out</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link :href="route(`admin.userManagement.index`)">
+            <FontAwesomeIcon class="mr-2" :icon="faUser" fixed-width />
+            <span>User Management</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link :href="route(`admin.role.index`)">
+            <FontAwesomeIcon class="mr-2" :icon="faShieldKeyhole" fixed-width />
+            <span>Role Management</span>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>
     </DropdownMenuContent>
