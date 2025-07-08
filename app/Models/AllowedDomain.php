@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * 
+ *
  * @property int $id
  * @property string $domain
  * @property string|null $favicon_url
@@ -20,7 +22,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property-read \App\Models\User|null $createdBy
  * @property-read \App\Models\User|null $updatedBy
- *
  * @method static \Database\Factories\AllowedDomainFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AllowedDomain newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AllowedDomain newQuery()
@@ -38,7 +39,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AllowedDomain whereUpdatedBy($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AllowedDomain withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AllowedDomain withoutTrashed()
- *
  * @mixin \Eloquent
  */
 class AllowedDomain extends Model
