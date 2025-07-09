@@ -5,9 +5,6 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
-import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
-const { hasPermissions } = useHasPermissions()
-
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -17,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useCompaniesQuery } from '@/composables/queries/company'
 
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
@@ -24,6 +22,8 @@ import CompanyInfoCell from './CompanyInfoCell.vue'
 import ToggleMapSwitch from './ToggleMapSwitch.vue'
 
 const { initialCompanies } = usePage().props
+
+const { userCan } = useRolesAndPermissions()
 
 const { data, isError } = useCompaniesQuery({
   config: {
@@ -63,7 +63,7 @@ const columns = [
       })
     },
   },
-  hasPermissions(`company.edit`)
+  userCan(`company:edit`)
     ? {
         accessorKey: `edit`,
         header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),

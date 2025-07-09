@@ -22,7 +22,9 @@ class StoreCompanyApiTokenRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'company_id' => 'required|integer|exists:companies,id',
+            'api_token' => 'required|string',
+            'trackingNumber' => 'required|string',
         ];
     }
 }

@@ -144,6 +144,7 @@ const submitForm = () => {
         :tracking-data="data?.trackingData"
         :company="data?.company"
         :shipment-coordinates="data?.shipmentCoordinates"
+        :shipment-documents="data?.shipmentDocuments"
         :use-track-shipment-query-refetch="refetch"
         :last-updated="dataUpdatedAt"
       />

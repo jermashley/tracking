@@ -17,10 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { imageAssetUrl } from '@/composables/hooks/disks'
-import { useHasPermissions } from '@/composables/hooks/auth/useHasPermissions'
 
-const { hasPermissions } = useHasPermissions()
+const { userCan } = useRolesAndPermissions()
 
 defineProps({
   company: {
@@ -74,9 +74,9 @@ defineProps({
 
       <HoverCard :open-delay="300">
         <HoverCardTrigger as-child>
-          <template v-if="hasPermissions('company.read')">
+          <template v-if="userCan(`company:show`)">
             <Button variant="link" class="p-0 underline" as-child>
-              <Link :href="route('admin.company.show', company.uuid)">
+              <Link :href="route('admin.companies.show', company.uuid)">
                 {{ company.name }}
               </Link>
             </Button>

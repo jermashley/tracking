@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property string $uuid
@@ -30,6 +30,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CompanyApiToken whereIsValid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CompanyApiToken whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CompanyApiToken whereUuid($value)
+ * @property string $bol
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CompanyApiToken whereBol($value)
  * @mixin \Eloquent
  */
 class CompanyApiToken extends Model
@@ -41,9 +43,10 @@ class CompanyApiToken extends Model
         'uuid',
         'company_id',
         'api_token',
+        'bol',
+        'is_valid',
         'created_at',
         'updated_at',
-        'is_valid'
     ];
 
     public function company(): BelongsTo

@@ -2,27 +2,25 @@
 
 namespace App\Services\Pipeline;
 
+use Illuminate\Http\Client\Response;
+
 class PipelineApiAccessorialsList extends PipelineApiBaseService
 {
     protected $endpoint;
 
+    protected $apiToken;
+
     public function __construct(string $apiToken)
     {
-        parent::__construct(config('services.pipeline.base_url'), $apiToken);
+        parent::__construct(apiKey: $apiToken);
 
-        $this->endpoint = '/api/v1/Execute/AccessorialsList';
+        $this->endpoint = '/Execute/AccessorialsList';
     }
 
-
-    /**
-     * @return bool
-     * returns true if the request was successful, false otherwise
-     * this will help us validate and check if api token is valid
-     */
-    public function getAccessorialsList(): bool {
+    public function getAccessorialsList(): Response
+    {
         $response = $this->makeRequest('GET', $this->endpoint);
 
-        return $response->successful();
+        return $response;
     }
-
 }

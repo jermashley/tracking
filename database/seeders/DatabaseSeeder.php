@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             ImageSeeder::class,
             CompanySeeder::class,
             RolesAndPermissionsSeeder::class,
+            UserSeeder::class,
+            AllowedDomainSeeder::class,
         ]);
     }
 }

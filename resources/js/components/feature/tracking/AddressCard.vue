@@ -21,8 +21,6 @@ const props = defineProps({
     <CardHeader>
       <CardTitle class="flex flex-row items-end space-x-4">
         <span>{{ type }}</span>
-
-        <!-- <div class="mb-1 h-[0.125rem] w-full rounded-full bg-zinc-200" /> -->
       </CardTitle>
     </CardHeader>
 
@@ -31,7 +29,7 @@ const props = defineProps({
         <address class="flex flex-col text-sm not-italic">
           <span
             v-if="location?.name"
-            class="mb-2 text-lg font-semibold capitalize leading-none"
+            class="mb-2 text-base font-semibold capitalize leading-none"
           >
             {{ location?.name }}
           </span>

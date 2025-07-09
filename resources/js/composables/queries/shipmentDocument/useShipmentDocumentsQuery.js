@@ -3,6 +3,7 @@ import axios from 'axios'
 
 const getShipmentDocuments = async (formData) => {
   const { data } = await axios.post(route(`api.shipmentDocuments`), formData)
+
   return data
 }
 
@@ -12,7 +13,7 @@ const useShipmentDocumentsQuery = ({
   companyId = ``,
 } = {}) =>
   useQuery({
-    queryKey: [`shipmentDocuments`, trackingNumber, companyId],
+    queryKey: [`shipmentDocuments`, trackingNumber],
     queryFn: () =>
       getShipmentDocuments({
         trackingNumber: trackingNumber?.value ?? trackingNumber,

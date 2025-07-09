@@ -13,8 +13,15 @@ class DocumentController extends Controller
 {
     public function shipmentDocuments(Request $request): JsonResponse
     {
-        $shipmentDocumentsData = new PipelineApiDocuments;
-        $company = Company::where('pipeline_company_id', '=', $request->input('companyId'))->with('apiToken')->first();
+        $validated = $request->validate([
+            'trackingNumber' => 'required|string',
+            'companyId' => 'required|integer|exists:companies,pipeline_company_id',
+        ]);
+
+        $company = Company::whereId($validated['companyId'])->with('apiToken')->first();
+
+        $shipmentDocumentsData = new PipelineApiDocuments(apiKey: $company->apiToken->api_token);
+
         $shipmentDocumentsResponse = $shipmentDocumentsData->getShipmentDocuments(
             $request->input('trackingNumber'),
             $company->apiToken->api_token

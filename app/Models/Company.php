@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Log;
  * @property string|null $brand
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read CompanyApiToken|null $apiToken
  * @property-read \App\Models\Image|null $banner
  * @property-read \App\Models\Image|null $footer
  * @property-read \App\Models\Image|null $logo
@@ -115,7 +116,7 @@ class Company extends Model
         try {
             $query = self::query()
                 ->where('is_active', true)
-                ->with(['logo', 'banner', 'footer', 'theme']);
+                ->with(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
             switch (true) {
                 case $brand:

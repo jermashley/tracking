@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid();
             $table->foreignIdFor(Company::class);
             $table->string('api_token');
+            $table->string('bol');
             $table->boolean('is_valid')->default(false);
             $table->timestamps();
         });

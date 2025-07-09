@@ -14,18 +14,16 @@ import {
 import { faSync } from '@fortawesome/pro-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import dayjs from 'dayjs'
-import {computed, ref} from 'vue'
+import { computed } from 'vue'
 
 import AddressCard from '@/components/feature/tracking/AddressCard.vue'
 import ShipmentDetail from '@/components/feature/tracking/ShipmentDetail.vue'
+import ShipmentDocuments from '@/components/feature/tracking/ShipmentDocuments.vue'
 import StatusStepper from '@/components/feature/tracking/StatusStepper.vue'
 import TrackingMap from '@/components/feature/tracking/TrackingMap.vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useTrackShipmentQuery } from '@/composables/queries/trackShipment'
-import { useShipmentDocumentsQuery } from '@/composables/queries/shipmentDocument'
-import {Table} from "@/components/ui/table/index.js";
-import Documents from "@/components/feature/tracking/Documents.vue";
 
 const props = defineProps({
   trackingData: {
@@ -41,6 +39,10 @@ const props = defineProps({
     type: Object,
     required: true,
     default: null,
+  },
+  shipmentDocuments: {
+    type: Array,
+    required: true,
   },
   useTrackShipmentQueryRefetch: {
     type: Function,
@@ -58,11 +60,6 @@ const { refetch, dataUpdatedAt, isRefetching } = useTrackShipmentQuery({
   trackingNumber: props.trackingData.bolNum,
   searchOption: `bol`,
   companyId: props.company?.pipeline_company_id ?? ``,
-})
-
-const { data } = useShipmentDocumentsQuery({
-  trackingNumber: props.trackingData.bolNum,
-  companyId: props.trackingData.companyId ?? ``,
 })
 
 const bolNumber = computed(() => {
@@ -241,6 +238,14 @@ const numberOfPieces = computed(() => {
       />
     </section>
 
+    <!-- Shipment Documents -->
+    <section v-if="shipmentDocuments?.length >= 1">
+      <ShipmentDocuments
+        :documents="shipmentDocuments"
+        :bol-number="bolNumber"
+      />
+    </section>
+
     <!-- Shipment Tracking Map -->
     <Card
       v-if="shipmentCoordinates && company?.enable_map"
@@ -272,11 +277,6 @@ const numberOfPieces = computed(() => {
           No status history found...yet.
         </p>
       </div>
-    </section>
-
-    <!-- Shipment Documents -->
-    <section>
-      <Documents :documents="data?.shipmentDocuments" />
     </section>
   </div>
 </template>

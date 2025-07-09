@@ -1,8 +1,11 @@
 <script setup>
-import {Link, usePage} from '@inertiajs/vue3'
+import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Link, usePage } from '@inertiajs/vue3'
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
 import { h, reactive } from 'vue'
 
+import { Button } from '@/components/ui/button/index.js'
 import {
   Table,
   TableBody,
@@ -11,9 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table/index.js'
-import {Button} from "@/components/ui/button/index.js";
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {faEdit} from "@fortawesome/pro-duotone-svg-icons";
 
 const { roles } = usePage().props
 

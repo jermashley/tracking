@@ -3,37 +3,49 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
-        // All permissions
         $permissions = [
-            'company.create',
-            'company.read',
-            'company.update',
-            'company.delete',
-            'user.read',
-            'user.update',
-            'theme.create',
-            'theme.read',
-            'theme.update',
-            'theme.delete',
-            'role.create',
-            'role.read',
-            'role.update',
-            'role.delete',
-            'permission.create',
-            'permission.read',
-            'permission.update',
-            'permission.delete',
-            'allowed_domain.create',
-            'allowed_domain.read',
-            'allowed_domain.update',
-            'allowed_domain.delete',
+            'allowed_domain:store',
+            'allowed_domain:show',
+            'allowed_domain:update',
+            'allowed_domain:destroy',
+
+            'company:store',
+            'company:show',
+            'company:update',
+            'company:destroy',
+
+            'user:store',
+            'user:show',
+            'user:update',
+            'user:destroy',
+            'user:impersonate',
+
+            'image:store',
+            'image:show',
+            'image:update',
+            'image:destroy',
+
+            'theme:store',
+            'theme:show',
+            'theme:update',
+            'theme:destroy',
+
+            'role:store',
+            'role:show',
+            'role:update',
+            'role:destroy',
+
+            'permission:store',
+            'permission:show',
+            'permission:update',
+            'permission:destroy',
         ];
 
         foreach ($permissions as $perm) {
@@ -50,14 +62,14 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // Assign only company and theme permissions to Company Admin
         $companyAdminPermissions = [
-            'company.create',
-            'company.read',
-            'company.update',
-            'company.delete',
-            'theme.create',
-            'theme.read',
-            'theme.update',
-            'theme.delete',
+            'company:store',
+            'company:show',
+            'company:update',
+            'company:destroy',
+            'theme:store',
+            'theme:show',
+            'theme:update',
+            'theme:destroy',
         ];
         $companyAdmin->syncPermissions($companyAdminPermissions);
 
