@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\AllowedDomain;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -23,17 +24,18 @@ class OAuthController extends Controller
         $socialiteUser = Socialite::driver($provider)->user();
 
         $emailDomain = substr(strrchr($socialiteUser->getEmail(), '@'), 1);
-        $allowedDomains = config('socialite.valid_domains', []);
-        $allowedUsers = config('socialite.valid_users', []);
 
-        // Check if the email domain is allowed, and if valid_users is set, also check the email
-        if (!in_array($emailDomain, $allowedDomains) || (!empty($allowedUsers) && !in_array($socialiteUser->email, $allowedUsers))) {
+        $allowedDomains = AllowedDomain::pluck('domain')->toArray();
+
+        // Check if the email domain is allowed
+        if (! in_array($emailDomain, $allowedDomains)) {
             return redirect()->route('login')->withErrors([
                 'email' => 'You must be an allowed user to login.',
             ]);
         }
 
         $userModel = new User;
+
         $user = $userModel->updateOrCreate([
             'azure_id' => $socialiteUser->id,
         ], [
@@ -46,11 +48,15 @@ class OAuthController extends Controller
             'avatar_url' => $socialiteUser->avatar,
         ]);
 
+        if ($user->roles->isEmpty()) {
+            $user->syncRoles(['Standard']);
+        }
+
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('admin.dashboard'));
+        return redirect(route('home'));
     }
 
     public function logout(Request $request)

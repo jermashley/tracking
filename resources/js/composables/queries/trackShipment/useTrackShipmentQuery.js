@@ -23,11 +23,17 @@ const useTrackShipmentQuery = ({
       }),
 
     retry: false,
-    select: ({ trackingData, company, shipmentCoordinates }) => {
+    select: ({
+      trackingData,
+      company,
+      shipmentCoordinates,
+      shipmentDocuments,
+    }) => {
       const data = {
         trackingData: trackingData.data[0],
         company,
         shipmentCoordinates,
+        shipmentDocuments,
       }
 
       return data

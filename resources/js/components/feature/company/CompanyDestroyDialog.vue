@@ -15,7 +15,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useCompanyDestroyMutation } from '@/composables/mutations/company'
+
+const { userCannot } = useRolesAndPermissions()
 
 const props = defineProps({
   company: {
@@ -35,7 +38,7 @@ const { mutate: destroyCompany } = useCompanyDestroyMutation({
         queryKey: [`companies`],
       })
 
-      router.visit(route(`admin.dashboard`))
+      router.visit(route(`admin.companies.index`))
     },
   },
 })
@@ -52,10 +55,14 @@ const cancelDialog = () => {
 <template>
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
-      <Button variant="destructive" size="sm">
+      <Button
+        :disabled="userCannot('company:destroy')"
+        variant="destructive"
+        size="sm"
+      >
         <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
 
-        <span>Delete</span>
+        <span>Delete {{ company.name }}</span>
       </Button>
     </DialogTrigger>
 

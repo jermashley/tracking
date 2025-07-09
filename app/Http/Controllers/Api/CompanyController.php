@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\ImageTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyApiTokenRequest;
 use App\Http\Requests\UpdateCompanyLogoRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Requests\UpdateCompanyThemeRequest;
@@ -50,7 +51,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company): JsonResponse
     {
-        $company->load(['logo', 'banner', 'footer', 'theme']);
+        $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
         return response()->json($company, Response::HTTP_OK);
     }

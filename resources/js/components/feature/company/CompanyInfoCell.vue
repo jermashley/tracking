@@ -17,7 +17,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { imageAssetUrl } from '@/composables/hooks/disks'
+
+const { userCan } = useRolesAndPermissions()
 
 defineProps({
   company: {
@@ -71,18 +74,21 @@ defineProps({
 
       <HoverCard :open-delay="300">
         <HoverCardTrigger as-child>
-          <Button variant="link" class="p-0 underline" as-child>
-            <Link :href="route(`admin.company.show`, company.uuid)">
-              {{ company.name }}
-            </Link>
-          </Button>
+          <template v-if="userCan(`company:show`)">
+            <Button variant="link" class="p-0 underline" as-child>
+              <Link :href="route('admin.companies.show', company.uuid)">
+                {{ company.name }}
+              </Link>
+            </Button>
+          </template>
+          <template v-else>
+            {{ company.name }}
+          </template>
         </HoverCardTrigger>
-
         <HoverCardContent class="w-[28rem]" align="start">
           <div class="flex flex-col items-start justify-start gap-4">
             <div class="flex w-full flex-row justify-between gap-1">
               <h4 class="text-xl font-semibold">{{ company.name }}</h4>
-
               <Badge v-if="company.pipeline_company_id" variant="secondary">
                 Pipeline ID: {{ company.pipeline_company_id }}
               </Badge>
