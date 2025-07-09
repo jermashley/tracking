@@ -61,16 +61,20 @@ class DetailedTrackingController extends Controller
             $shipmentCoordinates = $shipmentCoordinatesResponse->json();
         }
 
-        $shipmentDocumentsClient = new PipelineApiShipmentDocuments(apiKey: $company?->apiToken?->api_token);
+        $selectedDocuments = [];
 
-        $shipmentDocumentsResponse = $shipmentDocumentsClient->getShipmentDocuments(
-            $shipmentSearchResponse->object()->data[0]?->bolNum
-        );
+        if ($company?->apiToken()->exists()) {
+            $shipmentDocumentsClient = new PipelineApiShipmentDocuments(apiKey: $company?->apiToken?->api_token);
 
-        $selectedDocuments = (new GetShipmentDocumentsWithMetadata)(
-            $shipmentDocumentsResponse->json(),
-            ['bol', 'pod']
-        );
+            $shipmentDocumentsResponse = $shipmentDocumentsClient->getShipmentDocuments(
+                $shipmentSearchResponse->object()->data[0]?->bolNum
+            );
+
+            $selectedDocuments = (new GetShipmentDocumentsWithMetadata)(
+                $shipmentDocumentsResponse->json(),
+                ['bol', 'pod']
+            );
+        }
 
         return Inertia::render('brandedTracking/Index', [
             'initialTrackingData' => $trackingData,
