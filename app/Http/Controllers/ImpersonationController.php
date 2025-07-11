@@ -38,8 +38,9 @@ class ImpersonationController extends Controller
 
                 Auth::guard('web')->login($originalUser);
 
-                return redirect(route('home'))
-                    ->with('status', 'You have returned to your account.');
+                return redirect(route('admin.users.index'))
+                    ->with('status', 'You have returned to your account.')
+                    ->with('reload', true);
             }
         }
 
