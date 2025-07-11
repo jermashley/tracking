@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const getPermission = async (id) => {
-  const { data } = await axios.get(route(`api.permissions.show`, id))
+  const { data } = await axios.get(route(`api.admin.permissions.show`, id))
 
   return data
 }

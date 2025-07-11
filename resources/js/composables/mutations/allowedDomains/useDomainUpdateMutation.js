@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const updateDomain = async ({ id, domain }) => {
-  console.log({ id, domain })
   const { data } = await axios.patch(route(`api.allowedDomains.update`, id), {
     domain,
   })

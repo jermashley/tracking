@@ -6,8 +6,6 @@ const validateCompanyApiToken = async ({ companyId }) => {
     route(`api.admin.companyApiTokens.validate`, companyId),
   )
 
-  console.log(`validateCompanyApiToken`, data)
-
   return data
 }
 

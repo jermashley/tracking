@@ -3,7 +3,7 @@ import axios from 'axios'
 
 const assignPermissionsToRole = async ({ roleId, permissions }) => {
   const { data } = await axios.put(
-    route(`api.roles.assignPermissions`, roleId),
+    route(`api.admin.roles.assignPermissions`, roleId),
     {
       permissions,
     },

@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/vue-query'
 import axios from 'axios'
 
 const setCompanyApiToken = async (formData) => {
-  console.log({ formData })
   const { data } = await axios.post(
     route(`api.admin.companyApiTokens.store`),
     formData,

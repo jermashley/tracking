@@ -211,7 +211,7 @@ Route::get('/testing/oauth-login', function () {
     );
     Auth::login($user);
 
-    return redirect('/admin/dashboard');
+    return redirect(route('home'));
 });
 
 require __DIR__.'/auth.php';

@@ -192,12 +192,7 @@ const cancelDialog = () => {
                 accept="image/*"
                 type="file"
                 :disabled="isPending"
-                @change="
-                  (event) => {
-                    console.log(event.target.files[0])
-                    handleChange(event.target.files[0])
-                  }
-                "
+                @change="(event) => handleChange(event.target.files[0])"
               />
             </FormControl>
 
