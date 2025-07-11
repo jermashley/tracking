@@ -5,7 +5,7 @@ import { useForm, useIsFormDirty } from 'vee-validate'
 import { watch } from 'vue'
 import * as yup from 'yup'
 
-import permissionDestroyDialog from '@/components/feature/permission/permissionDestroyDialog.vue'
+import PermissionDestroyDialog from '@/components/feature/permission/PermissionDestroyDialog.vue'
 import { Button } from '@/components/ui/button'
 import {
   FormControl,
@@ -133,8 +133,6 @@ watch(
 </script>
 
 <template>
-
-
   <form
     id="permissionForm`"
     class="mt-4 flex w-full flex-col space-y-4 rounded-lg border border-border p-4"

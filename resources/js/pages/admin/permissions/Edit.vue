@@ -1,7 +1,7 @@
 <script setup>
 // import { faEdit } from '@fortawesome/pro-duotone-svg-icons'
 
-import permissionForm from '@/components/feature/permission/permissionForm.vue'
+import PermissionForm from '@/components/feature/permission/PermissionForm.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { usePermissionQuery } from '@/composables/queries/permission'
 
@@ -22,9 +22,7 @@ const { data: permission, isError } = usePermissionQuery({
 </script>
 
 <template>
-
   <AuthenticatedLayout :title="'Permission Information'">
-    <permissionForm v-if="permission && !isError" :permission="permission" />
-
+    <PermissionForm v-if="permission && !isError" :permission="permission" />
   </AuthenticatedLayout>
 </template>
