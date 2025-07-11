@@ -22,7 +22,8 @@ class ImpersonationController extends Controller
 
         Auth::guard('web')->login($userToImpersonate);
 
-        return redirect(route('home'))->with('status', 'You are now impersonating user #'.$userId);
+        return redirect(route('home'))
+            ->with('status', 'You are now impersonating user ID '.$userToImpersonate->id.'.');
     }
 
     public function stopImpersonate(Request $request)
@@ -33,6 +34,8 @@ class ImpersonationController extends Controller
             $originalUser = User::whereId($originalId)->first();
 
             if ($originalUser) {
+                $request->session()->forget('impersonate_original_id');
+
                 Auth::guard('web')->login($originalUser);
 
                 return redirect(route('home'))
