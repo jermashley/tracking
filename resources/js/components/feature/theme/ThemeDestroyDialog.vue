@@ -15,7 +15,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useThemeDestroyMutation } from '@/composables/mutations/theme'
+
+const { userCan } = useRolesAndPermissions()
 
 const props = defineProps({
   theme: {
@@ -51,13 +54,15 @@ const cancelDialog = () => {
 
 <template>
   <Dialog v-model:open="isOpen">
-    <DialogTrigger as-child>
-      <Button variant="destructive" size="sm">
-        <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
+    <template v-if="userCan(`theme:delete`)">
+      <DialogTrigger as-child>
+        <Button variant="destructive" size="sm">
+          <FontAwesomeIcon class="mr-2" :icon="faTrashAlt" fixed-width />
 
-        <span>Delete</span>
-      </Button>
-    </DialogTrigger>
+          <span>Delete</span>
+        </Button>
+      </DialogTrigger>
+    </template>
 
     <DialogContent>
       <DialogHeader>

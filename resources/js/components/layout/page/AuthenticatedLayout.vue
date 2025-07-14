@@ -1,9 +1,17 @@
 <script setup>
+import { router, usePage } from '@inertiajs/vue3'
 import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
+import { h, onMounted } from 'vue'
 
-import { Toaster } from '@/components/ui/toast'
+import { Button } from '@/components/ui/button'
+import { Toaster, useToast } from '@/components/ui/toast'
+import { useIsCurrentlyImpersonating } from '@/composables/hooks/auth'
+import { useImpersonateUserStopMutation } from '@/composables/mutations/user'
+import { useUserQuery } from '@/composables/queries/user'
 
 import AuthenticatedNavbar from '../navigation/AuthenticatedNavbar.vue'
+
+const { isCurrentlyImpersonating } = useIsCurrentlyImpersonating()
 
 defineProps({
   title: {
@@ -16,6 +24,52 @@ defineProps({
     required: false,
     default: () => null,
   },
+})
+
+const { user: initialCurrentUser } = usePage().props.auth
+
+const { data: currentUser } = useUserQuery({
+  userId: initialCurrentUser.id,
+
+  config: {
+    initialData: initialCurrentUser,
+  },
+})
+
+const { mutate: mutateImpersonateUserStop } = useImpersonateUserStopMutation({
+  config: {
+    onSuccess: () => {
+      router.visit(route(`home`), {
+        preserveState: false,
+      })
+    },
+  },
+})
+
+const { toast, dismiss } = useToast()
+
+onMounted(() => {
+  const impersonationToast = toast({
+    title: `Impersonation Active`,
+    description: `You are now impersonating ${currentUser.value.email}.`,
+    duration: 10000,
+    open: false,
+    action: h(
+      Button,
+      {
+        variant: `outline`,
+        size: `sm`,
+        onClick: mutateImpersonateUserStop,
+      },
+      `Stop`,
+    ),
+  })
+
+  if (isCurrentlyImpersonating) {
+    impersonationToast.open = true
+  } else {
+    dismiss(impersonationToast.id)
+  }
 })
 </script>
 

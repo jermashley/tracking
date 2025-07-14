@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useCompaniesQuery } from '@/composables/queries/company'
 
 import SelectThemeDialog from '../theme/SelectThemeDialog.vue'
@@ -21,6 +22,8 @@ import CompanyInfoCell from './CompanyInfoCell.vue'
 import ToggleMapSwitch from './ToggleMapSwitch.vue'
 
 const { initialCompanies } = usePage().props
+
+const { userCan } = useRolesAndPermissions()
 
 const { data, isError } = useCompaniesQuery({
   config: {
@@ -60,28 +63,30 @@ const columns = [
       })
     },
   },
-  {
-    accessorKey: `edit`,
-    header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
-    cell: ({ row }) => {
-      return h(
-        Button,
-        { variant: `outline`, size: `sm`, asChild: true },
-        {
-          default: () =>
-            h(
-              Link,
-              { href: route(`admin.company.show`, row.original.uuid) },
-              {
-                default: () =>
-                  h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
-              },
-            ),
+  userCan(`company:edit`)
+    ? {
+        accessorKey: `edit`,
+        header: () => h(`div`, { class: `text-sm font-semibold` }, `Edit`),
+        cell: ({ row }) => {
+          return h(
+            Button,
+            { variant: `outline`, size: `sm`, asChild: true },
+            {
+              default: () =>
+                h(
+                  Link,
+                  { href: route(`admin.company.show`, row.original.uuid) },
+                  {
+                    default: () =>
+                      h(FontAwesomeIcon, { icon: faEdit, fixedWidth: true }),
+                  },
+                ),
+            },
+          )
         },
-      )
-    },
-  },
-]
+      }
+    : null,
+].filter(Boolean)
 
 const tableOptions = reactive({
   get data() {
