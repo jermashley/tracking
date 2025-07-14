@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/vue3'
 import CompanyForm from '@/components/feature/company/CompanyForm.vue'
 import CompanySetImageAsset from '@/components/feature/company/CompanySetImageAsset.vue'
 import ToggleCompanyIsActive from '@/components/feature/company/ToggleCompanyIsActive.vue'
+import ToggleDocumentsSwitch from '@/components/feature/company/ToggleDocumentsSwitch.vue'
 import ToggleMapSwitch from '@/components/feature/company/ToggleMapSwitch.vue'
 import CompanyApiTokenForm from '@/components/feature/companyApiToken/CompanyApiTokenForm.vue'
 import ImageDestroyDialog from '@/components/feature/image/ImageDestroyDialog.vue'
@@ -104,11 +105,9 @@ const { data: company, isError } = useCompanyQuery({
     </div>
 
     <section v-if="company && !isError" class="mt-32">
-      <div
-        class="flex flex-col justify-stretch space-y-4 md:flex-row md:items-stretch md:space-x-4 md:space-y-0"
-      >
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-4">
         <div
-          class="flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
+          class="col-span-2 flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4 lg:col-span-2"
         >
           <div class="w-full space-y-0.5">
             <Label class="text-base">Enabled</Label>
@@ -148,24 +147,45 @@ const { data: company, isError } = useCompanyQuery({
             />
           </div>
         </div>
-      </div>
 
-      <div
-        class="mt-4 flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
-      >
-        <div class="w-full space-y-0.5">
-          <Label class="text-base">Theme</Label>
+        <div
+          class="flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4"
+        >
+          <div class="w-full space-y-0.5">
+            <Label class="text-base">Shipment Documents</Label>
 
-          <p class="text-sm text-muted-foreground">
-            Set the color theme for the company's tracking portal.
-          </p>
+            <p class="text-sm text-muted-foreground">
+              Enable shipment documents in portal.
+            </p>
+          </div>
+
+          <div>
+            <ToggleDocumentsSwitch
+              id="enable_documents"
+              name="enable_documents"
+              :company-id="company?.id"
+              :value="Boolean(company?.enable_documents)"
+            />
+          </div>
         </div>
 
-        <div>
-          <SelectThemeDialog
-            :company-id="company?.id"
-            :current-theme="company?.theme"
-          />
+        <div
+          class="col-span-2 flex w-full flex-row items-center justify-between space-x-8 rounded-lg border p-4 lg:col-span-2"
+        >
+          <div class="w-full space-y-0.5">
+            <Label class="text-base">Theme</Label>
+
+            <p class="text-sm text-muted-foreground">
+              Set the color theme for the company's tracking portal.
+            </p>
+          </div>
+
+          <div>
+            <SelectThemeDialog
+              :company-id="company?.id"
+              :current-theme="company?.theme"
+            />
+          </div>
         </div>
       </div>
 

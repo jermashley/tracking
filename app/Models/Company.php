@@ -75,6 +75,7 @@ class Company extends Model
         'footer_image_id',
         'theme_id',
         'enable_map',
+        'enable_documents',
         'requires_brand',
         'brand',
     ];

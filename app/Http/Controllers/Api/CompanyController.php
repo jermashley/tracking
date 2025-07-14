@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Enums\ImageTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompanyRequest;
-use App\Http\Requests\UpdateCompanyApiTokenRequest;
 use App\Http\Requests\UpdateCompanyLogoRequest;
 use App\Http\Requests\UpdateCompanyRequest;
 use App\Http\Requests\UpdateCompanyThemeRequest;
@@ -129,6 +128,18 @@ class CompanyController extends Controller
     public function toggleMapOption(Company $company): JsonResponse
     {
         $company->enable_map = ! $company->enable_map;
+
+        $company->save();
+
+        return response()->json($company, Response::HTTP_OK);
+    }
+
+    /**
+     * Toggle documents are enabled field.
+     */
+    public function toggleDocumentsOption(Company $company): JsonResponse
+    {
+        $company->enable_documents = ! $company->enable_documents;
 
         $company->save();
 

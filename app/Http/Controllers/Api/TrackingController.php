@@ -55,9 +55,9 @@ class TrackingController extends Controller
             $shipmentCoordinates = $shipmentCoordinatesResponse->json();
         }
 
-        $selectedDocuments = [];
+        if ($company?->apiToken()->exists() && $company->enable_documents) {
+            $selectedDocuments = [];
 
-        if ($company?->apiToken()->exists()) {
             $shipmentDocumentsClient = new PipelineApiShipmentDocuments(apiKey: $company?->apiToken?->api_token);
 
             $shipmentDocumentsResponse = $shipmentDocumentsClient->getShipmentDocuments(
@@ -74,7 +74,7 @@ class TrackingController extends Controller
             'trackingData' => $trackingData,
             'company' => $company,
             'shipmentCoordinates' => $shipmentCoordinates,
-            'shipmentDocuments' => $selectedDocuments,
+            'shipmentDocuments' => $selectedDocuments ?? [],
         ], Response::HTTP_OK);
     }
 
