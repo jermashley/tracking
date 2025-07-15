@@ -1,5 +1,6 @@
 <script setup>
 import {
+  faBuildings,
   faChartTreeMap,
   faMagnifyingGlassLocation,
 } from '@fortawesome/pro-duotone-svg-icons'
@@ -16,6 +17,9 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
+
+const { userCan } = useRolesAndPermissions()
 
 const {
   auth: { user },
@@ -31,16 +35,12 @@ const {
     >
       <NavigationMenu>
         <NavigationMenuList>
-          <NavigationMenuItem>
+          <NavigationMenuItem v-if="userCan(`company:show`)">
             <NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
-              <Link :href="route(`admin.dashboard`)">
-                <FontAwesomeIcon
-                  class="mr-2"
-                  :icon="faChartTreeMap"
-                  fixed-width
-                />
+              <Link :href="route(`admin.companies.index`)">
+                <FontAwesomeIcon class="mr-2" :icon="faBuildings" fixed-width />
 
-                Dashboard
+                Companies
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -59,15 +59,17 @@ const {
             </NavigationMenuLink>
           </NavigationMenuItem>
 
-          <NavigationMenuItem>
+          <NavigationMenuItem
+            v-if="userCan(`theme:show`) || userCan(`image:show`)"
+          >
             <NavigationMenuTrigger> Manage </NavigationMenuTrigger>
 
             <NavigationMenuContent>
               <ul class="grid min-w-72 grid-cols-1 gap-3 p-4">
-                <li>
+                <li v-if="userCan(`theme:show`)">
                   <NavigationMenuLink as-child>
                     <Link
-                      :href="route(`admin.theme.index`)"
+                      :href="route(`admin.themes.index`)"
                       class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                     >
                       <div class="text-sm font-medium leading-none">Themes</div>
@@ -81,7 +83,7 @@ const {
                   </NavigationMenuLink>
                 </li>
 
-                <li>
+                <li v-if="userCan(`image:show`)">
                   <NavigationMenuLink as-child>
                     <Link
                       :href="route(`admin.image.index`)"

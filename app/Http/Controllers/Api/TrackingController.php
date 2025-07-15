@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\GetShipmentDocumentsWithMetadata;
 use App\Http\Controllers\Controller;
 use App\Models\Company;
 use App\Services\Pipeline\PipelineApiShipmentCoordinates;
-use App\Services\Pipeline\PipelineApiTracking;
+use App\Services\Pipeline\PipelineApiShipmentDocuments;
+use App\Services\Pipeline\PipelineApiShipmentSearch;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,24 +16,25 @@ class TrackingController extends Controller
 {
     public function trackingStatuses(Request $request): JsonResponse
     {
-        $shipmentTrackingData = new PipelineApiTracking;
+        $shipmentSearchClient = new PipelineApiShipmentSearch;
 
-        $trackingDataResponse = $shipmentTrackingData->getTrackingData(
+        $shipmentSearchResponse = $shipmentSearchClient->searchShipment(
             $request->input('trackingNumber'),
             $request->input('searchOption'),
+            globalSearch: true,
         );
 
         // If error in trackingDataResponse, redirect to error page.
-        if ($trackingDataResponse->failed() || $trackingDataResponse->clientError() || empty($trackingDataResponse->object()->data)) {
+        if ($shipmentSearchResponse->failed() || $shipmentSearchResponse->clientError() || empty($shipmentSearchResponse->object()->data)) {
             return response()->json([
                 'error' => 'Tracking data not found or invalid.',
             ], Response::HTTP_NOT_FOUND);
         }
 
         // Pipeline ID of the company the shipment belongs to.
-        $pipelineCompanyId = $trackingDataResponse->object()->data[0]?->companyId;
+        $pipelineCompanyId = $shipmentSearchResponse->object()->data[0]?->companyId;
 
-        $trackingData = $trackingDataResponse->json();
+        $trackingData = $shipmentSearchResponse->json();
 
         // Attempt to get local company model from either the slug or the Pipeline company ID.
         $company = Company::findByIdentifier(null, $request->input('companyId'), $pipelineCompanyId);
@@ -52,10 +55,26 @@ class TrackingController extends Controller
             $shipmentCoordinates = $shipmentCoordinatesResponse->json();
         }
 
+        if ($company?->apiToken()->exists() && $company->enable_documents) {
+            $selectedDocuments = [];
+
+            $shipmentDocumentsClient = new PipelineApiShipmentDocuments(apiKey: $company?->apiToken?->api_token);
+
+            $shipmentDocumentsResponse = $shipmentDocumentsClient->getShipmentDocuments(
+                $shipmentSearchResponse->object()->data[0]?->bolNum
+            );
+
+            $selectedDocuments = (new GetShipmentDocumentsWithMetadata)(
+                $shipmentDocumentsResponse->json(),
+                ['bol', 'pod']
+            );
+        }
+
         return response()->json([
             'trackingData' => $trackingData,
             'company' => $company,
             'shipmentCoordinates' => $shipmentCoordinates,
+            'shipmentDocuments' => $selectedDocuments ?? [],
         ], Response::HTTP_OK);
     }
 
@@ -70,7 +89,7 @@ class TrackingController extends Controller
 
         $company = Company::findByIdentifier(null, null, $request->input('pipelineCompanyId'));
 
-        if (!$company || $company->enable_map === false) {
+        if (! $company || $company->enable_map === false) {
             return response()->json([
                 'error' => 'Map feature is disabled for this company.',
             ], Response::HTTP_FORBIDDEN);

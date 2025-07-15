@@ -5,8 +5,10 @@ import ThemeCreateButton from '@/components/feature/theme/ThemeCreateButton.vue'
 import AuthenticatedLayout from '@/components/layout/page/AuthenticatedLayout.vue'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useRolesAndPermissions } from '@/composables/hooks/auth'
 import { useThemesQuery } from '@/composables/queries/theme'
 
+const { userCan } = useRolesAndPermissions()
 const { initialThemes } = usePage().props
 
 const { data: themes, isError } = useThemesQuery({
@@ -53,7 +55,11 @@ const { data: themes, isError } = useThemesQuery({
             class="ml-auto flex w-full flex-row items-center justify-end space-x-4"
           >
             <Button as-child variant="outline" size="sm">
-              <Link :href="`/admin/themes/${theme.uuid}`">Edit</Link>
+              <Link
+                v-if="userCan(`theme:update`)"
+                :href="`/admin/themes/${theme.uuid}`"
+                >Edit</Link
+              >
             </Button>
           </div>
         </div>

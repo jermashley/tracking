@@ -3,5 +3,6 @@ export { default as useCompanyDestroyMutation } from './useCompanyDestroyMutatio
 export { default as useCompanySetImageAssetMutation } from './useCompanySetImageAssetMutation'
 export { default as useCompanyThemeMutation } from './useCompanyThemeMutation'
 export { default as useCompanyUpdateMutation } from './useCompanyUpdateMutation'
+export { default as useToggleCompanyEnableDocumentsMutation } from './useToggleCompanyEnableDocumentsMutation'
 export { default as useToggleCompanyEnableMapMutation } from './useToggleCompanyEnableMapMutation'
 export { default as useToggleCompanyIsActiveMutation } from './useToggleCompanyIsActiveMutation'

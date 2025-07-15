@@ -50,7 +50,7 @@ class CompanyController extends Controller
      */
     public function show(Company $company): JsonResponse
     {
-        $company->load(['logo', 'banner', 'footer', 'theme']);
+        $company->load(['logo', 'banner', 'footer', 'theme', 'apiToken']);
 
         return response()->json($company, Response::HTTP_OK);
     }
@@ -128,6 +128,18 @@ class CompanyController extends Controller
     public function toggleMapOption(Company $company): JsonResponse
     {
         $company->enable_map = ! $company->enable_map;
+
+        $company->save();
+
+        return response()->json($company, Response::HTTP_OK);
+    }
+
+    /**
+     * Toggle documents are enabled field.
+     */
+    public function toggleDocumentsOption(Company $company): JsonResponse
+    {
+        $company->enable_documents = ! $company->enable_documents;
 
         $company->save();
 

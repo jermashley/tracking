@@ -4,25 +4,34 @@ namespace App\Services\Pipeline;
 
 use Illuminate\Http\Client\Response;
 
-class PipelineApiTracking extends PipelineApiBaseService
+class PipelineApiShipmentSearch extends PipelineApiBaseService
 {
     protected $endpoint;
 
-    public function __construct()
+    protected $apiToken;
+
+    public function __construct(?string $apiToken = null)
     {
-        parent::__construct();
+        if (empty($apiToken)) {
+            parent::__construct();
+        }
+
+        if (! empty($apiToken)) {
+            parent::__construct(apiKey: $apiToken);
+        }
 
         $this->endpoint = '/shipmentSearch';
     }
 
-    public function getTrackingData(
+    public function searchShipment(
         ?string $trackingNumber = '',
         ?string $searchOption = '',
+        ?bool $globalSearch = false,
     ): Response {
         $data = [
             'trackNum' => $trackingNumber,
             'searchOption' => $searchOption,
-            'globalSearch' => true,
+            'globalSearch' => $globalSearch,
         ];
 
         $response = $this->makeRequest('POST', $this->endpoint, $data);
